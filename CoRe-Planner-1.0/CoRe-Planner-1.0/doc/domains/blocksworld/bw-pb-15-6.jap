@@ -1,0 +1,16 @@
+(defproblem bw-pb-15-6 blocksworld
+ ((arm-empty)
+ (on-table b1) (on b2 b1) (on b3 b2) (on b5 b3) (on b12 b5) (clear b12)
+ (on-table b4) (on b6 b4) (on b8 b6) (clear b8)
+ (on-table b7) (clear b7)
+ (on-table b9) (on b15 b9) (clear b15)
+ (on-table b10) (on b11 b10) (on b13 b11) (clear b13)
+ (on-table b14) (clear b14)
+ )
+ ((achieve-goals ( list 
+ (on-table b1) (on b3 b1) (on b8 b3) (on b14 b8) (clear b14)
+ (on-table b2) (on b4 b2) (on b5 b4) (on b6 b5) (on b7 b6) (on b13 b7) (clear b13)
+ (on-table b9) (on b12 b9) (clear b12)
+ (on-table b10) (on b11 b10) (clear b11)
+ (on-table b15) (clear b15)
+ ))))

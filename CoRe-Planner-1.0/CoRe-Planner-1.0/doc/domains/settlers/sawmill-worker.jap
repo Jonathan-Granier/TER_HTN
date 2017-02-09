@@ -1,0 +1,201 @@
+ ;;------------------------------------------------------------------------------
+;; This file describes the skills and the beliefs of a sawmill worker agent. 
+;;
+;; A sawmill worker agent can make the following assumptions:
+;; 	- (has-tree-trunk ?agent ?quantity) 
+;;    (is-available tree-trunk ?agent ?place)    
+;;	- (has-tool ?agent saw) 
+;;    (is-available saw ?agent ?place)
+;;	- (receive-cash ?agent1 ?agent2 ?cash wood)
+;;    (is-transportable wood ?from ?to)
+;;	- (is-built sawmill ?shop-name ?agent ?place)
+;;
+;; A sawmill worker agent can reach the following goals:
+;; 	- (has-wood ?agent ?quantity) 
+;;    (is-available wood ?agent ?place)
+;;	- (is-settled ?agent ?sawmill-name ?place)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash wood)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash sawmill)
+;;------------------------------------------------------------------------------
+
+(defdomain sawmill-worker (
+	
+	(:operator (!make-wood ?wq)
+		((has-wood ?sw ?iwq) (has-tree-trunk ?sw ?ittq))
+		((has-wood ?sw ?iwq) (has-tree-trunk ?sw ?ittq))
+		((has-wood ?sw (call + ?iwq ?wq)) (has-tree-trunk ?sw (call - ?ittq ?wq)))
+	)
+	
+	(:method (make-wood ?wq)
+		(:first (has-tool ?sw saw)
+			(is-settled ?sw (call cat ?sw sawmill) ?from)
+			(has-wood ?sw ?iwq)
+			(~is-available tree-trunk ?sw ?from)
+			(~has-tree-trunk ?sw ?ittq) (~call >= ?ittq ?wq))
+		((!make-wood ?wq))
+		
+		(:first (is-settled ?sw (call cat ?sw sawmill) ?from)
+			(~has-tool ?sw saw)
+			(~is-available saw ?sw ?from)
+			(has-wood ?sw ?iwq)
+			(is-available tree-trunk ?sw ?from)
+			(has-tree-trunk ?sw ?ittq) (call >= ?ittq ?wq))
+		((!make-wood ?wq))
+		
+		(:first (is-settled ?sw (call cat ?sw sawmill) ?from)
+			(~has-tool ?sw saw)
+			(~is-available saw ?sw ?from)
+			(has-wood ?sw ?iwq)
+			(~is-available tree-trunk ?sw ?from)
+			(~has-tree-trunk ?sw ?ittq) (~call >= ?ittq ?wq))
+		((!make-wood ?wq))
+	)
+					
+	(:operator (!sell-wood ?wq)
+		((has-wood ?sw ?iwq) (has-cash ?sw ?icq) (wood-price ?sw ?p))
+		((has-wood ?sw ?iwq) (has-cash ?sw ?icq))
+		((has-wood ?sw (call - ?iwq ?wq)) (has-cash ?sw (call + ?icq (call * ?wq ?p))))
+	)
+														
+	(:method (sell-wood ?a ?wq ?to)
+		(:first (has-wood ?sw ?iwq) (call >= ?iwq ?wq) 
+			(wood-price ?sw ?p) (is-settled ?sw (call cat ?sw sawmill) ?from)
+			(~receive-cash ?sw ?a (call * ?wq ?p) wood) 
+			(~is-transportable wood ?from ?to))
+		((!sell-wood ?wq))
+		
+		(:first (has-wood ?sw ?iwq) (call < ?iwq ?wq) 
+			(wood-price ?sw ?p) (is-settled ?sw (call cat ?sw sawmill) ?from)
+			(~receive-cash ?sw ?a (call * ?wq ?p) wood) 
+			(~is-transportable wood ?from ?to))
+		((make-wood (call - ?wq ?iwq)) (!sell-wood ?wq))
+	)
+	
+	(:operator (!settle ?n ?h ?p)
+		()
+		()
+		((is-settled ?n ?h ?p))
+	)
+
+	(:operator (!pay ?a ?s ?p)
+		((has-cash ?f ?c))
+		((has-cash ?f ?c))
+		((has-cash ?f (call - ?c ?p)))
+	)
+		
+	(:method (settle ?n)
+		(:first (is-built sawmill (call cat ?n sawmill) ?n ?p)
+			(is-settled ?n (call cat ?n sawmill) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n sawmill) ?p))
+			(~is-built sawmill (call cat ?n sawmill) ?n ?p))
+		((!settle ?n (call cat ?n sawmill) ?p))
+		
+		(:first (~is-built sawmill (call cat ?n sawmill) ?n ?p))
+		((!settle ?n (call cat ?n sawmill) ?p))
+	)
+		
+	(:method (settle ?n ?p)
+		(:first (is-built sawmill (call cat ?n sawmill) ?n ?p)
+			(is-settled ?n (call cat ?n sawmill) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n sawmill) ?p))
+			(~is-built sawmill (call cat ?n sawmill) ?n ?p))
+		((!settle ?n (call cat ?n sawmill) ?p))
+		
+		(:first (~is-built sawmill (call cat ?n sawmill) ?n ?p))
+		((!settle ?n (call cat ?n sawmill) ?p))
+		
+	)
+		
+	(:method (do-plan)
+		
+		;; some agent wants hams and the settler is already settled
+		(:first (goal (has-wood ?a ?wq))
+			(goal (is-available wood ?a ?to)) 
+			(agent-name ?n)
+			(is-settled ?n (call cat ?n sawmill) ?p))
+		((sell-wood ?a ?wq ?to))
+		
+		;; some agent wants hams but the settler is not already settled
+		(:first (goal (has-wood ?a ?wq))
+			(goal (is-available wood ?a ?to)) 
+			(agent-name ?n))
+		((settle ?n) (sell-wood ?a ?wq ?to))
+				
+		;; some agent want to settled this agent
+		(:first (agent-name ?n)
+			(goal (is-settled ?n (call cat ?n sawmill) ?p)))
+		((settle ?n ?p))
+		
+		;; the settlers must pay some agent for tree-trunk
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s tree-trunk)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))		
+		
+		;; the settlers must pay some agent for a sawmill
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s sawmill)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+	)
+	
+	;; classical axioms
+	
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+	
+    (:- (same ?x ?x) ())
+	
+	;; classical needed methods and operators
+	
+	(:operator (!do-nothing) () () ())
+	
+	(:operator (!assert ?g)	() () ?g)
+		
+	(:method (achieve-goals ?goals)
+        ()
+    	((assert-goals ?goals nil) (do-plan))
+	)
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+		()
+		((assert-goals ?goals (list (goal ?goal) . ?out)))
+	)
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))	
+))
+
+(defproblem sawmill-worker-problem sawmill-worker
+ 	(
+		;; static properties
+		(agent-name sawmill-worker)
+		(is-built sawmill sawmill-worker-sawmill sawmill-worker forest-village)
+		(is-settled sawmill-worker sawmill-worker-sawmill forest-village)
+		(wood-price sawmill-worker 1)
+		
+		;; consumable resources
+		(has-tree-trunk sawmill-worker 2)
+		(has-wood sawmill-worker 1)
+		(has-cash sawmill-worker 2)
+		
+		;; non-consumable resources
+		(not (has-tool sawmill-worker saw))
+		
+	)
+	((achieve-goals (list 
+		//(is-settled sawmill-worker sawmill-worker-sawmill forest-village)
+		(has-wood tool-maker 2)
+		(is-available wood tool-maker shop-village)
+		//(receive-cash construction-worker sawmill-worker 2 wood)
+		//(receive-cash tool-maker sawmill-worker 2 wood)
+		//(receive-cash construction-worker sawmill-worker 2 wood)
+	))
+))

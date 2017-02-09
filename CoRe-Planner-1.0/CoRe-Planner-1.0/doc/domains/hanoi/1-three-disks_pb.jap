@@ -1,0 +1,14 @@
+
+(defproblem three-disks hanoi
+	(
+		(hand-empty)
+		(position A r1) (position B r1) (position C r1)
+		(is-empty r2) (is-empty r3)
+		(is-smaller A B) (is-smaller A C) (is-smaller B C)
+		(on A B) (on B C)
+		(on-top A) (on-ground C)
+	)
+	;;((move-disk C r1 r2 r3))
+	((clean r3 r2 r1))
+
+)

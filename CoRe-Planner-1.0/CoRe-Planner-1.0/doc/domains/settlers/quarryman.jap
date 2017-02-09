@@ -1,0 +1,180 @@
+;;------------------------------------------------------------------------------
+;; This file describes the skills and the beliefs of a quarryman agent. 
+;;
+;; A quarryman agent can make the following assumptions:
+;;	- (receive-cash ?agent1 ?agent2 ?cash stone)
+;;    (is-transportable stone ?from ?to)
+;;	- (has-tool ?agent pick)
+;;    (is-available pick ?agent ?place)
+;;	- (is-built quarryman-hut ?hut-name ?agent ?place)
+;;
+;; A quarryman agent can reach the following goals:
+;; 	- (has-stone ?agent ?quantity)
+;;    (is-available stone ?agent ?place)
+;;	- (is-settled ?agent ?hut-name ?place)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash pick)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash quarryman-hut)
+;;------------------------------------------------------------------------------
+
+(defdomain quarryman (
+										
+	(:operator (!extract-stone-block ?sbq)
+		((has-stone-block ?qm ?isbq))
+		((has-stone-block ?qm ?isbq))
+		((has-stone-block ?qm (call + ?isbq ?sbq)))
+	)
+		
+	(:method (extract-stone-block ?qm ?q)		
+		(:first (has-tool ?qm pick))
+		((!extract-stone-block ?q))
+		
+		(:first (is-settled ?qm (call cat ?qm hut) ?loc)
+			(~has-tool ?qm pick)
+			(~is-available pick ?qm ?loc))
+		((!extract-stone-block ?q))		
+	)
+		
+	(:operator (!sell-stone-block ?sbq)
+		((has-stone-block ?qm ?isbq) (has-cash ?qm ?icq) (stone-block-price ?qm ?p))
+		((has-stone-block ?qm ?isbq) (has-cash ?qm ?icq))
+		((has-stone-block ?qm (call - ?isbq ?sbq)) (has-cash ?qm (call + ?icq (call * ?sbq ?p))))
+	)
+		
+	(:method (sell-stone-block ?a ?sbq ?to)
+		(:first (has-stone-block ?qm ?isbq) (call >= ?isbq ?sbq) 
+			(stone-block-price ?qm ?p) (is-settled ?qm (call cat ?qm hut) ?from)
+			(~receive-cash ?qm ?a (call * ?sbq ?p) stone-block) 
+			(~is-transportable stone-block ?from ?to))
+		((!sell-stone-block ?sbq))
+		
+		(:first (has-stone-block ?qm ?isbq) (call < ?isbq ?sbq) 
+			(stone-block-price ?qm ?p) (is-settled ?qm (call cat ?qm hut) ?from)
+			(~receive-cash ?qm ?a (call * ?sbq ?p) stone-block)
+			(~is-transportable stone-block ?from ?to))
+		((extract-stone-block ?qm (call - ?sbq ?isbq)) (!sell-stone-block  ?sbq))
+	)
+
+	(:operator (!pay ?a ?s ?p)
+		((has-cash ?f ?c))
+		((has-cash ?f ?c))
+		((has-cash ?f (call - ?c ?p)))
+	)
+	
+	(:operator (!settle ?n ?h ?p)
+		()
+		()
+		((is-settled ?n ?h ?p))
+	)
+		
+	(:method (settle ?n)
+		(:first (is-built quarryman-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built quarryman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+		(:first (~is-built quarryman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+	)
+		
+	(:method (settle ?n ?p)
+		(:first (is-built quarryman-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built quarryman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+		(:first (~is-built quarryman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+	)
+		
+	(:method (do-plan)
+		
+		;; some agent wants stone block and the settler is already settled
+		(:first (goal (has-stone-block ?a ?sbq)) 
+			(goal (is-available stone-block ?a ?to))
+			(agent-name ?n)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((sell-stone-block ?a ?sbq ?to))
+		
+		;; some agent wants stone block but the settler is not already settled
+		(:first (goal (has-stone-block ?a ?sbq))
+			(goal (is-available stone-block ?a ?to))
+			(agent-name ?n))
+		((settle ?n) (sell-stone-block ?a ?sbq ?to))
+				
+		;; some agent want to settled this agent
+		(:first (agent-name ?n)
+			(goal (is-settled ?n (call cat ?n hut) ?p)))
+		((settle ?n ?p))
+		
+		;; the settlers must pay some agent for a pick
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s pick)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+		;; the settlers must pay some agent for a quarryman-hut
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s quarryman-hut)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+	)
+	
+	;; classical axioms
+	
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+	
+    (:- (same ?x ?x) ())
+
+	;; classical needed methods and operators
+	
+	(:operator (!do-nothing) () () ())
+	
+	(:operator (!assert ?g)	() () ?g)
+		
+	(:method (achieve-goals ?goals)
+        ()
+    	((assert-goals ?goals nil) (do-plan))
+	)
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+		()
+		((assert-goals ?goals (list (goal ?goal) . ?out)))
+	)
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))
+		
+))
+
+(defproblem quarryman-problem quarryman
+ 	(
+		;; static properties
+		(agent-name quarryman)
+		//(has-tool quarryman pick)
+		(is-built quarryman-hut quarryman-hut quarryman montain-village)
+		//(is-settled quarryman quarryman-hut montain-village)
+		(stone-block-price quarryman 1)
+		
+		;; dynamic properties
+		(has-stone-block quarryman 3)
+		(has-cash quarryman 2)
+		
+	)
+	((achieve-goals (list 
+		//(is-settled quarryman quarryman-hut montain-village)
+		(has-stone-block construction-worker 4)
+		(is-available stone-block construction-worker shop-village)
+		//(receive-cash tool-maker quarryman 2 pick)
+		//(receive-cash construction-worker quarryman 2 quarryman-hut)
+	))
+))

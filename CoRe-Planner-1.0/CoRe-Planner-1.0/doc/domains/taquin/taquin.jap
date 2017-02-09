@@ -1,0 +1,107 @@
+(defdomain taquin (
+
+	;; basic operators
+		
+	(:operator (!up ?x ?y ?tile)
+		()
+        ((on ?x ?y ?tile) (on ?x (call - ?y 1) 0))
+        ((on ?x ?y 0) (on ?x (call - ?y 1) ?tile))
+	)
+
+	(:operator (!down ?x ?y ?tile)
+		()
+        ((on ?x ?y ?tile) (on ?x (call + ?y 1) 0))
+        ((on ?x ?y 0) (on ?x (call + ?y 1) ?tile))
+	)
+
+	(:operator (!left ?x ?y ?tile)
+		()
+        ((on ?x ?y ?tile) (on (call - ?x 1) ?y 0))
+        ((on ?x ?y 0) (on (call - ?x 1) ?y ?tile))
+	)
+
+	(:operator (!right ?x ?y ?tile)
+		()
+		((on ?x ?y ?tile) (on (call + ?x 1) ?y 0))
+        ((on ?x ?y 0) (on (call + ?x 1) ?y ?tile))
+	)
+
+	;; main method
+
+	(:method (do-plan ?i ?state ?nomove ?goals)
+		
+		;; build the current state and goals to reached
+		(:first (on ?x ?y ?i) (size ?s) (call <= ?i ?s) (goal (on ?z ?t ?i)))
+		((do-plan (call + ?i 1) 
+			(list (on ?x ?y ?i) . ?state)
+			?nomove
+			(list (on ?z ?t ?i) . ?goals)))
+		
+		;; goals reached	
+		(:first (call member ?state (list ?goals)))
+		()	
+		
+		;; move the a tile
+		(:first (not (call member ?state ?nomove)))
+			((move-tile ?state (list ?state . ?nomove) ?goals))						
+	)	
+		
+	(:method (move-tile ?state ?nomove ?goals) 
+		
+		;; move up a tile 
+		((on ?x ?y ?tile) (misplaced ?x ?y ?tile) (moveable ?x ?y ?tile up))
+		((!up ?x ?y ?tile) (do-plan 0 nil ?nomove nil))
+		
+		;; move down a tile
+		((on ?x ?y ?tile) (misplaced ?x ?y ?tile) (moveable ?x ?y ?tile down))
+		((!down ?x ?y ?tile) (do-plan 0 nil ?nomove nil))
+		
+		;; move left a tile
+		((on ?x ?y ?tile) (misplaced ?x ?y ?tile) (moveable ?x ?y ?tile left))
+		((!left ?x ?y ?tile) (do-plan 0 nil ?nomove nil))
+		
+		;; move right a tile
+		((on ?x ?y ?tile) (misplaced ?x ?y ?tile) (moveable ?x ?y ?tile right))
+		((!right ?x ?y ?tile) (do-plan 0 nil ?nomove nil))
+				
+	)
+	 
+	(:- (misplaced ?x ?y ?tile) 
+		((not (goal (on ?x ?y ?tile))))
+	)
+
+	(:- (moveable ?x ?y ?tile ?d)
+		;; test to move up
+		((same ?d up) (different ?tile 0) (on ?x (call - ?y 1) 0))
+		;; test to move down
+		((same ?d down) (different ?tile 0) (on ?x (call + ?y 1) 0))
+		;; test to move left
+		((same ?d left) (different ?tile 0) (on (call - ?x 1) ?y 0))
+		;; test to move right
+		((same ?d right) (different ?tile 0) (on (call + ?x 1) ?y 0))
+	)
+
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+
+	(:- (same ?x ?x) ())
+
+	;; book-keeping methods & ops, to keep track of what needs to be done
+    
+    (:operator (!assert ?g)
+               ()
+               ()
+               ?g)
+    
+    (:method (achieve-goals ?goals)
+		()
+        ((assert-goals ?goals nil) (do-plan 0 nil nil nil)))
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+             ()
+             ((assert-goals ?goals (list (goal ?goal) . ?out))))
+
+    (:method (assert-goals nil ?out)
+             ()
+             ((!assert ?out)))	
+    
+))

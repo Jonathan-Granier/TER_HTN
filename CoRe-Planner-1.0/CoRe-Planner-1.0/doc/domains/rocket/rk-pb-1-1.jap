@@ -1,0 +1,11 @@
+(defproblem rocket-problem rocket
+ 	(
+		(rocket-at r1 city1)
+		(hasfuel r1)
+		(container-at b1 city1)
+		 
+	)
+	((achieve-goals (list 
+		(container-at b1 city2)
+	))
+))

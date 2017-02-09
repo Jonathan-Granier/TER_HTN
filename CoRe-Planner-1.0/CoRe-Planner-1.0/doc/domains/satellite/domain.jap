@@ -1,0 +1,131 @@
+(defdomain satellite
+   (
+
+    (:operator  (!turn_to ?s ?d_new ?d_prev)
+                (
+                  (satellite ?s) (direction ?d_new) (direction ?d_prev)
+                  (pointing ?s ?d_prev)
+                )
+                (
+                  (pointing ?s ?d_prev)
+                ) 
+                (
+                  (pointing ?s ?d_new)
+                )
+    )
+
+    (:operator  (!switch_on ?i ?s)
+                (
+                  (satellite ?s) (instrument ?i)
+                  (on_board ?i ?s) (power_avail ?s)
+                )
+                (
+                  (calibrated ?i) (power_avail ?s)
+                ) 
+                (
+                  (power_on ?i)
+                )
+    )
+
+    (:operator  (!switch_off ?i ?s)
+                (
+                  (satellite ?s) (instrument ?i)
+                  (on_board ?i ?s) (power_on ?i) 
+                )
+                (
+                  (power_on ?i) 
+                ) 
+                (
+                  (power_avail ?s)
+                )
+    )
+
+    (:operator  (!calibrate ?s ?i ?d)
+                (
+                  (satellite ?s) (instrument ?i) (direction ?d)
+                  (on_board ?i ?s) (calibration_target ?i ?d)
+                  (pointing ?s ?d) (power_on ?i)
+                )
+                (
+                ) 
+                (
+                  (calibrated ?i)
+                )
+    )
+
+    (:operator  (!take_image ?s ?d ?i ?m)
+                (
+                  (satellite ?s) (instrument ?i) (direction ?d) (mode ?m)
+                  (calibrated ?i) (on_board ?i ?s) (supports ?i ?m)
+                  (power_on ?i) (pointing ?s ?d)
+                )
+                () 
+                (
+                  (have_image ?d ?m)
+                )
+    )
+   
+
+;------------------------------------------------------------------
+;               Methods
+;------------------------------------------------------------------
+
+(:method  (do_mission ?d ?m)
+  Case1     ((direction ?d) (mode ?m) (satellite ?s) (instrument ?i))
+            (
+              (do_prepare ?s ?i ?d)
+              (!take_image ?s ?d ?i ?m)
+            ) 
+)
+
+(:method  (do_prepare ?s ?i ?d)
+  Case1     ((satellite ?s) (instrument ?i) (direction ?d) (direction ?d2))
+            (
+              (do_switching ?s ?i)
+              (do_calibration ?s ?i ?d2)
+              (do_turning ?s ?d)
+            ) 
+)
+
+(:method  (do_switching ?s ?i)
+  Case1     ((satellite ?s) (instrument ?i) (power_on ?i))
+            ()
+  Case2     ((satellite ?s) (instrument ?i) (on_board ?i ?s) (power_avail ?s))
+            (
+              (!switch_on ?i ?s)
+            )
+  Case3     ((satellite ?s) (instrument ?i) (on_board ?i ?s) (on_board ?other_i ?s) )
+            (
+              (make_power_available ?s ?other_i)
+              (!switch_on ?i ?s)
+            ) 
+)
+
+(:method  (do_calibration ?s ?i ?d)
+  Case1     ((satellite ?s) (instrument ?i) (direction ?d) (calibrated ?i))
+            ()
+  Case2     ((satellite ?s) (instrument ?i) (direction ?d) )
+            (
+              (do_turning ?s ?d)
+              (!calibrate ?s ?i ?d)
+            )
+)
+
+(:method  (make_power_available ?s ?other_i)
+  Case1     ((satellite ?s) (instrument ?other_i) (power_on ?other_i))
+            (
+              (!switch_off ?other_i ?s)
+            )
+)
+
+(:method  (do_turning ?s ?d)
+  Case1     ((satellite ?s) (direction ?d) (pointing ?s ?d))
+            ()
+  Case2     ((satellite ?s) (direction ?d) (pointing ?s ?other_d))
+            (
+              (!turn_to ?s ?d ?other_d)
+            )
+)
+
+)
+)

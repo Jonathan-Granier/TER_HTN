@@ -1,0 +1,183 @@
+;;------------------------------------------------------------------------------
+;; This file describes the skills and the beliefs of a fishman agent. 
+;;
+;; A fishman agent can make the following assumptions:
+;;	- (receive-cash ?agent1 ?agent2 ?cash fish)
+;;    (is-transportable fish ?from ?to)
+;;	- (has-tool ?agent fishing-pole) 
+;;    (is-available fishing-pole ?agent ?place)
+;;	- (is-built fishman-hut ?hut-name ?agent ?place)
+;;
+;; A fishman agent can reach the following goals:
+;; 	- (has-fish ?agent ?quantity) 
+;;    (is-available fish ?agent ?place)
+;;	- (is-settled ?agent ?hut-name ?place)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash fishing-pole)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash fishman-hut)
+;;------------------------------------------------------------------------------
+
+(defdomain fishman (
+										
+	(:operator (!catch-fish ?fq)
+		((has-fish ?fm ?ifq))
+		((has-fish ?fm ?ifq))
+		((has-fish ?fm (call + ?ifq ?fq)))
+	)
+		
+	(:method (catch-fish ?fm ?fq)
+		
+		(:first (has-tool ?fm fishing-pole))
+		((!catch-fish ?fq))
+		
+		(:first (is-settled ?fm (call cat ?fm hut) ?loc)
+			(~has-tool ?fm fishing-pole)
+			(~is-available fishing-pole ?fm ?loc))
+		((!catch-fish ?fq))
+	)
+		
+	(:operator (!sell-fish ?fq)
+		((has-fish ?fm ?ifq) (has-cash ?fm ?icq) (fish-price ?fm ?p))
+		((has-fish ?fm ?ifq) (has-cash ?fm ?icq))
+		((has-fish ?fm (call - ?ifq ?fq)) (has-cash ?fm (call + ?icq (call * ?fq ?p))))
+	)
+		
+	(:method (sell-fish ?a ?fq ?to)
+		(:first (has-fish ?fm ?ifq) (call >= ?ifq ?fq) 
+			(fish-price ?fm ?p) (is-settled ?fm (call cat ?fm hut) ?from)
+			(~receive-cash ?fm ?a (call * ?fq ?p) fish) 
+			(~is-transportable fish ?from ?to))
+		((!sell-fish ?fq))
+		
+		(:first (has-fish ?fm ?ifq) (call < ?ifq ?fq) 
+			(fish-price ?fm ?p) (is-settled ?fm (call cat ?fm hut) ?from)
+			(~receive-cash ?fm ?a (call * ?fq ?p) fish)
+			(~is-transportable fish ?from ?to))
+		((catch-fish ?fm (call - ?fq ?ifq)) (!sell-fish ?fq))
+	)
+
+	(:operator (!pay ?a ?s ?p)
+		((has-cash ?f ?c))
+		((has-cash ?f ?c))
+		((has-cash ?f (call - ?c ?p)))
+	)
+	
+	(:operator (!settle ?n ?h ?p)
+		()
+		()
+		((is-settled ?n ?h ?p))
+	)
+		
+	(:method (settle ?n)
+		(:first (is-built fishman-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built fishman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+		(:first (~is-built fishman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+	)
+		
+	(:method (settle ?n ?p)
+		(:first (is-built fishman-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built fishman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+		(:first (~is-built fishman-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+	)
+		
+	(:method (do-plan)
+		
+		;; some agent wants fish and the settler is already settled
+		(:first (goal (has-fish ?a ?fq)) 
+			(goal (is-available fish ?a ?to))
+			(agent-name ?n)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((sell-fish ?a ?fq ?to))
+		
+		;; some agent wants fish but the settler is not already settled
+		(:first (goal (has-fish ?a ?fq))
+			(goal (is-available fish ?a ?to))
+			(agent-name ?n))
+		((settle ?n) (sell-fish ?a ?fq ?to))
+				
+		;; some agent want to settled this agent
+		(:first (agent-name ?n)
+			(goal (is-settled ?n (call cat ?n hut) ?p)))
+		((settle ?n ?p))
+		
+		;; the settlers must pay some agent for a fishing rod
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s fishing-pole)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))		
+		
+		;; the settlers must pay some agent for a fishman hut
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s fishman-hut)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))		
+		
+	)
+	
+	;; classical axioms
+	
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+	
+    (:- (same ?x ?x) ())
+
+
+	;; classical needed methods and operators
+	
+	(:operator (!do-nothing) () () ())
+	
+	(:operator (!assert ?g) () () ?g)
+		
+	(:method (achieve-goals ?goals)
+        ()
+    	((assert-goals ?goals nil) (do-plan))
+	)
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+		()
+		((assert-goals ?goals (list (goal ?goal) . ?out)))
+	)
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))
+		
+))
+
+(defproblem fishman-problem fishman
+ 	(
+		;; static properties
+		(agent-name fishman)
+		//(not (has-tool fishman fishing-pole))
+		(is-built fishman-hut fishman-hut fishman lake-village)
+		//(is-settled fishman fishman-hut lake-village)
+		(fish-price fishman 1)
+		
+		;; dynamic properties
+		(has-fish fishman 3)
+		(has-cash fishman 2)
+		
+	)
+	((achieve-goals (list 
+		//(is-settled fishman fishman-hut lake-village)
+		(has-fish miner 4)
+		(is-available fish miner montain-village))
+		//(receive-cash miner fishman 2 fishing-pole)
+		//(receive-cash construction-worker fishman 2 fishman-hut)
+	))
+))
