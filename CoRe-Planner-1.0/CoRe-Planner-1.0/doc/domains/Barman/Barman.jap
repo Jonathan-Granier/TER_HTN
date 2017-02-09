@@ -3,7 +3,7 @@
 
 				(:operator (!grasp ?h ?c)
 					(
-						(hand ?h) (container ?c)	
+						(hand ?h) 
 						(ontable ?c) 
 						(handempty ?h) 
 					)
@@ -18,7 +18,7 @@
 
 				(:operator (!leave ?h ?c)
 					(
-					(hand ?h) (container ?c)
+					(hand ?h)
 					(holding ?h ?c)
 					)
 					((holding ?h ?c))
@@ -28,7 +28,7 @@
 
 				(:operator (!fill-shot ?s ?i ?h1 ?h2 ?d)
 					(
-						(shot ?s) (ingredient ?i) (hand ?h1) (hand ?h2) (?d dispenser)
+						(shot ?s) (ingredient ?i) (hand ?h1) (hand ?h2) (dispenser ?d )
 						(holding ?h1 ?s)
 	                    (handempty ?h2)
 	                    (dispenses ?d ?i)
@@ -47,7 +47,7 @@
 
 				(:operator (!refill-shot ?s ?i ?h1 ?h2 ?d)
 					(
-						(shot ?s) (ingredient ?i) (hand ?h1) (hand ?h2) (?d dispenser)
+						(shot ?s) (ingredient ?i) (hand ?h1) (hand ?h2) (dispenser ?d)
 						(holding ?h1 ?s)
 	                    (handempty ?h2)
 	                    (dispenses ?d ?i)
@@ -65,7 +65,7 @@
 
 				(:operator (!empty-shot ?h ?p ?b)
 					(
-						(hand ?h) (shot ?p) (beverage ?b)
+						(hand ?h) (shot ?p)
 						(holding ?h ?p)
 						(contains ?p ?b)
 					)
@@ -78,7 +78,7 @@
 				)
 				(:operator (!clean-shot ?s ?b ?h1 ?h2)
 					(
-						(shot ?s) (beverage ?b) (hand ?h1) (hand ?h2)
+						(shot ?s) (hand ?h1) (hand ?h2)
 						(holding ?h1 ?s)
                         (handempty ?h2)	   		      
                         (empty ?s)
@@ -99,7 +99,7 @@
                         (empty ?d)
                         (clean ?d)                              
                         (shaker-level ?d ?l)
-                        (next ?l ?l1))
+                        (next ?l ?l1)
 					)
 					(
 						(contains ?s ?i)
@@ -155,7 +155,7 @@
 				)
 				(:operator (!clean-shaker ?h1 ?h2 ?s)
 					(
-						(hand ?h1) (hand ?2) (shaker ?s)
+						(hand ?h1) (hand ?h2) (shaker ?s)
 						(holding ?h1 ?s)
                         (handempty ?h2)
                         (empty ?s)
@@ -190,7 +190,7 @@
 				)
 				(:operator (!pour-shaker-to-shot ?b ?d ?h ?s ?l ?l1)
 					(
-						(beverage ?b) (shot ?d) (hand ?h) (shaker ?s) (level ?l) (level ?l1)
+						(shot ?d) (hand ?h) (shaker ?s) (level ?l) (level ?l1)
 						(holding ?h ?s)
 	                    (shaked ?s)
 	                    (empty ?d)
@@ -228,9 +228,10 @@
 	    ( handempty ?h)
 	)
 	(
+		
 		(get_first_ingredient ?c ?h)
-		(get_second_ingredient ?c ?h)
-		(serve_shot ?sh ?c)
+		;(get_second_ingredient ?c ?h)
+		;(serve_shot ?sh ?c)
 	)
 
 )
@@ -255,13 +256,19 @@
 	(
 		( cocktail ?c )
 		( hand ?h1 )
+		( hand ?h2 )
+		( shaker ?s )
+		( level ?l0 )
+		( level ?l1 )
 		( cocktail-part1 ?c ?i)
         ( empty ?sh)
+        ( next ?l0 ?l1)
 	)
 	(
-		(do_fill_shot ?sh ?i ?h1)
-        (pour-shot-to-clean-shaker ?sh ?i ?s ?h1 ?l0 ?l1)
-        (clean-shot ?sh ?i ?h1 ?h2)
+		
+		(do_fill_shot ?sh ?i ?h1)	
+       	(!pour-shot-to-clean-shaker ?sh ?i ?s ?h1 ?l0 ?l1)
+        ;(clean-shot ?sh ?i ?h1 ?h2)
 
 	)
 
@@ -276,6 +283,7 @@
 	)
 	(
 		(fill-shot ?sh ?i ?h1 ?h2 ?d)
+
         (!pour-shot-to-used-shaker ?sh ?i ?s ?h1 ?l0 ?l1)
         (!leave ?h1 ?sh)
 
@@ -313,14 +321,12 @@
 (:method (do_clean_shot ?s ?b ?h1)
 Case1	(
 			(shot ?s)
-			(beverage ?b)
 			(hand ?h1)
 			(clean ?s)
 		)
 		()
 Case2	(
 			(shot ?s)
-			(beverage ?b)
 			(hand ?h1)
 		)
 		(
@@ -341,6 +347,7 @@ Case1	(
 			(shot ?sh)
 			(ingredient ?i)
 			(hand ?h1)
+			(hand ?h2)
 			( used ?sh ?i)
             ( dispenses ?d ?i)
 		)
@@ -353,6 +360,7 @@ Case2	(
 			(shot ?sh)
 			(ingredient ?i)
 			(hand ?h1)
+			(hand ?h2)
 			( clean ?sh)
             ( dispenses ?d ?i)
 
@@ -366,13 +374,14 @@ Case3	(
 			(shot ?sh)
 			(ingredient ?i)
 			(hand ?h1)
+			(hand ?h2)
 			( used ?sh ?b )
             ( dispenses ?d ?i)
 		)
 		(
 			(!grasp ?h1 ?sh)
-            (!clean-shot ?sh ?b ?h1 ?h2)
-            (!fill-shot ?sh ?i ?h1 ?h2 ?d)
+           	(!clean-shot ?sh ?b ?h1 ?h2)
+           	(!fill-shot ?sh ?i ?h1 ?h2 ?d)
 		)
 
 

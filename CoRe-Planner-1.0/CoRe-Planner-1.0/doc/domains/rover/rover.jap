@@ -121,7 +121,10 @@ Case3    ((waypoint ?mid)
           (can_traverse ?rover ?from ?mid)
           (not (visited ?mid))
          )
-         ((!navigate ?rover ?from ?mid) (!visit ?mid) (navigate ?rover ?mid ?to) (!unvisit ?mid))
+         ((!navigate ?rover ?from ?mid) 
+          (!visit ?mid) 
+          (navigate ?rover ?mid ?to) 
+          (!unvisit ?mid))
 )
 
 ;       Collection and transmission of samples              
