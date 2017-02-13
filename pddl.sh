@@ -5,6 +5,7 @@ function aide()
 	echo "Usage : ./pddl.sh <Option> <Nom du Probleme> <Numero du probeme>"
 	echo " -h 	:		version HTN"
 	echo " -j 	:		version PDDL"
+	echo " -c   :		version Core_HTN"
 	echo " -v 	:		test un plan"
 	echo " --help : 	affiche l'aide"
 }
@@ -34,6 +35,9 @@ elif [ $1 = "-v" ]; then
 	CHEMIN=seq-agl/$2
 	./VAL-master/validate $CHEMIN/domain.pddl $CHEMIN/p$3.pddl Plan/$2/plan_$3.pddl 
 
+elif [ $1 = "-c" ]; then
+	CHEMIN=CoRe-Planner-1.0/CoRe-Planner-1.0
+	java -jar $CHEMIN/lib/planner_Vtest.jar -d $CHEMIN/doc/domains/$2/$2.jap -p $CHEMIN/doc/domains/$2/pb$3.jap
 else
 	aide
 fi

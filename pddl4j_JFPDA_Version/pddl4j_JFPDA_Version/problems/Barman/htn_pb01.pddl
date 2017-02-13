@@ -1,6 +1,6 @@
 (define (problem prob)
 (:domain barman)
-;(:requirements :strips :typing :negative-preconditions :htn :equality)
+(:requirements :strips :typing :negative-preconditions :htn :equality)
 
 
 

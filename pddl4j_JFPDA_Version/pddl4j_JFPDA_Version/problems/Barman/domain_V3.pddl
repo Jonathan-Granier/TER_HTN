@@ -393,9 +393,9 @@
         :parameters(?s - shot ?b - beverage ?h1 - hand)
         :expansion (
 
-                        (tag t1 (grasp ?h ?s))
+                        (tag t1 (grasp ?h1 ?s))
                         (tag t2 (clean-shot ?s ?b ?h1 ?h2))
-                        (tag t3 (leave ?h ?s))
+                        (tag t3 (leave ?h1 ?s))
 
                     )
         :constraints(

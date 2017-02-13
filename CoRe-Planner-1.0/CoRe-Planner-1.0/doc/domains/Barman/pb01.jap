@@ -129,12 +129,7 @@
     (cocktail-part1 cocktail11 ingredient3)
     (cocktail-part2 cocktail11 ingredient1)
 
-    ;(holding left shot1)
-    ;(contains shot1 ingredient4)
-    ;(empty shaker1)
-    ;(clean shaker1)                              
-    ;(shaker-level shaker1 l0)
-    ;(next l0 l1)
+
 
 
   )
@@ -143,22 +138,21 @@
   ;;;
 (
            
-            ;(!pour-shot-to-clean-shaker shot1 ingredient4 shaker1 left l0 l1)
-            ;(do_cocktail_in_shot shot1 cocktail4)
-            (get_first_ingredient cocktail4 left)
-            ;(do_cocktail_in_shot shot2 cocktail6)
-            ;(do_cocktail_in_shot shot3 cocktail11)
-            ;(do_cocktail_in_shot shot4 cocktail8)
-            ;(do_cocktail_in_shot shot5 cocktail7)
-            ;(do_cocktail_in_shot shot6 cocktail9)
-            ;(do_cocktail_in_shot shot7 cocktail2)
-            ;(do_cocktail_in_shot shot8 cocktail3)
-            ;(do_cocktail_in_shot shot9 cocktail5)
-            ;(do_cocktail_in_shot shot10 cocktail1)
-            ;(do_cocktail_in_shot shot11 cocktail10)
-            ;(do_cocktail_in_shot shot12 cocktail2)
-            ;(do_cocktail_in_shot shot13 ingredient2)
-            ;(do_cocktail_in_shot shot14 ingredient3)
+            
+            (do_cocktail_in_shot shot1 cocktail4)
+            (do_cocktail_in_shot shot2 cocktail6)
+            (do_cocktail_in_shot shot3 cocktail11)
+            (do_cocktail_in_shot shot4 cocktail8)
+            (do_cocktail_in_shot shot5 cocktail7)
+            (do_cocktail_in_shot shot6 cocktail9)
+            (do_cocktail_in_shot shot7 cocktail2)
+            (do_cocktail_in_shot shot8 cocktail3)
+            (do_cocktail_in_shot shot9 cocktail5)
+            (do_cocktail_in_shot shot10 cocktail1)
+            (do_cocktail_in_shot shot11 cocktail10)
+            (do_cocktail_in_shot shot12 cocktail2)
+            (do_cocktail_in_shot shot13 ingredient2)
+            (do_cocktail_in_shot shot14 ingredient3)
 
  )
 )
