@@ -1,2 +1,6 @@
-Barman Core 
-Erreur seg dans le pb 6 14 15 
+Résumé du travail effectué :
+	
+	Traduction du Probleme de Barman en HTN(djalil) et en HTN_Core (domaine et probleme)
+	Mise en place d'un script qui :
+		-execute un probleme, parse et stock le plan obtenu  (en PDDL, HTN ou HTN_Core)
+		-Verifie les plans obtenu grace à VAL-master a partir d'un plan et de la version PDDL du probleme (domaine + probleme) 
