@@ -58,10 +58,17 @@
 
 ;;; Methods
 ;;;;;;;;;;;;;;;;;
-	
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 	Mettre un block sur un autre
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 	;; Mettre X sur Y 
 	;; Cas ou X est Y 
 	
+
+	;; TODO a revoir peut-etre , si il faut mettre un pile de 2 block sur le 
 	(:method do_put_on
 		:parameters (?x - block ?y - block)
 		:expansion (
@@ -78,6 +85,30 @@
 
 	)
 
+;; Cas ou X est sur Y mais X doit aller sur la table
+	(:method do_put_on
+		:parameters (?x - block ?y - block)
+		:expansion (
+						(tag t1 (do_clear ?x))
+				    	(tag t2 (do_clear ?y))
+				    	(tag t3 (do_on_table ?y))
+				    	(tag t4 (do_move ?x ?y))
+					)
+		:constraints
+					( and
+						(before 
+							( and 
+								(on ?x ?y)
+								( not (ontable ?y))
+							)
+						t1
+						)
+					)
+
+
+	)
+
+
 
 	;; Cas ou X n'est pas sur Y
 	(:method do_put_on
@@ -85,7 +116,8 @@
 		:expansion	(
 						(tag t1 (do_clear ?x))
 				    	(tag t2 (do_clear ?y))
-				    	(tag t3 (do_move ?x ?y))
+				    	(tag t3 (do_on_table ?y))
+				    	(tag t4 (do_move ?x ?y))
 			    	)
 		:constraints
 					( and 
@@ -99,7 +131,7 @@
 			     	  				(handempty) 
 			     	  				(clear ?x)
 			     	  				)
-			     	  				t1 t3
+			     	  				t1 t2
 			     	  	)
 			     	  	( between ( and 
 			     	  				(handempty) 
@@ -111,7 +143,52 @@
 			     	)
 
 	)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;		 Mettre sur la table 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 2 Choix en fonction du resultat attendu
+	;; Met sur la table le block x qui n'est pas déjà sur la table
+	(:method do_on_table
+		:parameters (?x - block)
+		:expansion	(
+						
+						(tag t1 (unstack ?x ?y))
+						(tag t2 (put-down ?x))
+					)
+		:constraints
+					( and 
+						( before
+							( and 
+								(clear ?x)
+								(handempty)
+								( not (ontable ?x))
+							)
+							t1
+						)
+					)
+	)
 
+	;; Ne fait rien 
+	(:method do_on_table
+		:parameters (?x - block)
+		:expansion	(
+						(tag t1 (nop))
+					)
+		:constraints
+					( and 
+						( before
+							( and 
+								(clear ?x)
+							)
+							t1
+						)
+					)
+	)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;	Bouger un cube sur un autre
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Bouge un cube X sur Y
 	;; Si X est sur la table
@@ -125,14 +202,14 @@
 		:constraints
 					( and 
 			  			( before
-			  				(and  
+			  				( and  
 
 				  			(clear ?x)
 				  			(clear ?y)
 				  			(handempty)
 				  			(ontable ?x)
 				  			)
-				  		t1
+				  			t1
 				  		)
 			     	)
 
@@ -158,6 +235,11 @@
 			  			)
 			     	)
 	)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;		 Nettoie un cube
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ;; Nettoie un Cube X
 ;; cas ou X est nettoyé
@@ -187,6 +269,7 @@
 						
 						(tag t1 (do_clear ?y))
 						(tag t2 (unstack ?y ?x))
+						(tag t3 (put-down ?y))
 					)
 		:constraints
 					(

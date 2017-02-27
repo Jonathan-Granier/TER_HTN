@@ -51,7 +51,7 @@ elif [ $1 = "-h" ]; then
 
 
 elif [ $1 = "-p" ]; then
-	java -javaagent:$JAR_PDDL -server -Xms2048m -Xmx2048m fr.uga.pddl4j.planners.hsp.HSP -o $CHEMIN_PDDL/$2/domain.pddl -f $CHEMIN_PDDL/$2/p$3.pddl
+	java -javaagent:$JAR_PDDL -server -Xms2048m -Xmx2048m fr.uga.pddl4j.planners.hsp.HSP -o $CHEMIN_PDDL/domain.pddl -f $CHEMIN_PDDL/p$3.pddl
 
 elif [ $1 = "-vH" ]; then
 	./$VAL $CHEMIN_PDDL/domain.pddl $CHEMIN_PDDL/p$3.pddl Plan/HTN/$2/plan_$3.pddl 
