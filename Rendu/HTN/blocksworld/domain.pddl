@@ -1,7 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; BlocksWorld , version HTN
+;;; BlocksWorld , version HTN,
+;;; Version 1.0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;-------------------------------------------------------------------
+;								Actions
+;-------------------------------------------------------------------
 (define (domain BLOCKS)
   (:requirements :strips :typing :htn :negative-preconditions :equality)
   (:types block)
@@ -55,20 +59,19 @@
 	     :effect (and )
 	)      
 
-
-;;; Methods
-;;;;;;;;;;;;;;;;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 	Mettre un block sur un autre
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;-------------------------------------------------------------------
+;			 				Methods
+;-------------------------------------------------------------------
 
 
-	;; Mettre X sur Y 
-	;; Cas ou X est Y 
-	
 
-	;; TODO a revoir peut-etre , si il faut mettre un pile de 2 block sur le 
+; 					Mettre un block sur un autre ( X sur Y)
+;-------------------------------------------------------------------
+
+
+
+; Cas ou X est Y 
+
 	(:method do_put_on
 		:parameters (?x - block ?y - block)
 		:expansion (
@@ -85,7 +88,7 @@
 
 	)
 
-;; Cas ou X est sur Y mais X doit aller sur la table
+; Cas ou X est sur Y mais Y doit aller sur la table
 	(:method do_put_on
 		:parameters (?x - block ?y - block)
 		:expansion (
@@ -100,6 +103,7 @@
 							( and 
 								(on ?x ?y)
 								( not (ontable ?y))
+								( handempty )
 							)
 						t1
 						)
@@ -110,7 +114,7 @@
 
 
 
-	;; Cas ou X n'est pas sur Y
+; Cas ou X n'est pas sur Y
 	(:method do_put_on
 		:parameters	(?x - block ?y - block)
 		:expansion	(
@@ -143,11 +147,14 @@
 			     	)
 
 	)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;		 Mettre sur la table 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 2 Choix en fonction du resultat attendu
-	;; Met sur la table le block x qui n'est pas déjà sur la table
+
+;					Mettre un cube sur la table 
+;-------------------------------------------------------------------
+
+; 2 Choix en fonction du resultat attendu
+
+
+; Met sur la table le block x qui n'est pas déjà sur la table
 	(:method do_on_table
 		:parameters (?x - block)
 		:expansion	(
@@ -168,7 +175,8 @@
 					)
 	)
 
-	;; Ne fait rien 
+
+; Ne fait rien 
 	(:method do_on_table
 		:parameters (?x - block)
 		:expansion	(
@@ -186,12 +194,11 @@
 	)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;	Bouger un cube sur un autre
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Bouge un cube X sur Y
-	;; Si X est sur la table
+;				Bouger un cube sur un autre ( X sur Y )
+;-------------------------------------------------------------------
+
+; Si X est sur la table
 
 	(:method do_move 
 		:parameters	(?x - block ?y - block)
@@ -215,7 +222,8 @@
 
 	)
 
-	;; Si X est sur un Block
+; Si X est sur un Block
+
 	(:method do_move 
 		:parameters	(?x - block ?y - block)
 		:expansion	(
@@ -236,13 +244,13 @@
 			     	)
 	)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;		 Nettoie un cube
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;						 Nettoie un cube X
+;-------------------------------------------------------------------
 
 
-;; Nettoie un Cube X
-;; cas ou X est nettoyé
+; Si X est nettoyé
+	
 	(:method do_clear
 		:parameters (?x - block)
 		:expansion 	(
@@ -262,7 +270,7 @@
 
 	)
 
-;; Cas ou X n'est pas nettoyé
+; Si X n'est pas nettoyé
 	(:method do_clear
 		:parameters (?x - block)
 		:expansion 	(
@@ -276,7 +284,7 @@
 						and 
 						( before
 							( and 
-							(not (clear ?x))
+							( not (clear ?x))
 							(on ?y ?x)
 							(handempty) 
 							)

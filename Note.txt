@@ -9,4 +9,8 @@ Résumé du travail effectué :
 	Probleme restant : Sur le Barman , il fait parfois <lacher> puis <attraper> sur un un meme verre
 
 
-	Debut du Blocksworld
+	Debut du Blocksworld (16/02/2017)
+
+	2/03/2017 
+	Creation d'une nouvelle syntax dans /home/jonathan/.config/sublime-text-3/Packages/myPDDL_HTN
+		c'est un copie de la syntaxe myPDDL , mais elle contient quelque modificiation pour pouvoir colorer le HTN, seul le fichier syntax/pddl.tmLanguage a était modifié.

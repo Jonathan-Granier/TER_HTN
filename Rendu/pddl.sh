@@ -64,7 +64,7 @@ elif [ $1 = "-c" ]; then
 	PLAN=Plan/Core/$2/plan_$3.pddl 
 
 	TEMP=tmp.pddl
-	java -jar $JAR_CORE -d Core/$2/$2.jap -p Core/$2/pb$3.jap | tee $TEMP
+	java -jar $JAR_CORE -f -d Core/$2/$2.jap -p Core/$2/pb$3.jap | tee $TEMP
 	rm $PLAN > /dev/null 2> /dev/null
 
 	sed -i '1,8 d' $TEMP

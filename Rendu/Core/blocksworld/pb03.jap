@@ -1,0 +1,34 @@
+(defproblem problem blocksworld
+  (
+    ;;;
+    ;;;  facts
+    ;;;
+
+
+    (block A)
+    (block B)
+    (block C)
+    (block D)
+    
+    (clear A) 
+    (clear C) 
+    (clear D) 
+    (ontable A) 
+    (ontable B) 
+    (ontable D)
+    (on C B) 
+
+    (handempty)
+
+  )
+  ;;;
+  ;;; goals
+  ;;;
+(
+           
+            
+            (do_put_on C D)
+            (do_put_on B C)
+            (do_put_on A B)
+ )
+)
