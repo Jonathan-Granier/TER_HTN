@@ -1,10 +1,6 @@
 ;------------------------------------------------------------------
 ;	 BlocksWorld , version HTN_CORE,
-;	 Version 2.0 , 
-; 		La version a un probleme au niveau de la methode do_on_table
-;		Donc cette methode a été supprimé et remplacer par une
-;		methode do_put_on_table, qui fait une pile de 2 block mais 
-;		avec la base sur la table
+;	 Version 1.0
 ;------------------------------------------------------------------
 
 
@@ -104,25 +100,23 @@ Case1	(
 		)
 		()	
 
-; Cas ou X n'est pas sur Y
+; Cas ou X est sur Y mais Y doit aller sur la table
 Case2	(	
 			(block ?x)
-			(block ?y)
+			(block ?y)	
+			(on ?x ?y)
+			(on ?y ?z)
 			( handempty )
 		)
 		(
 			(do_clear ?x)
 			(do_clear ?y)
+			(do_on_table ?y)
 			(do_move ?x ?y)
 		)
-)
-
-
-
-(:method (do_put_on_table ?x ?y)
 
 ; Cas ou X n'est pas sur Y
-Case2	(	
+Case3	(	
 			(block ?x)
 			(block ?y)
 			( handempty )
@@ -135,7 +129,7 @@ Case2	(
 		)
 )
 
-
+;; PROBLEME POTENTIELLE, CE LANGAGE DE MORT VEUT PAS FAIRE UN CHOIX !!!
 ;					Mettre un cube sur la table 
 ;-------------------------------------------------------------------
 
@@ -143,20 +137,15 @@ Case2	(
 
 (:method (do_on_table ?x )
 
-; X est sur la table
-Case2	(	
-			(block ?x)
-			(ontable ?x)
-			(clear ?x)
-		)
-		()
-		
 
-; X n'est pas sur la table
+; Met sur la table le block y qui n'est pas déjà sur la table
 Case1	(	 
 			(block ?x)
 			(block ?y)
+			(block ?z)
 			(on ?x ?y)
+			(on ?x ?z)
+			(clear ?x)
 			(handempty)
 		)
 		(
@@ -164,6 +153,13 @@ Case1	(
 			(!put-down ?x)
 		)	
 
+; Ne fait rien 
+Case2	(	
+			(block ?x)
+			(clear ?x)
+		)
+		()
+		
 
 )
 

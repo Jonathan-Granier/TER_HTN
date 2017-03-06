@@ -88,33 +88,34 @@
 
 	)
 
+;; A delete
 ; Cas ou X est sur Y mais Y doit aller sur la table
-	(:method do_put_on
-		:parameters (?x - block ?y - block)
-		:expansion (
-						(tag t1 (do_clear ?x))
-				    	(tag t2 (do_clear ?y))
-				    	(tag t3 (do_on_table ?y))
-				    	(tag t4 (do_move ?x ?y))
-					)
-		:constraints
-					( and
-						(before 
-							( and 
-								(on ?x ?y)
-								( not (ontable ?y))
-								( handempty )
-							)
-						t1
-						)
-					)
+;	(:method do_put_on
+;		:parameters (?x - block ?y - block)
+;		:expansion (
+;						(tag t1 (do_clear ?x))
+;				    	(tag t2 (do_clear ?y))
+;				    	(tag t3 (do_on_table ?y))
+;				    	(tag t4 (do_move ?x ?y))
+;					)
+;		:constraints
+;					( and
+;						(before 
+;							( and 
+;								(on ?x ?y)
+;								( not (ontable ?y))
+;								( handempty )
+;							)
+;						t1
+;						)
+;					)
+;
+;
+;	)
 
 
-	)
 
-
-
-; Cas ou X n'est pas sur Y
+; Cas ou X n'est pas sur Y ou bien Y doit aller sur la table (ça peut etre les 2)
 	(:method do_put_on
 		:parameters	(?x - block ?y - block)
 		:expansion	(
@@ -127,7 +128,7 @@
 					( and 
 			  			( before 	( and 
 			  						( handempty ) 
-			  						( not(on ?x ?y) )
+			  						;( not(on ?x ?y) )
 			  						)
 			  						t1
 			  			)

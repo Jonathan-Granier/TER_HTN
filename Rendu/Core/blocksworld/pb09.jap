@@ -3,20 +3,20 @@
     ;;;
     ;;;  facts
     ;;;
-
-
     (block A)
     (block B)
     (block C)
     (block D)
+    (block E)
+    (block F)
     
     (clear A) 
-    (clear C) 
-    (clear D) 
-    (ontable A) 
-    (ontable B) 
-    (ontable D)
-    (on C B) 
+    (ontable C) 
+    (on A D) 
+    (on D B) 
+    (on B F) 
+    (on F E) 
+    (on E C)
 
     (handempty)
 
@@ -24,9 +24,14 @@
   ;;;
   ;;; goals
   ;;;
-(                    
+(
+           
+            
             (do_put_on_table C D)
             (do_put_on B C)
             (do_put_on A B)
+            (do_put_on F A)
+            (do_put_on E F)
+
  )
 )

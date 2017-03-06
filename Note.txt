@@ -14,3 +14,17 @@ Résumé du travail effectué :
 	2/03/2017 
 	Creation d'une nouvelle syntax dans /home/jonathan/.config/sublime-text-3/Packages/myPDDL_HTN
 		c'est un copie de la syntaxe myPDDL , mais elle contient quelque modificiation pour pouvoir colorer le HTN, seul le fichier syntax/pddl.tmLanguage a était modifié.
+
+	6/03/2017
+	Idées d'amélioration du langague HTN : 
+		Le principe de cas , avec le mot-clé "Case<num>", du Core pourrait etre plus pratique. En effet, je trouve que les methodes qui nous font rien (qui servent de condition d'arret pour les methodes récursives) sont trop lourde pour pas grand chose.
+
+		Simplifié la définition de probleme :
+			- Au début du probleme , la définition des requirements est-elle vraiment utile sachant qu'elle est equivalente aux requirements du domain ?
+			- On pourrait ajoute un signe distinctif pour les methodes d'"entrée". 
+				Dans un probleme, on definie les methodes a appeler pour résoudre le probleme. On pourrait, avec signe distinctif , indiquer au solver par quelles methodes il peut commencer pour resoudre un probleme.
+
+			- Avec ses 2 idées , on se retrouve avec des problemes qui ont la meme définition en PDDL qu'en HTN.
+
+	Creation d'un fichier test qui s'appelle : test_un_probleme.sh
+	

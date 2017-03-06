@@ -3,21 +3,21 @@
     ;;;
     ;;;  facts
     ;;;
-
-
     (block A)
     (block B)
     (block C)
     (block D)
     (block E)
+    (block F)
     
     (clear D) 
-    (clear C) 
-    (ontable D) 
-    (ontable A) 
-    (on C E) 
-    (on E B) 
-    (on B A)
+    (clear F) 
+    (ontable C) 
+    (ontable B) 
+    (on D A) 
+    (on A C) 
+    (on F E)
+    (on E B)     
 
     (handempty)
 
@@ -28,9 +28,10 @@
 (
            
             
-            (do_put_on_table D C)
-            (do_put_on B D)
-            (do_put_on E B)
+            (do_put_on_table F D)
+            (do_put_on E F)
             (do_put_on A E)
+            (do_put_on B A)
+            (do_put_on C B)
  )
 )

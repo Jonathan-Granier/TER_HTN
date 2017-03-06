@@ -24,7 +24,7 @@
 (
            
             
-            (do_put_on A B)
+            (do_put_on_table A B)
             (do_put_on C A)
             (do_put_on D C)
  )

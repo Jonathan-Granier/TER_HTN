@@ -1,7 +1,7 @@
 ;------------------------------------------------------------------
 ;	 BlocksWorld , version HTN_CORE,
 ;	 Version 2.0 , 
-; 		La version a un probleme au niveau de la methode do_on_table
+; 		La version 1.0 a un probleme au niveau de la methode do_on_table
 ;		Donc cette methode a été supprimé et remplacer par une
 ;		methode do_put_on_table, qui fait une pile de 2 block mais 
 ;		avec la base sur la table
