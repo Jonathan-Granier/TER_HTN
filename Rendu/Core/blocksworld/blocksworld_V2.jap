@@ -120,9 +120,7 @@ Case2	(
 
 
 (:method (do_put_on_table ?x ?y)
-
-; Cas ou X n'est pas sur Y
-Case2	(	
+		(	
 			(block ?x)
 			(block ?y)
 			( handempty )
@@ -144,7 +142,7 @@ Case2	(
 (:method (do_on_table ?x )
 
 ; X est sur la table
-Case2	(	
+Case1	(	
 			(block ?x)
 			(ontable ?x)
 			(clear ?x)
@@ -153,7 +151,7 @@ Case2	(
 		
 
 ; X n'est pas sur la table
-Case1	(	 
+Case2	(	 
 			(block ?x)
 			(block ?y)
 			(on ?x ?y)

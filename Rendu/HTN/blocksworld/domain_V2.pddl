@@ -1,6 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; BlocksWorld , version HTN,
 ;;; Version 1.0
+;;;		Cette version correspont à la version 2.0 du Core 
+;;;		la version 1.0 du Core a un probleme au niveau de la methode do_on_table
+;;;		Donc cette methode a été supprimé et remplacer par une
+;;;		methode do_put_on_table, qui fait une pile de 2 block mais 
+;;;		avec la base sur la table
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;-------------------------------------------------------------------
@@ -98,8 +103,7 @@
 		:expansion	(
 						(tag t1 (do_clear ?x))
 				    	(tag t2 (do_clear ?y))
-				    	(tag t3 (do_on_table ?y))
-				    	(tag t4 (do_move ?x ?y))
+				    	(tag t3 (do_move ?x ?y))
 			    	)
 		:constraints
 					( and 
@@ -126,13 +130,32 @@
 
 	)
 
+;; Met Y sur la table , puis X sur Y
+(:method do_put_on_table
+		:parameters	(?x - block ?y - block)
+		:expansion	(
+						(tag t1 (do_clear ?x))
+				    	(tag t2 (do_clear ?y))
+				    	(tag t3 (do_on_table ?y))
+				    	(tag t4 (do_move ?x ?y))
+			    	)
+		:constraints
+					( and 
+			  			( before 	( and 
+			  						( handempty ) 
+			  						)
+			  						t1
+			  			)
+			     	)
+
+	)
+
 ;					Mettre un cube sur la table 
 ;-------------------------------------------------------------------
 
-; 2 Choix en fonction du resultat attendu
+; 
 
-
-; Met sur la table le block x qui n'est pas déjà sur la table
+; Met sur la table le block x si il n'est pas déjà sur la table
 	(:method do_on_table
 		:parameters (?x - block)
 		:expansion	(
@@ -144,7 +167,7 @@
 					( and 
 						( before
 							( and 
-								(clear ?x)
+								(on ?x ?y)
 								(handempty)
 								( not (ontable ?x))
 							)
@@ -164,6 +187,7 @@
 					( and 
 						( before
 							( and 
+								(ontable ?x)
 								(clear ?x)
 							)
 							t1
