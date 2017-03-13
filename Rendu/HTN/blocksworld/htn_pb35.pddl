@@ -29,7 +29,7 @@
     (HANDEMPTY))
 (:goal
      :tasks  (
-            (tag t1 (do_put_on_table F D))
+            (tag t1 (do_put_on F D))
             (tag t2 (do_put_on K F))
             (tag t3 (do_put_on I K))
             (tag t4 (do_put_on B I))

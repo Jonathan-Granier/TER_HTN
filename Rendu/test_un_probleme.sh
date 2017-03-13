@@ -118,7 +118,7 @@ function test_un_probleme()
 
 
 
-for i in `seq 01 20` ;
+for i in `seq 01 35` ;
 do
 	if [ $i -lt 10 ]; then
 

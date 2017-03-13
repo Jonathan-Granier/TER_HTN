@@ -1,9 +1,9 @@
-Checking plan: Plan/Core/Barman/plan_20.pddl
+Checking plan: Plan/Core/blocksworld/plan_35.pddl
 Plan executed successfully - checking goal
 Plan valid
-227 
+46 
 
 Successful plans:
-Value: 227
- Plan/Core/Barman/plan_20.pddl 227 
+Value: 46
+ Plan/Core/blocksworld/plan_35.pddl 46 
 
