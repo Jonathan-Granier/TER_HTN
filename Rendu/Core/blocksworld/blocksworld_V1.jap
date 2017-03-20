@@ -141,16 +141,9 @@ Case3	(
 (:method (do_on_table ?x )
 
 
-; Ne fait rien 
-Case1	(	
-			(block ?x)
-			(clear ?x)
-		)
-		()
-		
 
 ; Met sur la table le block y qui n'est pas déjà sur la table
-Case2	(	 
+Case1	(	 
 			(block ?x)
 			(block ?y)
 			(block ?z)
@@ -163,6 +156,14 @@ Case2	(
 			(!unstack ?x ?y)
 			(!put-down ?x)
 		)	
+
+
+; Ne fait rien 
+Case2	(	
+			(block ?x)
+			(clear ?x)
+		)
+		()
 
 )
 

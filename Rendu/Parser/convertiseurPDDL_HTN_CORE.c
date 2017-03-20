@@ -45,10 +45,14 @@ int main(int argc,char *argv[])
 }
 
 
-
+/*
+Traduit un fichier probleme pddl (src) en un fichier probleme HTN (dst)
+Attention : Aucune vérification n'est faite sur la structure du fichier pddl 
+			il peut donc y avoir des erreurs 
+*/
 void pddl_to_htn(FILE *src,FILE *dst)
 {
-	char temp[1000000];
+	char temp[TAILLE_TEMP];
 	//Definition du probleme
 	go_to_next_parenthesis(src);
 	fprintf(dst,"(define ");
@@ -100,7 +104,35 @@ void pddl_to_htn(FILE *src,FILE *dst)
 
 
 
+/*
+Récupere ce qui se trouve entre parenthése dans un fichier src 
+de manière récursive et le stock dans une chaine de caractère data a partir de l'index
+Avant chaque parenthèse ouvrante (et donc avant chaque appele récursif) rajoute
+le separateur à la chaine data.
+Retour l'index
 
+Input :	
+	src  : fichier avec la tete de lecture juste après une parenthèse ouvrante
+	data : chaine de caractère
+	index : entier qui indique où on commence à ecrire dans la chaine data
+	separator : chaine de caractère qui fini par \0
+Output:
+	data : le contenu de src et finissant par \0
+	retour : nouvelle index de data
+
+Exemple:
+	Input :
+		separateur = \n\0
+		index = 0
+		data = (chaine vide)
+		src = Le roi burgonde (La fleur embouquet fâne , et jamais ne renait ) (salsifi) (j'aime les fruits au sirop) )
+
+Output :
+	(Le roi burgonde
+	(La fleur embouquet fâne , et jamais ne renait )
+	(salsifi)
+	(j'aime les fruits au sirop) ) \0
+*/
 int get_under_parenthesis(FILE *src, char *data, int index,char *separator)
 {
 	char c;
@@ -156,6 +188,8 @@ void go_to_next_parenthesis(FILE *src)
 		c = fgetc(src);
 	}while(c!='(');
 }
+
+
 /*
 Va jusqu'à la prochaine parenthèse ouvrant sur fichier src et renvoi 1
 mais s'arrete à la première fermante rencontré et renvoi 0.
@@ -190,7 +224,32 @@ int go_to_next_parenthesis_stop_close(FILE *src)
 }
 
 
+/*
+Ajoute un séparateur à l'index index dans la chaine de caractere data 
+et retourne le nouvelle index
 
+Input :
+	data : une chaine de caractère
+	index : index juste après le dernier element de data
+	separator : chaine de caractère finissant par \0
+
+
+Output:
+	data : data avec le separator à la fin sans le \0
+	retour : nouvelle index de data
+
+
+Exemple
+Input: 
+	data : blublu\n
+	index : 7
+	separator : \t\t\t\0
+
+Output:
+	data : blublu\n\t\t\t
+	index : 10
+
+*/
 int add_separator(char *data, int index, char *separator)
 {
 	int i=0;
@@ -206,9 +265,15 @@ int add_separator(char *data, int index, char *separator)
 
 
 
+
+/*
+Traduit un fichier probleme HTN (src) en un fichier probleme CORE (dst)
+Attention : Aucune vérification n'est faite sur la structure du fichier HTN 
+			il peut donc y avoir des erreurs 
+*/
 void htn_to_core(FILE *src, FILE *dst)
 {
-	char temp[1000000];
+	char temp[TAILLE_TEMP];
 	int index;
 	//Saut de toute la 1er partie pour atteindre la liste d'objet
 	go_to_next_parenthesis(src);
@@ -253,7 +318,10 @@ void htn_to_core(FILE *src, FILE *dst)
 
 
 /**
+Traduit les objects qui sont sous forme HTN dans le fichier src en prédicats CORE 
+et les stockent dans la chaine de caractère data.  
 
+Le fichier src doit avec sa tete de lecture sur :objects
 
 Input :
 	Fichier de la forme: 
@@ -270,7 +338,8 @@ Ouput :
 	(pile I)
 	(pile J)
 	(pile K)
-....
+
+....(suite du fichier)
 
 
 
@@ -319,9 +388,9 @@ Input :
 	type et object : 2 chaines de caractéres contenant respectivement le type et l'object du predicat 
 	index : entier naturel non nul
 
-Out :
-	Data avec le nouveau predicat à la fin , à la ligne. 	
-	Le nouvelle index de data.
+Output :
+	data : Data avec le nouveau predicat à la fin , à la ligne. 	
+	retour : Le nouvelle index de data.
 
 **/
 int add_predicat(int index , char *data, char *type, char *object)
