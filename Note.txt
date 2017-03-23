@@ -28,3 +28,5 @@ Résumé du travail effectué :
 
 	Creation d'un fichier test qui s'appelle : test_un_probleme.sh
 	
+
+	Il faudrait prevenir l'utilisateur quand une action qu'il utilise est supprimer , afin de savoir pourquoi il n'y a pas de plan qu'il sort.

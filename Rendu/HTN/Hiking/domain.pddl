@@ -7,7 +7,7 @@
 ;  the software or its performance.
 
 (define (domain hiking)
-  (:requirements :strips :equality :typing)
+  (:requirements :strips :typing :negative-preconditions :htn :equality)
   (:types car tent person couple place )
   (:predicates 
               (at_tent ?x1 - tent ?x2 - place)
@@ -23,7 +23,7 @@
 
   ;  Démonter la tente
   (:action put_down
-         :parameters ( ?x1 - person ?x2 - place ?x3 - tent)
+         :parameters (?x1 - person ?x2 - place ?x3 - tent)
          :precondition  (and 
                         (at_person ?x1 ?x2)
                         (at_tent ?x3 ?x2)
@@ -35,7 +35,7 @@
 )
   ;; Monter la tente
   (:action put_up
-         :parameters ( ?x1 - person ?x2 - place ?x3 - tent)
+         :parameters (?x1 - person ?x2 - place ?x3 - tent)
          :precondition  (and 
                         (at_person ?x1 ?x2)
                         (at_tent ?x3 ?x2)
@@ -48,7 +48,7 @@
 
   ;;Transporte 2 personnes d'une place à l'autre
   (:action drive_passenger
-         :parameters ( ?x1 - person ?x2 - place ?x3 - place ?x4 - car ?x5 - person)
+         :parameters (?x1 - person ?x2 - place ?x3 - place ?x4 - car ?x5 - person)
          :precondition  (and 
                         (at_person ?x1 ?x2)
                         (at_car ?x4 ?x2)
@@ -66,7 +66,7 @@
 
   ;; Transporte 1 personne d'une place à l'autre
   (:action drive
-         :parameters ( ?x1 - person ?x2 - place ?x3 - place ?x4 - car)
+         :parameters (?x1 - person ?x2 - place ?x3 - place ?x4 - car)
          :precondition  (and 
                         (at_person ?x1 ?x2)(at_car ?x4 ?x2))
          :effect    (and 
@@ -78,7 +78,7 @@
 )
   ;; Transporte 1 personnes et 1 tente d'une place à l'autre
   (:action drive_tent
-         :parameters ( ?x1 - person ?x2 - place ?x3 - place ?x4 - car ?x5 - tent)
+         :parameters (?x1 - person ?x2 - place ?x3 - place ?x4 - car ?x5 - tent)
          :precondition  (and 
                         (at_person ?x1 ?x2)
                         (at_car ?x4 ?x2)
@@ -95,7 +95,7 @@
 )
   ;; Transporte 2 personnes et 1 tente d'une place à l'autre
   (:action drive_tent_passenger
-         :parameters ( ?x1 - person ?x2 - place ?x3 - place ?x4 - car ?x5 - tent ?x6 - person)
+         :parameters (?x1 - person ?x2 - place ?x3 - place ?x4 - car ?x5 - tent ?x6 - person)
          :precondition  (and 
                         (at_person ?x1 ?x2)
                         (at_car ?x4 ?x2)
@@ -117,16 +117,17 @@
 
   ;; Un couple marche d'une place à l'autre , il faut que la tente soit monté au départ
   (:action walk_together
-         :parameters ( ?x1 - tent ?x2 - place ?x3 - person ?x4 - place ?x5 - person ?x6 - couple)
+         :parameters (?x1 - tent ?x2 - place ?x3 - person ?x4 - place ?x5 - person ?x6 - couple)
          :precondition  (and 
-                        (at_tent ?x1 ?x2)
+                        ;(at_tent ?x1 ?x2)
                         (up ?x1)
-                        (at_person ?x3 ?x4)
-                        (next ?x4 ?x2)
-                        (at_person ?x5 ?x4)
-                        (not (= ?x3 ?x5))
-                        (walked ?x6 ?x4)
-                        (partners ?x6 ?x3 ?x5))
+                        ;(at_person ?x3 ?x4)
+                        ;(next ?x4 ?x2)
+                        ;(at_person ?x5 ?x4)
+                        ;(not (= ?x3 ?x5))
+                        ;(walked ?x6 ?x4)
+                        ;(partners ?x6 ?x3 ?x5)
+                        )
          :effect    (and 
                     (at_person ?x3 ?x2)
                     (not (at_person ?x3 ?x4))
@@ -134,8 +135,17 @@
                     (not (at_person ?x5 ?x4))
                     (walked ?x6 ?x2)
                     (not (walked ?x6 ?x4))
+                    
 )
 )
+
+(:action nop
+         :parameters ()
+         :precondition (and )
+         :effect (and )
+) 
+  
+
 
 ; Algo :
 ;   Init :
@@ -196,15 +206,63 @@
 
 
 
-  (:method do_
+  (:method do_Hiking
         :parameters ()
         :expansion (
-                        (tag t1 ())
+                        ;(tag t1 (nop))
+                        ;(tag t1 (do_walk_couple ?p1 ?p2))
+                        ;(tag t1 (walk_together ?pl1 ))
+                        (tag t1 (walk_together ?x1 ?x2 ?x3 ?x4 ?x5 ?x6))
                     )
         :constraints
                     ( and
                         (before 
-                            ()
+                            (next ?x4 ?x2)
+
+                           ; (down ?jhg)
+
+                        t1
+                        )
+                    )
+
+
+    )
+
+
+  (:method do_Init
+        :parameters ()
+        :expansion (
+                        (tag t1 (nop))
+                    )
+        :constraints
+                    ( and
+                        (before 
+                            (next ?p1 ?p2)
+                        t1
+                        )
+                    )
+
+
+    )
+
+;--------------------------------------------------------------------------------
+;   Faire marcher tout les couples jusqu'a qu'il n'y est plus de tente.
+;   Construire les tentes à chaque arrivé  
+;--------------------------------------------------------------------------------
+    
+    (:method do_walk_all
+        :parameters (?pl1 - place)
+        :expansion (
+                        (tag t1 (nop))
+                    )
+        :constraints
+                    ( and
+                        (before 
+                            ( and 
+                            (at_tent ?t ?pl1)
+                            (up ?t)
+                            (next ?pl1 ?pl2)
+                            )
                         t1
                         )
                     )
@@ -214,7 +272,50 @@
 
 
 
+    (:method do_walk_couple
+    :parameters (?pl1 - place ?pl2 - place )
+    :expansion (
+                    (tag t1 (nop))
+                    ;(tag t1 (walk_together ?t ?pl2 ?per1 ?pl1 ?per2 ?c))
+                    ;(tag t2 (do_walk_couple ?pl1 ?pl2))
+                )
+    :constraints
+                ( and
+                    (before 
+                        ( and 
+                        ;(at_tent ?t ?pl1)
+                        (up ?t)
+                        ;(next ?pl1 ?pl2)
+                        ;(at_person ?per1 ?pl1)
+                        ;(at_person ?per2 ?pl1)
+                        ;(partners ?c ?per1 ?per2)
+                        )
+                    t1
+                    )
+                )
 
+
+    )
+
+;    (:method do_walk_couple
+;    :parameters (?pl1 - place ?pl2 - place )
+;    :expansion (
+;                    (tag t1 (nop))
+;                )
+;    :constraints
+;                ( and
+;                    (before 
+;                        ( and 
+;                        (at_tent ?t ?pl1)
+;                        (up ?t)
+;                        (next ?pl1 ?pl2)
+;                        )
+;                    t1
+;                    )
+;                )
+
+
+;    )
 
 
 
