@@ -21,19 +21,19 @@ void goals_htn_to_goals_core(FILE *src,char *data);
 int main(int argc,char *argv[])
 {
 
-	if(argc < 3)
+	if(argc < 4)
 	{
 		
-		printf("Usage : convertiseurPDDL_HTN_CORE <src> <dest> <options>\n");
+		printf("Usage : convertiseurPDDL_HTN_CORE <options> <src> <dest>\n");
 		printf("-c :		htn to core");
 		printf("-h :		pddl to htn");
 		return -1;
 
 	}
 
-	FILE *src = fopen(argv[1],"r");
-	FILE *dst = fopen(argv[2],"w");
-	if((argc == 4) && (strcmp(argv[3],"-c") == 0))
+	FILE *src = fopen(argv[2],"r");
+	FILE *dst = fopen(argv[3],"w");
+	if((argc == 4) && (strcmp(argv[1],"-c") == 0))
 		htn_to_core(src,dst);
 	else
 		pddl_to_htn(src,dst);

@@ -29,4 +29,29 @@ Résumé du travail effectué :
 	Creation d'un fichier test qui s'appelle : test_un_probleme.sh
 	
 
+	20/03/2017 :
+	Création d'un parser pour transformé un probleme PDDL en HTN puis en CORE.
+	Attention , ce parser est essentiellement hard codé par manque de temps.
+
 	Il faudrait prevenir l'utilisateur quand une action qu'il utilise est supprimer , afin de savoir pourquoi il n'y a pas de plan qu'il sort.
+	Comment on fait compteur. ---> Impossible.
+
+	
+	Barman 		--> Fait
+	Blocksworld	--> Fait.
+	CaveDiving 	--> Impossible en HTN (compteur)	--> Erreur PDDL problem to encode not ADL
+	Childsnack 	--> Fait.
+	CityCar  	--> Impossible en HTN (compteur)	--> Erreur PDDL problem to encode not ADL
+	Floortile   --> Impossible en HTN (compteur)	--> Erreur PDDL problem to encode not ADL	
+	GED			--> Impossible en HTN (compteur)	--> Erreur PDDL problem to encode not ADL
+	Hiking		--> J'ai rage quit , ya un bug
+	Maintenance	--> Arbre trop grand
+	Openstacks	--> Impossible en HTN (compteur)
+	Parking 	--> Impossible en HTN (compteur)	--> Erreur PDDL problem to encode not ADL
+	Tetris		--> Impossible en HTN (compteur)	--> Erreur PDDL problem to encode not ADL
+	Thoughtful	--> A Voir.
+	Transport 	--> Impossible en HTN (compteur)	--> Erreur PDDL problem to encode not ADL
+	Visitall	--> Arbre trop grand
+
+
+	
