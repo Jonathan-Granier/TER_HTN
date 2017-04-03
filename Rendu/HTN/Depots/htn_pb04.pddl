@@ -43,8 +43,12 @@
  )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			
+				(tag t1 (do_put_on crate7 pallet0))
+				(tag t2 (do_put_on crate6 pallet1))
+				(tag t3 (do_put_on crate5 pallet2))
+				(tag t4 (do_put_on crate4 crate7))
+				(tag t5 (do_put_on crate2 crate6))
+				(tag t6 (do_put_on crate0 crate4))
 			
 		)
 	:constraints(and

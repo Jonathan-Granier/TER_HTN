@@ -35,7 +35,7 @@ elif [ $1 = "-h" ]; then
 	
 	PLAN=Plan/HTN/$2/plan_$3.pddl
 
-	java -javaagent:$JAR_HTN -server -Xms8048m -Xmx8048m -classpath $JAR_HTN pddl4j.examples.ISHOP.ISHOP -o HTN/$2/domain.pddl -f HTN/$2/htn_pb$3.pddl | tee $TEMP
+	java -javaagent:$JAR_HTN -server -Xms2048m -Xmx2048m -classpath $JAR_HTN pddl4j.examples.ISHOP.ISHOP -o HTN/$2/domain.pddl -f HTN/$2/htn_pb$3.pddl | tee $TEMP
 
 	#PARSE
 	 
@@ -60,7 +60,6 @@ elif [ $1 = "-p" ]; then
 	sed -i -n '/found plan as follows:/,/time spent:/p' $PLAN
 	sed -i '1,2 d' $PLAN
 	sed -i '$d' $PLAN
-
 
 elif [ $1 = "-vH" ]; then
 	./$VAL $CHEMIN_PDDL/domain.pddl $CHEMIN_PDDL/p$3.pddl Plan/HTN/$2/plan_$3.pddl 
@@ -93,5 +92,5 @@ elif [ $1 = "-c" ]; then
 else
 	aide
 fi
-
+echo 
 #\(([0-9]+)\)

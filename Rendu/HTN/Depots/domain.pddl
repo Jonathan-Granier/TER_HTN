@@ -52,22 +52,23 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;         Met une caisse c sur une surface s2         
+;;;  Met une caisse c sur une surface s2    ;;;    
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Cas où la caisse est sur une surface s1
+;; Cas où la caisse est dans un autre dépot ou distributeur
 (:method do_put_on 
 
        :parameters (?c - crate ?s2 - surface)
         :expansion  (
-                        (tag t1 (do_clear ?c ?p1))
-                        (tag t2 (Lift ?h1 ?c ?s1 ?p1))
-                        (tag t3 (do_get_truck ?t ?p1))
-                        (tag t4 (Load ?h1 ?c ?t ?p1))
-                        (tag t5 (Drive ?t ?p1 ?p2))
-                        (tag t6 (do_clear ?s2 ?p2))
-                        (tag t7 (Unload ?h2 ?c ?t ?p2))
-                        (tag t8 (Drop ?h2 ?c ?s2 ?p2))
+                        (tag t1 (nop))
+                        ;(tag t1 (do_clear ?c ?p1))
+                        ;(tag t2 (Lift ?h1 ?c ?s1 ?p1))
+                        ;(tag t3 (do_get_truck ?t ?p1))
+                        ;(tag t4 (Load ?h1 ?c ?t ?p1))
+                        ;(tag t5 (Drive ?t ?p1 ?p2))
+                        ;(tag t6 (do_clear ?s2 ?p2))
+                        ;(tag t7 (Unload ?h2 ?c ?t ?p2))
+                        ;(tag t8 (Drop ?h2 ?c ?s2 ?p2))
                     )
         :constraints( 
                     and 
@@ -84,6 +85,31 @@
                     )
     )
 
+
+;; Cas ou la caisse est déjà dans le bon dépot ou distributeur
+(:method do_put_on 
+
+       :parameters (?c - crate ?s2 - surface)
+        :expansion  (
+                        (tag t1 (nop))
+                        ;(tag t1 (do_clear ?c ?p))
+                        ;(tag t2 (do_clear ?s2 ?p))
+                        ;(tag t3 (do_lift_crate ?c ?p ?h))
+                        ;(tag t4 (Drop ?h ?c ?s2 ?p))
+                    )
+        :constraints( 
+                    and 
+                        (before ( and 
+                                ( at ?c ?p)
+                                ( at ?s2 ?p)
+                                ( at ?h ?p)
+                                ) 
+                        t1
+                        )
+                    )
+    )
+
+
 ;;Cas ou la caisse est dans un camion t
 
 (:method do_put_on 
@@ -91,10 +117,11 @@
        :parameters (?c - crate ?s2 - surface)
         :expansion  (
                         
-                        (tag t1 (do_get_truck ?t ?p))
-                        (tag t2 (do_clear ?s2 ?p))
-                        (tag t3 (Unload ?h ?c ?t ?p))
-                        (tag t4 (Drop ?h ?c ?s2 ?p))
+                        (tag t1 (nop))
+                        ;(tag t1 (do_get_truck ?t ?p))
+                        ;(tag t2 (do_clear ?s2 ?p))
+                        ;(tag t3 (Unload ?h ?c ?t ?p))
+                        ;(tag t4 (Drop ?h ?c ?s2 ?p))
                     )
         :constraints( 
                     and 
@@ -108,9 +135,27 @@
                     )
     )
 
+;; Cas ou la caisse est bien placé
+(:method do_put_on 
+
+       :parameters (?c - crate ?s2 - surface)
+        :expansion  (
+                        
+                        (tag t1 (nop))
+                    )
+        :constraints( 
+                    and 
+                        (before ( and 
+                                ( on ?c ?s2)
+                                ) 
+                        t1
+                        )
+                    )
+    )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;         Nettoie une surface         
+;;;         Nettoie une surface             ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Nettoie la surface s1 à la place p1 et met ce qui a dessus dans un camion
@@ -157,40 +202,16 @@
 
 
 
-;; Cas ou tout le monde il est beau , il est content
-;; Amélioration : On peut mettre au tente de caisse que l'on veut dans un camion. Donc il faudrait optimiser les déplacements
-;; Exemple : dans do_clean , il faut juste charger la marchandise dans un camion. 
-;; On peut aussi exploiter le fait de mettre la marchandise juste dans la grue. 
 
 
-(:method do_get_crate
-        :parameters (?c - crate ?s1 - surface ?s2 - surface ?p1 - place ?p2 - place)
-        :expansion  (
-                        (tag t1 (do_clear ?c ?p1))
-                        (tag t2 (Lift ?h1 ?c ?s1 ?p1))
-                        (tag t3 (do_get_truck ?t ?p1))
-                        (tag t4 (Load ?h1 ?c ?t ?p1))
-                        (tag t5 (Drive ?t ?p1 ?p2))
-                        (tag t6 (do_clear ?s2 ?p2))
-                        (tag t7 (Unload ?h2 ?c ?t ?p2))
-                        (tag t8 (Drop ?h2 ?c ?s2 ?p2))
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                ( at ?c ?p1)
-                                ( at ?s1 ?p1)
-                                ( on ?c ?s1)
-                                ( at ?h1 ?p1)
-                                ( at ?h2 ?p2)
-                                ( at ?s2 ?p2)
-                                ) 
-                        t1
-                        )
-                    )
-    )
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;         Récupere un camion              ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Raméne un camion à la place p si il n'y est pas déjà
 
 (:method do_get_truck
         :parameters (?t - truck ?p1 - place)
@@ -222,10 +243,64 @@
                         t1
                         )
                     )
-    )
+)
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;         Souleve une caisse              ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Souleve une caisse avec une grue en fonction de là ou elle est (camion ou surface)
+
+;; Cas où la caisse est dans un camion
+(:method do_lift_crate
+    :parameters (?c - crate ?p - place ?h - hoist)
+    :expansion (
+                    (tag t1 (do_get_truck ?t ?p))
+                    (tag t2 (Unload ?h ?c ?t ?p))
+                )
+    :constraints(
+                and
+                    (before ( and
+                            ( in ?c ?t)
+                            ( at ?c ?p)
+                            ( at ?h ?p)
+                            )
+                    t1
+                    )
+
+                )
+
+
+
+)
+
+;; Cas où la caisse est sur une surface
+(:method do_lift_crate
+    :parameters (?c - crate ?p - place ?h - hoist)
+    :expansion (
+                    (tag t1 (Lift ?h ?c ?s ?p))
+                )
+    :constraints(
+                and
+                    (before ( and
+                            ( on ?c ?s)
+                            ( at ?c ?p)
+                            ( at ?s ?p)
+                            ( at ?h ?p)
+                            )
+                    t1
+                    )
+
+                )
+
+
 
 )
 
 )
-
-

@@ -26,6 +26,8 @@ Résumé du travail effectué :
 
 			- Avec ses 2 idées , on se retrouve avec des problemes qui ont la meme définition en PDDL qu'en HTN.
 
+		Pouvoir dire au planificateur , cette ensemble de tache , tu peux le faire dans n'importe quel ordre. Trouve le plan le plus court et qui répond aux contraintes
+
 	Creation d'un fichier test qui s'appelle : test_un_probleme.sh
 	
 

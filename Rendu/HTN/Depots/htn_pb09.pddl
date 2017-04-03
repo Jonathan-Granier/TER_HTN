@@ -63,7 +63,24 @@
  )
 (:goal
 	:tasks  (
-			 ;; A remplir 
+				(tag t1 (do_put_on crate3 pallet0))
+				(tag t2 (do_put_on crate13 crate3))
+
+				(tag t3 (do_put_on crate11 pallet1))
+
+				(tag t4 (do_put_on crate10 pallet2))
+				(tag t5 (do_put_on crate2 crate10))
+				(tag t6 (do_put_on crate1 crate2))
+				(tag t7 (do_put_on crate9 crate1))
+
+				(tag t8 (do_put_on crate14 pallet3))
+				(tag t9 (do_put_on crate12 crate14))
+
+				(tag t10 (do_put_on crate6 pallet4))
+				(tag t11 (do_put_on crate4 crate6))
+
+				(tag t12 (do_put_on crate5 pallet5))
+				(tag t13 (do_put_on crate0 crate5))
 			
 			
 		)

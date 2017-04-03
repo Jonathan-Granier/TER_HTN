@@ -69,23 +69,37 @@
  )
 (:goal
 	:tasks  (
-			 ;; A remplir 
+				(tag t1 (do_put_on crate5 pallet0))
+
+				;(tag t2 (do_put_on crate13 pallet1))
+				;(tag t3 (do_put_on crate10 crate13))
+				;(tag t4 (do_put_on crate14 crate10))
+
+				;(tag t5 (do_put_on crate9 pallet2))
+				;(tag t6 (do_put_on crate3 crate9))
+
+				;(tag t7 (do_put_on crate0 pallet4))
+				;(tag t8 (do_put_on crate2 crate0))
+				;(tag t9 (do_put_on crate6 crate2))
+
+				;(tag t10 (do_put_on crate12 pallet5))
+				;(tag t11 (do_put_on crate1 crate12))
 			
 			
 		)
 	:constraints(and
 			(after (and
-								(on crate0 pallet4 )
-								(on crate1 crate12 )
-								(on crate2 crate0 )
-								(on crate3 crate9 )
-								(on crate5 pallet0 )
-								(on crate6 crate2 )
-								(on crate9 pallet2 )
-								(on crate10 crate13 )
-								(on crate12 pallet5 )
-								(on crate13 pallet1 )
-								(on crate14 crate10 )
+								;(on crate0 pallet4 )
+								;(on crate1 crate12 )
+								;(on crate2 crate0 )
+								;(on crate3 crate9 )
+								;(on crate5 pallet0 )
+								;(on crate6 crate2 )
+								;(on crate9 pallet2 )
+								;(on crate10 crate13 )
+								;(on crate12 pallet5 )
+								;(on crate13 pallet1 )
+								;(on crate14 crate10 )
 	 )
 				 t1)
 		)
