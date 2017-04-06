@@ -14,7 +14,7 @@ Information sur le PDDL :
 
 Information sur le HTN_CORE:
 	Les plans sont plus long du fait que le solver va faire :
-	 	leave left shot1  
+	 	leave left shot1
 		grasp right shot1 
 	à la suite.
 	Ce probleme est corrigable en rajoutant des cas dans la methode : do_clean_shot et supprimant le fait de lacher le verre à la fin de la methode : get_second_ingredient

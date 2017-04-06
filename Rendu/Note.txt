@@ -1,0 +1,22 @@
+Documents qui recense les domaines traité et leur differents problemes
+
+Barman : 
+	-PDDL impossible dessus .
+	- HTN : OK
+	- Core : plan plus long , une adaptation pour être faite.
+
+Blocksworld
+	- PDDL : OK
+	- HTN : OK
+	- Core : Probleme dans l'arbre de recherche , impossible de remonter. Obliger de donner une indication supplementaire dans le probleme.
+
+Hiking
+	- PDDL : OK
+	- HTN : Algo fait , il est compliqué
+	- Core : Pas fait.
+
+Depots :
+	- PDDL : OK sur les problemes petits
+	- HTN  : prend trop de mémoire.
+	- Core : prend trop de mémoire.
+
