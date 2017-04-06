@@ -35,7 +35,7 @@ elif [ $1 = "-h" ]; then
 	
 	PLAN=Plan/HTN/$2/plan_$3.pddl
 
-	java -javaagent:$JAR_HTN -server -Xms2048m -Xmx2048m -classpath $JAR_HTN pddl4j.examples.ISHOP.ISHOP -o HTN/$2/domain.pddl -f HTN/$2/htn_pb$3.pddl | tee $TEMP
+	java -javaagent:$JAR_HTN -server -Xms6048m -Xmx6048m -classpath $JAR_HTN pddl4j.examples.ISHOP.ISHOP -o HTN/$2/domain.pddl -f HTN/$2/htn_pb$3.pddl | tee $TEMP
 
 	#PARSE
 	 
@@ -52,7 +52,7 @@ elif [ $1 = "-h" ]; then
 
 elif [ $1 = "-p" ]; then
 	PLAN=Plan/PDDL/$2/plan_$3.pddl
-	java -javaagent:$JAR_PDDL -server -Xms2048m -Xmx2048m fr.uga.pddl4j.planners.hsp.HSP -o $CHEMIN_PDDL/domain.pddl -f $CHEMIN_PDDL/p$3.pddl | tee $PLAN
+	java -javaagent:$JAR_PDDL -server -Xms6048m -Xmx6048m fr.uga.pddl4j.planners.hsp.HSP -o $CHEMIN_PDDL/domain.pddl -f $CHEMIN_PDDL/p$3.pddl | tee $PLAN
 
 
 

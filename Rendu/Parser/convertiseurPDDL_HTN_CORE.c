@@ -16,7 +16,7 @@ void objects_to_predicats(FILE *src,char *data);
 int add_predicat(int index , char *data, char *type, char *object);
 void delete_init(int index, char *data);
 void goals_htn_to_goals_core(FILE *src,char *data);
-
+void UppertoLower(char *c);
 
 int main(int argc,char *argv[])
 {
@@ -363,6 +363,7 @@ void objects_to_predicats(FILE *src,char *data)
 	do{
 		//On a trouvé le type
 		fscanf(src,"%s",objects[index_type][0]);
+		UppertoLower(objects[index_type][0]);
 		//On remplie data
 		for(i=1;i<index_object;i++)
 			index_data = add_predicat(index_data,data,objects[index_type][0],objects[index_type][i]);
@@ -478,3 +479,17 @@ void goals_htn_to_goals_core(FILE *src,char *data)
 }
 
 
+
+/*
+Prend une chaine caractère et transforme les lettre majuscule en lettre minuscule.
+*/
+void UppertoLower(char *c)
+{
+	int i=0;
+	while(c[i]!='\0')
+	{
+		if(c[i]>='A'&&c[i]<='Z')
+			c[i]=c[i]+'a'-'A';
+		i++;
+	}
+}

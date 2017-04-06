@@ -38,7 +38,7 @@ elif [ $1 = "-c" ]; then
 			name=${file:6}
 			name=${name%.*}
 			echo $name
-			./Parser/convertiseurPDDL_HTN_CORE -h $fullfile Core/$2/p$name.jap
+			./Parser/convertiseurPDDL_HTN_CORE -c $fullfile Core/$2/pb$name.jap
 		fi
 	done	
 else
