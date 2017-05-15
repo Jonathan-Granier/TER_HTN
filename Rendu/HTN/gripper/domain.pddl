@@ -39,6 +39,65 @@
 
 
 
+
+
+;------------------------------------------------------------------
+;                               Methods
+;------------------------------------------------------------------
+;                             Do_Probleme
+;------------------------------------------------------------------
+;; Transporte 2 ball de la piece ra à la piece rb puis recommence jusqu'à qu'il n'y est plus de balle. 
+(:method do_problem
+    :parameters (?ra - room ?rb - room )
+    :expansion  (
+                    (tag t1 (do_move_on ?ra))
+                    (tag t2 (pick ?b1 ?ra ?gl))
+                    (tag t3 (pick ?b2 ?ra ?gr))
+                    (tag t4 (move ?ra ?rb))
+                    (tag t5 (drop ?b1 ?rb ?gl))
+                    (tag t6 (drop ?b2 ?rb ?gr))
+                    (tag t7 (do_problem ?ra ?rb))
+                )
+    :constraints
+                ( and
+                    (before 
+                        ( and
+                        ( at ?b1 ?ra)
+                        ( at ?b2 ?ra)
+                        ( free ?gl)
+                        ( free ?gr)
+                        )
+                    t1
+                    )
+                )
+)
+
+;; Il n'y a plus de balle à transporté, donc on s'arrete
+
+(:method do_problem
+    :parameters (?ra - room ?rb - room )
+    :expansion  (
+                    (tag t1 (nop))
+                )
+    :constraints
+                ( and
+                    (before 
+                        ( not(at ?b ?ra)
+                        )
+                    t1
+                    )
+                )
+)
+
+
+;------------------------------------------------------------------
+;                               Methods
+;------------------------------------------------------------------
+;                             Do_Move
+;------------------------------------------------------------------
+
+;; Ramene le gripper à la room r s'il n'y est pas déjà. 
+
 (:method do_move_on
     :parameters (?r - room)
     :expansion  (
@@ -72,51 +131,4 @@
 )
 
 
-
-;; Si j'ai plus de ball dans A j'ai fini
-
-
-
-;; Sinon je prends 2 balls et je 
-(:method do_problem
-    :parameters (?ra - room ?rb - room )
-    :expansion  (
-                    (tag t1 (do_move_on ?ra))
-                    (tag t2 (pick ?b1 ?ra ?gl))
-                    (tag t3 (pick ?b2 ?ra ?gr))
-                    (tag t4 (move ?ra ?rb))
-                    (tag t5 (drop ?b1 ?rb ?gl))
-                    (tag t6 (drop ?b2 ?rb ?gr))
-                    (tag t7 (do_problem ?ra ?rb))
-                )
-    :constraints
-                ( and
-                    (before 
-                        ( and
-                        ( at ?b1 ?ra)
-                        ( at ?b2 ?ra)
-                        ( free ?gl)
-                        ( free ?gr)
-                        )
-                    t1
-                    )
-                )
-)
-
-
-
-(:method do_problem
-    :parameters (?ra - room ?rb - room )
-    :expansion  (
-                    (tag t1 (nop))
-                )
-    :constraints
-                ( and
-                    (before 
-                        ( not(at ?b ?ra)
-                        )
-                    t1
-                    )
-                )
-)
 )

@@ -1,0 +1,7 @@
+0 :  (rewind-movie) 
+1 :  (get-cheese z7  )  
+2 :  (get-crackers k7  )  
+3 :  (get-pop p7  )  
+4 :  (get-dip d7  )  
+5 :  (get-chips c7  )  
+6 :  (reset-counter) 

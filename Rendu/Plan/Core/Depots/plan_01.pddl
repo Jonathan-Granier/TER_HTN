@@ -1,5 +1,5 @@
-0 :  (Lift hoist0 crate1 pallet0 depot0  )  
-1 :  (Drive truck0 distributor1 depot0  )  
+0 :  (Drive truck0 distributor1 depot0  )  
+1 :  (Lift hoist0 crate1 pallet0 depot0  )  
 2 :  (Load hoist0 crate1 truck0 depot0  )  
 3 :  (Drive truck0 depot0 distributor0  )  
 4 :  (Lift hoist1 crate0 pallet1 distributor0  )  

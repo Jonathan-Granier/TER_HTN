@@ -57,3 +57,20 @@ Résumé du travail effectué :
 
 
 	
+BUG connue :
+	Quand il n'y a pas de contrainte , j'ai une execption
+
+
+Questions : 
+	Peut avoir un variable indiferente par rapport à une autre (Exemple , j'ai 2 ball f1 et f2 , est-ce que je peut dire que f2 est peut-etre egal à f1 , peut-etre pas ) ?
+
+
+En plannification classique , il y a un cout . En HTN , on en peut pas le representer , donc on va utilisé un systeme de pile , à chaque fois qu'on fait une action precise on dépile.
+
+
+Amilioration possible :
+	Définir une contrainte qui permet de pouvoir utilisé 2 variables du meme type de manière indépendante . Pour l'instite si j'ai 2 variables de type caisse A et B et A !=B forcement.
+
+Prolèmes rencontrées :
+	Mettre l'arret des methodes recursive avant plutot que après. Il vaut mieux elaguer que d'aller en pronfondeur : Boucle inifni
+	Reduire la taille des méthodes et le nombre de variable utilisé dans chaque methode pour réduire la taille des données générer ==> Reduit la complixité du programme

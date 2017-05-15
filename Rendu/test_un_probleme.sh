@@ -116,13 +116,12 @@ function test_un_probleme()
 
 }
 
-
-
-for i in `seq 01 35` ;
-do
-	if [ $i -lt 10 ]; then
-
-		i="0$i"
-	fi
-	test_un_probleme $1 $i
-done
+for fullfile in PDDL/$1/* 
+	do
+		file=$(basename $fullfile)
+		if [ "${file::1}" = 'p' ]; then
+			name=${file:1}
+			name=${name%%.*}
+			test_un_probleme $1 $name
+		fi
+	done

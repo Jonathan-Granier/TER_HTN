@@ -9,7 +9,7 @@
 
 int get_under_parenthesis(FILE *src, char *data, int index,char *separator);
 void go_to_next_parenthesis(FILE *src);
-void pddl_to_htn(FILE *src,FILE *dst);
+void pddl_to_htn(FILE *src,FILE *dst,int uniquetask);
 void htn_to_core(FILE *src, FILE *dst);
 int add_separator(char *data, int index, char *separator);
 void objects_to_predicats(FILE *src,char *data);
@@ -27,16 +27,21 @@ int main(int argc,char *argv[])
 		printf("Usage : convertiseurPDDL_HTN_CORE <options> <src> <dest>\n");
 		printf("-c :		htn to core");
 		printf("-h :		pddl to htn");
+		printf("-u : 		tache unique : (tag t1 (do_problem ))");
 		return -1;
 
 	}
 
-	FILE *src = fopen(argv[2],"r");
-	FILE *dst = fopen(argv[3],"w");
+	FILE *src = fopen(argv[argc-2],"r");
+	FILE *dst = fopen(argv[argc-1],"w");
+
 	if((argc == 4) && (strcmp(argv[1],"-c") == 0))
 		htn_to_core(src,dst);
 	else
-		pddl_to_htn(src,dst);
+		if((argc == 5) && ((strcmp(argv[1],"-u") == 0) || (strcmp(argv[2],"-u") == 0)))
+			pddl_to_htn(src,dst,1);
+		else
+			pddl_to_htn(src,dst,0);
 	
 	fclose(src);
 	fclose(dst);
@@ -47,10 +52,11 @@ int main(int argc,char *argv[])
 
 /*
 Traduit un fichier probleme pddl (src) en un fichier probleme HTN (dst)
+Si unique task != 0 alors dans la catégorie task ecrit : (tag t1 (do_problem ))
 Attention : Aucune vérification n'est faite sur la structure du fichier pddl 
 			il peut donc y avoir des erreurs 
 */
-void pddl_to_htn(FILE *src,FILE *dst)
+void pddl_to_htn(FILE *src,FILE *dst,int uniquetask)
 {
 	char temp[TAILLE_TEMP];
 	//Definition du probleme
@@ -83,7 +89,11 @@ void pddl_to_htn(FILE *src,FILE *dst)
 
 	fprintf(dst,"(:goal\n");
 	fprintf(dst,"\t:tasks  (\n");
-	fprintf(dst,"\t\t\t ;; A remplir \n\t\t\t\n\t\t\t\n");
+	if(uniquetask)
+		fprintf(dst,"\t\t\t (tag t1 (do_problem )) \n\t\t\t\n\t\t\t\n");
+	else
+		fprintf(dst,"\t\t\t ;; A remplir \n\t\t\t\n\t\t\t\n");
+	
 	fprintf(dst,"\t\t)\n");
 	fprintf(dst,"\t:constraints(and\n\t\t\t(after ");
 

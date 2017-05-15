@@ -10,6 +10,7 @@ function aide()
 	echo "Usage : ./convertie_problemes.sh <Option> <Domaine>"
 	echo " -h 		:		PDDL à HTN"
 	echo " -c 		:		HTN à CORE"
+	echo " -u 		:		tache unique : (tag t1 (do_problem ))"
 	echo " --help 	: 		affiche l'aide"
 }
 
@@ -18,18 +19,27 @@ function aide()
 if [ $# -eq 0 ] || [ $1 = "--help" ]; then
 	aide
 
-elif [ $1 = "-h" ]; then
-	for fullfile in PDDL/$2/* 
+elif [ $1 = "-h" ] || [ $2 = "-h" ]; then
+	if [ $# -eq 2 ]; then
+		FOLDER=$2
+	else
+		FOLDER=$3
+	fi
+
+	for fullfile in PDDL/$FOLDER/* 
 	do
 		file=$(basename $fullfile)
 		if [ "${file::1}" = 'p' ]; then
 			name=${file:1}
 			echo $file
-			./Parser/convertiseurPDDL_HTN_CORE -h $fullfile HTN/$2/htn_pb$name
+			if [ $1 = "-u" ] || [ $2 = "-u" ];then 
+				./Parser/convertiseurPDDL_HTN_CORE -h -u $fullfile HTN/$FOLDER/htn_pb$name
+			else
+				./Parser/convertiseurPDDL_HTN_CORE -h $fullfile HTN/$FOLDER/htn_pb$name
+			fi
 		fi
 	done
 
-#A tester
 elif [ $1 = "-c" ]; then
 	for fullfile in HTN/$2/* 
 	do

@@ -1,0 +1,11 @@
+00: (    up f0 f3) [1]
+01: ( board f3 p0) [1]
+02: (  down f3 f2) [1]
+03: ( board f2 p1) [1]
+04: (  down f2 f0) [1]
+05: (depart f0 p1) [1]
+06: ( board f0 p2) [1]
+07: (depart f0 p0) [1]
+08: (    up f0 f4) [1]
+09: (depart f4 p2) [1]
+

@@ -698,6 +698,7 @@ public final class Preprocessing {
 				}
 				
 			}
+		}
 			System.out.println("\n********* Preprocessing stats: **********");
 			System.out.println("1- Standardization done in: " + (tStand / 1000) + "s");
 			System.out.println("2- Integer Encoding done in: " + (tIntEnc / 1000) + "s");
@@ -725,7 +726,7 @@ public final class Preprocessing {
 			System.out.println("		6.4.4- Encoding4 done in: " + enc4 + "ms");
 			System.out.println("	6.5- Relevant Operators table done in: " + (tBitEnc5 / 1000) + "s");
 			System.out.println("	6.6- Relevant Methods table done in: " + (tBitEnc6 / 1000) + "s");
-		}
+		
 		
 		System.out.println("\n********* Preprocessing stats: **********");
 		System.out.println("1- Standardization done in: " + (tStand / 1000) + "s");

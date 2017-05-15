@@ -7,3 +7,4 @@ Successful plans:
 Value: 46
  Plan/Core/blocksworld/plan_35.pddl 46 
 
+

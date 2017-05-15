@@ -1,0 +1,57 @@
+(defproblem problem byPaser
+(
+	;;;
+	;;;   facts
+	;;;
+
+
+	(chips c6)
+	(chips c5)
+	(chips c4)
+	(chips c3)
+	(chips c2)
+	(chips c1)
+
+	(dip d6)
+	(dip d5)
+	(dip d4)
+	(dip d3)
+	(dip d2)
+	(dip d1)
+
+	(pop p6)
+	(pop p5)
+	(pop p4)
+	(pop p3)
+	(pop p2)
+	(pop p1)
+
+	(cheese z6)
+	(cheese z5)
+	(cheese z4)
+	(cheese z3)
+	(cheese z2)
+	(cheese z1)
+
+	(crackers k6)
+	(crackers k5)
+	(crackers k4)
+	(crackers k3)
+	(crackers k2)
+	(crackers k1)
+
+ 
+     
+ (not (movie-rewound  )  )
+          (not (counter-at-two-hours  )  )
+          (not (counter-at-zero  )  )   
+)
+	;;;
+	;;;   goals
+	;;;
+
+
+(
+	(do_problem )
+)
+)
