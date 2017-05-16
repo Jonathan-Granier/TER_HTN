@@ -13,7 +13,4 @@
 12 :     (up f0 f7)[1]
 13 :     (depart f7 p3)[1]
 14 :     (down f7 f6)[1]
-15 :     (board f6 p3)[1]
-16 :     (depart f6 p2)[1]
-17 :     (up f6 f7)[1]
-18 :     (depart f7 p3)[1]
+15 :     (depart f6 p2)[1]

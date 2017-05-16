@@ -37,7 +37,17 @@ Mystery :
 
 Elevator :
 	- PDDL : OK
-	- HTN  : En cours
+	- HTN  : OK
+	- Core : OK mais algo different et moins efficasse en taille de plan
+
+zenotravel :
+	- PDDL : OK
+	- HTN  : Ca bug de manière incompréhensible / probleme de typage
 	- Core : Pas fait
 
+
+satellite :
+	- PDDL : OK
+	- HTN  : OK mais pas optimal , le solver ne remonte pas assez le branche pour trouver la solution optimal
+	- Core : Pas fait
 

@@ -75,7 +75,7 @@
 ;ALGO :
 ;Recupere tout les gens
 ;Poser les gens qui ont besoin d'etre Poser
-;Une fois tout les gens Recupere
+;Une fois tout les gens sont Recupéré
 ;Aller tous les poser
 
 
@@ -83,14 +83,14 @@
 
         :parameters ()
         :expansion  (
-                        (tag t1 (do_check_floor ?f1))
-                        (tag t2 (do_take_all ?f1))
-                        ;(tag t3 (do_start_throw_all))
+                        (tag t1 (do_check_floor ?f))
+                        (tag t2 (do_take_all ?f))
+                        (tag t3 (do_start_throw_all))
                     )
         :constraints( 
                     and 
                         (before ( and 
-                                    ( lift-at ?f1)
+                                    ( lift-at ?f)
                                     ) 
                         t1
                         )
@@ -102,7 +102,7 @@
 ;                   Check un étage
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Fait descendre les personnes qui doivent descendre
+
 (:method do_check_floor
 
     :parameters (?f - floor)
@@ -121,7 +121,7 @@
 
 
 )
-
+;; Fait descendre les personnes qui doivent descendre
 (:method do_check_floor
 
     :parameters (?f - floor)
@@ -158,6 +158,7 @@
                                     ( lift-at ?f)
                                     ( origin ?p ?f)
                                     ( not ( boarded ?p))
+                                    ( not ( served ?p))
                                 ) 
                         t1
                         )
@@ -167,7 +168,6 @@
 )
 
 
-; Fin du check de l'etage
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;                   Recupere tout le monde
@@ -197,7 +197,6 @@
     :expansion (
                     
                     (tag t1 (up ?f ?to))
-                    
                     (tag t3 (do_check_floor ?to))
                     (tag t4 (do_take_all ?to))
                 )
@@ -289,7 +288,6 @@
 
 
 
-;; DANS LES TENEBRES
 (:method do_throw_all
  :parameters (?f - floor)
     :expansion (
@@ -315,6 +313,7 @@
 (:method do_throw_all
  :parameters (?f - floor)
     :expansion (
+                    ;(tag t1 (nop))
                     (tag t1 (down ?f ?to))
                     (tag t2 (do_check_floor ?to))
                     (tag t3 (do_throw_all ?to))

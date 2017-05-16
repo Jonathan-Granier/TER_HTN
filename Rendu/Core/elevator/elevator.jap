@@ -1,0 +1,215 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Version 2
+; Récupere les personnes 1 par 1 
+; demande de definir une tache par personnes 
+; contrairement au 1er
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(defdomain elevator
+	(
+		(:operator (!board ?f ?p)
+					(
+						(floor ?f) 
+						(passenger ?p) 
+						(lift-at ?f) 
+						(origin ?p ?f)
+					)
+					( 
+					)
+					(
+						(boarded ?p)
+					)
+		)
+		(:operator (!depart ?f ?p)
+					(
+						(floor ?f) 
+						(passenger ?p) 
+						(lift-at ?f) 
+						(destin ?p ?f)
+						(boarded ?p)
+					)
+					( 
+						(boarded ?p)
+					)
+					(
+						(served ?p)
+					)
+		)
+		(:operator (!up ?f1 ?f2)
+					(
+						(floor ?f1)
+						(floor ?f2)  
+						(lift-at ?f1)
+						(above ?f1 ?f2) 
+					)
+					( 
+						(lift-at ?f1)
+					)
+					(
+						(lift-at ?f2)
+					)
+		)
+		(:operator (!down ?f1 ?f2)
+					(
+						(floor ?f1)
+						(floor ?f2)  
+						(lift-at ?f1)
+						(above ?f2 ?f1) 
+					)
+					( 
+						(lift-at ?f1)
+					)
+					(
+						(lift-at ?f2)
+					)
+		)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                   Sert un passager
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+(:method (do_served ?p )
+Case1	(
+			( passenger ?p )
+			( served ?p)
+		)
+		()
+Case2   (
+			( floor ?f)
+			( lift-at ?f)
+			( passenger ?p )
+			( boarded ?p)
+		)
+		(
+			(do_throw ?p)
+		)		
+Case3	(
+			( floor ?f)
+			( lift-at ?f)
+			( passenger ?p )
+		)
+		(
+			(do_take ?p)
+            (do_throw ?p)
+		)	
+
+)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                   Recupere Une personne
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(:method (do_take ?p)
+;; L'ascenseur est au bonne étage
+Case1   (
+			( floor ?f)
+			( passenger ?p)
+			( lift-at ?f)
+		    ( origin ?p ?f)
+		)
+		(
+			(!board ?f ?p)
+		)
+;; L'ascenseur est à un étage en dessous 
+Case2  (
+			( floor ?f)
+			( floor ?to)
+			( passenger ?p)
+
+		 	( lift-at ?f)
+		    ( above ?f ?to)
+		    ( origin ?p ?to)
+
+		)
+		(
+			(!up ?f ?to)
+			(!board ?to ?p)
+		)
+;; L'ascenseur est à un étage en dessus 
+Case3  (
+			( floor ?f)
+			( floor ?to)
+			( passenger ?p)
+
+			( lift-at ?f)
+            ( above ?to ?f)
+            ( origin ?p ?to)
+		)
+		(
+			(!down ?f ?to)
+			(!board ?to ?p)
+		)
+
+
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                   Pose une personne
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(:method (do_throw ?p)
+;; L'ascenseur est au bonne étage
+Case1  (
+			( floor ?f)
+			( lift-at ?f)
+			( passenger ?p)
+			( boarded ?p)
+			( destin ?p ?f)
+		)
+		(
+			(!depart ?f ?p)
+		)
+
+;; L'ascenseur est à un étage en dessous		
+Case2  (
+			( floor ?f)
+			( floor ?to)
+			( passenger ?p)
+
+		 	( lift-at ?f)
+            ( above ?f ?to)
+            ( boarded ?p)
+            ( destin ?p ?to)
+
+		)
+		(
+			(!up ?f ?to)
+            (!depart ?to ?p)
+		)
+
+;; L'ascenseur est à un étage en dessus 
+Case3  (
+			( floor ?f)
+			( floor ?to)
+			( passenger ?p)
+			( lift-at ?f)
+            ( above ?to ?f)
+            ( boarded ?p)
+            ( destin ?p ?to)
+		)
+		(
+			(!down ?f ?to)
+            (!depart ?to ?p)
+		)
+
+
+)
+
+
+
+
+)
+)

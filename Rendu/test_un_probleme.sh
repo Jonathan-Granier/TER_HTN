@@ -24,6 +24,7 @@ NEUTRE='\e[0;m'
 #	Debug
 ###################
 MAKE_PDDL=0
+TIMEMAX=300s
 ###################
 
 
@@ -74,38 +75,49 @@ function test_un_probleme()
 
 	echo -e "${NEUTRE} Probleme numero : $2"
 	echo -e -n "\t"
-	./$SCRIPT_PDDL -h $1 $2 > $TEMP
-
-	sed -i -n '/seconds total time/p' $TEMP
-	sed -i -r "s/                //g" $TEMP
-	TIME=$(sed -r "s/ seconds total time//g" $TEMP)
-	TIME_TOTAL="$TIME_TOTAL \t$TIME"
-	
-	./$SCRIPT_PDDL -vH $1 $2 > $TEMP
-	Parse_Validateur $TEMP $HTN
-
-
-	./$SCRIPT_PDDL -c $1 $2  > $TEMP
-	sed -i -n '/Conjectures found in/p' $TEMP
-	sed -i -r "s/ s://g" $TEMP
-	TIME=$(sed -r "s/Conjectures found in//g" $TEMP)
-	TIME_TOTAL="$TIME_TOTAL \t\t$TIME"
-
-	./$SCRIPT_PDDL -vC $1 $2 > $TEMP
-	Parse_Validateur $TEMP $CORE
-
-
-	if [ $MAKE_PDDL -eq 1 ]; then
-		./$SCRIPT_PDDL -p $1 $2 > $TEMP
-
+	timeout $TIMEMAX ./$SCRIPT_PDDL -h $1 $2 > $TEMP
+	RETVAL=$?
+	if [ $RETVAL -eq 124 ]; then
+		echo "timeout"
+	else
 		sed -i -n '/seconds total time/p' $TEMP
-		sed -i -r "s/                  //g" $TEMP
-		TIME=$(sed -r "s/seconds total time//g" $TEMP)
+		sed -i -r "s/                //g" $TEMP
+		TIME=$(sed -r "s/ seconds total time//g" $TEMP)
+		TIME_TOTAL="$TIME_TOTAL \t$TIME"
+	
+		./$SCRIPT_PDDL -vH $1 $2 > $TEMP
+		Parse_Validateur $TEMP $HTN
+	fi
+
+	timeout $TIMEMAX ./$SCRIPT_PDDL -c $1 $2  > $TEMP
+	RETVAL=$?
+	if [ $RETVAL -eq 124 ]; then
+		echo "timeout"
+	else
+		sed -i -n '/Conjectures found in/p' $TEMP
+		sed -i -r "s/ s://g" $TEMP
+		TIME=$(sed -r "s/Conjectures found in//g" $TEMP)
 		TIME_TOTAL="$TIME_TOTAL \t\t$TIME"
 
+		./$SCRIPT_PDDL -vC $1 $2 > $TEMP
+		Parse_Validateur $TEMP $CORE
+	fi
 
-		./$SCRIPT_PDDL -vP $1 $2 > $TEMP
-		Parse_Validateur $TEMP $PDDL
+	if [ $MAKE_PDDL -eq 1 ]; then
+		timeout $TIMEMAX ./$SCRIPT_PDDL -p $1 $2 > $TEMP
+		RETVAL=$?
+		if [ $RETVAL -eq 124 ]; then
+		echo "timeout"
+		else
+			sed -i -n '/seconds total time/p' $TEMP
+			sed -i -r "s/                  //g" $TEMP
+			TIME=$(sed -r "s/seconds total time//g" $TEMP)
+			TIME_TOTAL="$TIME_TOTAL \t\t$TIME"
+
+
+			./$SCRIPT_PDDL -vP $1 $2 > $TEMP
+			Parse_Validateur $TEMP $PDDL
+		fi
 	fi
 
 	#rm $TEMP

@@ -59,7 +59,8 @@ Résumé du travail effectué :
 	
 BUG connue :
 	Quand il n'y a pas de contrainte , j'ai une execption
-
+	Il a du mal à utilisé (either type1 type2) dans une déclaration de predicat il va parfois utilisé un mauvais typage sur ce predicat alors qu'il a juste avant un predicat qui donne le type sans ambiguité .
+	Par contre si le predicat ambigu est avant , cela fonctionne
 
 Questions : 
 	Peut avoir un variable indiferente par rapport à une autre (Exemple , j'ai 2 ball f1 et f2 , est-ce que je peut dire que f2 est peut-etre egal à f1 , peut-etre pas ) ?
