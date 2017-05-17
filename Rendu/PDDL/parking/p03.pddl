@@ -118,3 +118,20 @@
 ;  curb_11: car_11 
 ;  curb_12: car_12 
 ; =========== /GOAL =========== 
+
+
+; =========== TEST =========== 
+;  curb_00: car_00 car_13
+;  curb_01: car_11 car_23 
+;  curb_02: car_12 car_21
+;  curb_03: car_03 car_16 
+;  curb_04: car_04 car_17
+;  curb_05: car_05 car_18 
+;  curb_06: car_02 car_22 
+;  curb_07: car_07 car_19 
+;  curb_08: car_08 car_14 
+;  curb_09: car_10 car_09
+;  curb_10: car_01 car_15 
+;  curb_11: car_06 car_20 
+;  curb_12:    
+; ========== /TEST =========== 

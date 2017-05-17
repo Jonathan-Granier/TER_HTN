@@ -67,7 +67,7 @@
                 (tag t8 (do_correct_a_curb curb_07 car_07 car_19))
                 (tag t9 (do_correct_a_curb curb_08 car_08 car_20))
                 (tag t10 (do_correct_a_curb curb_09 car_09 car_21))
-                (tag t11 (do_transfert_car car_10 car_11))
+                (tag t11 (do_transfert_car_to_curb car_10 car_11))
 			
 		)
 	:constraints(and

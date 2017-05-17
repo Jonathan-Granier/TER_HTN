@@ -142,3 +142,23 @@
 ;  curb_14: car_14 
 ;  curb_15: car_15 
 ; =========== /GOAL =========== 
+
+
+; =========== INIT =========== 
+;  curb_00: car_00 car_16
+;  curb_01: car_26  
+;  curb_02: car_04 car_11 
+;  curb_03: car_23 car_18 
+;  curb_04: car_03 car_12 
+;  curb_05: car_07 car_13 
+;  curb_06: car_20 car_17 
+;  curb_07: car_02 car_05 
+;  curb_08: car_29 car_08 
+;  curb_09: car_15 car_10 
+;  curb_10: car_27 car_06 
+;  curb_11: car_14 car_28 
+;  curb_12: car_19 car_24 
+;  curb_13: car_25 car_21 
+;  curb_14: car_01 
+;  curb_15: car_09 car_22
+; ========== /INIT =========== 

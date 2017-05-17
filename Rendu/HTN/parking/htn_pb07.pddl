@@ -65,7 +65,20 @@
 (:goal
 	:tasks  (
 			 ;; A remplir 
-			
+                (tag t1 (do_correct_a_curb curb_00 car_00 car_14))
+                (tag t2 (do_correct_a_curb curb_01 car_01 car_15))
+                (tag t3 (do_correct_a_curb curb_02 car_02 car_16))
+                (tag t4 (do_correct_a_curb curb_03 car_03 car_17))
+                (tag t5 (do_correct_a_curb curb_04 car_04 car_18))
+                (tag t6 (do_correct_a_curb curb_05 car_05 car_19))
+                (tag t7 (do_correct_a_curb curb_06 car_06 car_20))
+                (tag t8 (do_correct_a_curb curb_07 car_07 car_21))
+                (tag t9 (do_correct_a_curb curb_08 car_08 car_22))
+                (tag t10 (do_correct_a_curb curb_09 car_09 car_23))
+                (tag t11 (do_correct_a_curb curb_10 car_10 car_24))
+                (tag t12 (do_correct_a_curb curb_11 car_11 car_25))
+                (tag t13 (do_transfert_car_to_curb car_12 car_13))  
+      
 			
 		)
 	:constraints(and
