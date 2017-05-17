@@ -1,0 +1,231 @@
+(defdomain gripper
+	(
+
+		(:operator (!turn_to ?s ?d_new ?d_prev)
+			(
+				(satellite ?s)
+				(direction ?d_new)
+				(direction ?d_prev)
+				(pointing ?s ?d_prev)
+			)
+			(
+				(pointing ?s ?d_prev)
+			)
+			(
+				(pointing ?s ?d_new)
+			)
+		)
+		(:operator (!switch_on ?i ?s)
+			(
+				(satellite ?s)
+				(instrument ?i)
+				(on_board ?i ?s) 
+              	(power_avail ?s)
+			)
+			(
+				(calibrated ?i)
+                (power_avail ?s)
+			)
+			(
+				(power_on ?i)
+			)
+		)
+		(:operator (!switch_off ?i ?s)
+			(
+				(satellite ?s)
+				(instrument ?i)
+				(on_board ?i ?s) 
+              	(power_on ?i)
+			)
+			(
+				(power_on ?i)
+			)
+			(
+				(power_avail ?s)
+			)
+		)
+		(:operator (!calibrate ?s ?i ?d)
+			(
+				(satellite ?s)
+				(instrument ?i)
+				(direction ?d)
+				(on_board ?i ?s) 
+              	(calibration_target ?i ?d)
+                (pointing ?s ?d)
+                (power_on ?i)
+			)
+			(
+				
+			)
+			(
+				(calibrated ?i)
+			)
+		)
+		(:operator (!take_image ?s ?d ?i ?m)
+			(
+				(satellite ?s)
+				(instrument ?i)
+				(direction ?d)
+				(mode ?m)
+				(calibrated ?i)
+				(on_board ?i ?s)
+				(supports ?i ?m)
+				(power_on ?i)
+				(pointing ?s ?d)
+				(power_on ?i)
+			)
+			(
+				
+			)
+			(
+				(have_image ?d ?m)
+			)
+		)
+
+
+
+
+
+;------------------------------------------------------------------
+;                               Methods
+;------------------------------------------------------------------
+;                          Prendre une image
+;------------------------------------------------------------------
+;; Algo :
+;;     Allumer l'instrument adequat 
+;;     Le calibrer 
+;;     Orienter le satellite dans la bonne direction
+;;     Prendre la photo.
+
+
+(:method (do_take_image ?d ?m)
+
+;; Cas où il y a déjà un instrument correspondant au mode allumé
+Case1	(
+			(direction ?d)
+			(mode ?m)
+
+			( supports ?i ?m)
+            ( on_board ?i ?s) 
+            ( power_on ?i )
+            ( calibrated ?i) 
+
+
+		)
+	    (
+	        (do_turn_to ?s ?d)
+	        (!take_image ?s ?d ?i ?m)
+	    )
+;; Cas où il n'y a pas d'instrument correspondant au mode allumé
+Case2	(
+			( direction ?d)
+			( mode ?m)
+			( supports ?i ?m)
+            ( on_board ?i ?s) 
+		)
+		(
+
+            (do_power_on ?i ?s)
+            (do_calibrate ?i ?s)
+            (do_turn_to ?s ?d)
+            (!take_image ?s ?d ?i ?m)
+		)
+)
+
+;------------------------------------------------------------------
+;                  		 Allume un instrument
+;------------------------------------------------------------------
+
+
+(:method (do_power_on ?i ?s)
+
+;; Cas où il est déjà allumé
+Case1	(
+			(instrument ?i)
+			(satellite ?s)
+
+			( power_on ?i)
+         	( on_board ?i ?s)
+
+
+		)
+	    (
+	    )
+;; Cas où il n'est pas allumé
+Case2	(
+			(instrument ?i)
+			(satellite ?s)
+			( on_board ?i ?s)
+                            
+		)
+		(
+            (!switch_on ?i ?s)
+		)
+)
+
+;------------------------------------------------------------------
+;               Calibre un instrument               
+;------------------------------------------------------------------
+
+(:method (do_calibrate ?i ?s)
+
+;; Cas où il est déjà calibré
+Case1	(
+			(instrument ?i)
+			(satellite ?s)
+
+			( calibrated ?i)
+            ( on_board ?i ?s)
+
+
+		)
+	    (
+	    )
+;; Cas où il n'est pas calibré
+Case2	(
+			(instrument ?i)
+			(satellite ?s)
+			( on_board ?i ?s)
+            ( calibration_target ?i ?d)
+                            
+		)
+		(
+            (do_turn_to ?s ?d)
+            (!calibrate ?s ?i ?d)
+		)
+)
+
+
+;------------------------------------------------------------------
+;               Oriente un statellite               
+;------------------------------------------------------------------
+
+
+(:method (do_turn_to ?s ?d)
+
+;; Cas où il est déjà bien orienté
+Case1	(
+			(direction ?d)
+			(satellite ?s)
+
+			( pointing ?s ?d)
+
+
+		)
+	    (
+	    )
+;; Cas où il n'est pas bien orienté
+Case2	(
+			(direction ?d)
+			(direction ?from)
+			(satellite ?s)
+			( pointing ?s ?from)
+                            
+		)
+		(
+            (!turn_to ?s ?d ?from)
+		)
+)
+
+)
+)

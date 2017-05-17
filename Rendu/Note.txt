@@ -49,5 +49,5 @@ zenotravel :
 satellite :
 	- PDDL : OK
 	- HTN  : OK mais pas optimal , le solver ne remonte pas assez le branche pour trouver la solution optimal
-	- Core : Pas fait
+	- Core : OK mais meme probleme que HTN
 
