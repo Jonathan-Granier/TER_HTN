@@ -132,9 +132,9 @@
                     and 
                         (before ( and 
                                 
-                                    ( at ?a ?from)
-                                    ( in ?p ?a)
                                     ;( at ?a ?from)
+                                    ( in ?p ?a)
+                                    ( at ?a ?from)
                                 ) 
                         t1
                         )

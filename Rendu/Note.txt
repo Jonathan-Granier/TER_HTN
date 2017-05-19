@@ -1,19 +1,19 @@
 Documents qui recense les domaines traité et leur differents problemes
 
 Barman : 
-	-PDDL impossible dessus .
-	- HTN : OK
-	- Core : plan plus long , une adaptation pour être faite.
+	- PDDL 	: impossible dessus .
+	- HTN 	: OK
+	- Core 	: plan plus long , une adaptation pour être faite.
 
 Blocksworld
-	- PDDL : OK
-	- HTN : OK
-	- Core : Probleme dans l'arbre de recherche , impossible de remonter. Obliger de donner une indication supplementaire dans le probleme.
+	- PDDL 	: OK
+	- HTN 	: OK
+	- Core 	: Probleme dans l'arbre de recherche , impossible de remonter. Obliger de donner une indication supplementaire dans le probleme.
 
 Hiking
-	- PDDL : OK
-	- HTN : Algo fait , il est compliqué
-	- Core : Pas fait.
+	- PDDL 	: OK
+	- HTN 	: Algo fait , il est compliqué
+	- Core 	: Pas fait.
 
 Depots :
 	- PDDL : OK sur les problemes petits
@@ -51,3 +51,7 @@ satellite :
 	- HTN  : OK mais pas optimal , le solver ne remonte pas assez le branche pour trouver la solution optimal
 	- Core : OK mais meme probleme que HTN
 
+parking :
+	- PDDL : Trop complexe
+	- HTN : OK mais juste niveau mémoire --> Faire un test avec uniquement 4 methode pour bouger et très peu d'indication
+	- Core : OK ? , a tester car la résolution est longue

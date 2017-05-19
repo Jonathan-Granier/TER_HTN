@@ -230,7 +230,7 @@
                     )
     )
 
-;; Cas où car_i est dans la bonne place mais pas dans la bonne position et que c'est car_j qui est derrière lui
+;; Cas où car_i est dans la bonne place mais pas dans la bonne position et que ce n'est pas car_j qui est derrière lui
 ;; (curb  car_x car_i)
 
 (:method do_correct_a_curb 
@@ -264,10 +264,10 @@
         :expansion  (
                         ;(tag t1 (nop))
                         (tag t1 (do_clear_i ?car_i))
-                        (tag t2 (do_clear_curb ?curb))
-                        (tag t3 (do_move_car_i ?curb ?car_i))
-                        (tag t4 (do_clear_j ?car_j))
-                        (tag t5 (do_move_car_j ?car_i ?car_j))
+                        ;(tag t2 (do_clear_curb ?curb))
+                        ;(tag t3 (do_move_car_i ?curb ?car_i))
+                        ;(tag t4 (do_clear_j ?car_j))
+                        ;(tag t5 (do_move_car_j ?car_i ?car_j))
 
                     )
         :constraints( 
@@ -393,7 +393,7 @@
 ;------------------------------------------------------------------
 
 
-;; Cas où car_i est clear et que car_i n'est pas au fond d'une place et que 
+;; Cas où car_i est clear et que car_i n'est pas au fond d'une place 
 (:method do_clear_i 
 
         :parameters (?car_i - car)
@@ -406,12 +406,15 @@
                         (before ( and 
                                     ( car-clear ?car_i)
                                     ( behind-car ?car_i ?c)
+                                    
                                 ) 
                         t1
                         )
                          
                     )
     )
+
+
 
 
 ;; Cas où car_i est clear mais que car_i est au fond d'une place
@@ -454,14 +457,15 @@
                     and 
                         (before ( and 
                                     ( car-clear ?car_x)
-                                    ( behind-car ?car_x ?c) 
+                                    ( behind-car ?car_x ?c)
+                                    ( car-clear ?car_i)
+                                    ( at-curb ?car_i) 
                                 ) 
                         t1
                         )
                          
                     )
     )
-
 
 ;; Cas où car_i n'est pas clear
 (:method do_clear_i 
@@ -579,7 +583,7 @@
                          
                     )
     )
-; Cas ou il y a 2 voiture
+; Cas ou il y a 2 voitures
 (:method do_clear_curb
 
         :parameters (?curb - curb)
@@ -604,7 +608,7 @@
 
 
 ;------------------------------------------------------------------
-;              			Bouge une voiture i
+;               	Bouge la voiture i dans une place 
 ;------------------------------------------------------------------
 
 ;; Cas où la voiture est dans un place 
@@ -651,7 +655,7 @@
     )
 
 ;------------------------------------------------------------------
-;              			Bouge une voiture j
+;           	Bouge la voiture j sur la voiture i
 ;------------------------------------------------------------------
 
 ;; Cas où la voiture est dans un place 

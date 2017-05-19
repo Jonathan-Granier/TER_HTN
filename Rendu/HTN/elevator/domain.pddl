@@ -1,3 +1,9 @@
+;-----------------------------------------------
+; Version 1
+; le problem est résolu par un algorithme
+;-----------------------------------------------
+
+
 (define (domain miconic)
     (:requirements :strips :typing :negative-preconditions :htn :equality)
   (:types passenger - object

@@ -109,3 +109,20 @@
 ;  curb_10: car_10 
 ;  curb_11: car_11 
 ; =========== /GOAL =========== 
+
+
+
+; =========== INIT =========== 
+;  curb_00: car_02 
+;  curb_01: car_11 car_14 
+;  curb_02: car_07 car_09 
+;  curb_03: car_21 car_08 
+;  curb_04: car_19 car_03 
+;  curb_05: car_05 car_16 
+;  curb_06: car_15 car_12
+;  curb_07: car_01 car_04 
+;  curb_08: car_10 car_06 
+;  curb_09: car_13 car_18 
+;  curb_10: car_20 car_17 
+;  curb_11:  
+; ========== /INIT =========== 

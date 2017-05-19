@@ -75,3 +75,96 @@ Amilioration possible :
 Prolèmes rencontrées :
 	Mettre l'arret des methodes recursive avant plutot que après. Il vaut mieux elaguer que d'aller en pronfondeur : Boucle inifni
 	Reduire la taille des méthodes et le nombre de variable utilisé dans chaque methode pour réduire la taille des données générer ==> Reduit la complixité du programme
+
+
+Method :
+	Verbeuse
+(:method do_fill_curb
+
+        :parameters (?curb - curb)
+        :expansion  (
+                        ;(tag t1 (nop))
+                        (tag t1 (move-car-to-curb ?car_a ?car_b ?curb))
+                        (tag t2 (move-curb-to-car ?car_b ?curbsrc ?car_a))
+
+                    )
+        :constraints( 
+                    and 
+                        (before ( and 
+                           			( car-clear ?car_a)
+									( curb-clear ?curb)
+									( behind-car ?car_a ?car_b)
+									( at-curb-num ?car_b ?curbsrc)
+
+                                ) 
+                        t1
+                        )
+                         
+                    )
+    )
+
+Moins verbeuse
+
+(:method do_fill_curb (?curb - curb)
+        (tag t1 (move-car-to-curb ?car_a ?car_b ?curb))
+        (tag t2 (move-curb-to-car ?car_b ?curbsrc ?car_a))
+        
+        (before ( and 
+           			( car-clear ?car_a)
+					( curb-clear ?curb)
+					( behind-car ?car_a ?car_b)
+					( at-curb-num ?car_b ?curbsrc)
+
+                ) 
+        t1
+        )	
+                         
+)
+
+
+
+BUG CORE:
+	Il peut arriver qu'il conserve les objets instancié lors d'un appelle recursif sur une method.
+
+Exemple :
+(:method (do_clear_curb ?curb)
+
+
+; Cas où la place est déjà clear
+Case1	(
+			(curb ?curb)
+			( curb-clear ?curb)
+		)
+		(
+		)
+
+; Cas où il y a qu'une seul voiture
+Case2	(
+			(curb ?curb)
+			(car ?car)
+			(car ?cardest)
+			( car-clear ?car)
+			( car-clear ?cardest)
+			( at-curb-num ?car ?curb)
+			( at-curb ?cardest) 
+			
+		)
+		(
+			(!move-curb-to-car ?car ?curb ?cardest)
+		)
+
+; Cas ou il y a 2 voitures
+Case3	(
+			(curb ?curb)
+			(car ?car)
+			(car ?carsrc)
+			( behind-car ?car ?carsrc)
+			( at-curb-num ?carsrc ?curb)
+			
+		)
+		(
+            (do_move_car ?car ?carsrc)
+            (do_clear_curb ?curb)
+            ;(!move-curb-to-car ?carsrc ?curb ?car)
+		)
+)

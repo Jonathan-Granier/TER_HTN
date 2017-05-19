@@ -137,3 +137,6 @@ for fullfile in PDDL/$1/*
 			test_un_probleme $1 $name
 		fi
 	done
+
+
+
