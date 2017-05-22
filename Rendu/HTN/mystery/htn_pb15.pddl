@@ -122,13 +122,12 @@
           (harmony entertainment mars ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
+			(tag t1 (do_delivery jealousy chicken))  
 			
-                   (tag t1 (do_catapulte  jealousy chicken))    
 			
 		)
 	:constraints(and
-			(after (and 						(craves jealousy chicken ) )
+			(after (and (craves jealousy chicken ) )
 				 t1)
 		)
 ))

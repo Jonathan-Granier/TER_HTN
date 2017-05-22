@@ -150,12 +150,12 @@
           (eats pepper grapefruit ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  jealousy-16 tofu))
+			(tag t1 (do_delivery jealousy-16 tofu)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves jealousy-16 tofu ) )
+			(after (and (craves jealousy-16 tofu ) )
 				 t1)
 		)
 ))

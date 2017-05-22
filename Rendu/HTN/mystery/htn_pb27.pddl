@@ -62,14 +62,14 @@
           (attacks moravia surrey ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  grief guava  ))
-               (tag t2 (do_catapulte  boils guava   ))
+			(tag t1 (do_delivery grief guava)) 
+               (tag t2 (do_delivery boils guava)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves grief guava )
-               						(craves boils guava ) )
+			(after (and (craves grief guava )
+               (craves boils guava ) )
 				 t1)
 		)
 ))

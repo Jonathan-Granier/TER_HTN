@@ -55,3 +55,8 @@ parking :
 	- PDDL : Trop complexe
 	- HTN : OK mais juste niveau mémoire --> Faire un test avec uniquement 4 methode pour bouger et très peu d'indication
 	- Core : OK ? , a tester car la résolution est longue
+
+
+A faire : 
+
+hiking, zenotravel, Mystery, logistic, freecell, schedule, pipesworld, storage,thoughful

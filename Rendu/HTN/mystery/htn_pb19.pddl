@@ -105,13 +105,12 @@
           (craves entertainment lobster ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-                   (tag t1 (do_catapulte  abrasion lobster))    
-
+			(tag t1 (do_delivery abrasion lobster)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves abrasion lobster ) )
+			(after (and (craves abrasion lobster ) )
 				 t1)
 		)
 ))

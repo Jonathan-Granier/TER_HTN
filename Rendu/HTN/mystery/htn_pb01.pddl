@@ -8,74 +8,75 @@
              kentucky bosnia surrey pennsylvania alsace quebec guanabara
              - province
              mars earth uranus venus - planet )
-(:init      
-            
-            (eats rice rice )
-            (eats rice flounder )
-            (eats rice pear )
+(:init 
+          
+          
+          
+         
+          
+          
 
-            (eats pork okra )
-            (eats pork lamb )
+          (harmony rest venus )
+         
+          
+          
+          (craves rest pork )
+          (craves hangover rice )
+          (craves depression flounder )
+          (craves abrasion pork )
+          
 
-            (eats lamb flounder )
-            (eats lamb pork )
-            
-            (eats okra pear )
-            (eats okra pork )
-           
-            (eats pear okra )
-            (eats pear rice )
-            
-            (eats flounder rice )
-            (eats flounder lamb )
+          (eats lamb flounder )
+          (eats lamb pork )
+          
+          (eats pork lamb )
+          (eats pork okra )
+          
+          (eats okra pork )
+          (eats okra pear )
+          
+          (eats rice pear )
+          (eats rice rice )
+          (eats rice flounder )
+          
+          (eats pear okra )
+          (eats pear rice )
+          
+          (eats flounder lamb )
+          (eats flounder rice )
 
-           
-           
-            (locale okra guanabara )
-            (locale pork quebec )
-            (locale rice bosnia )
-            (locale lamb pennsylvania )
-            (locale flounder alsace ) 
-            (locale pear surrey )
+          (orbits mars earth )
+          (orbits earth uranus )
+          (orbits uranus venus )
+          
 
-            (harmony rest venus )
 
-            (craves depression flounder )
-            (craves abrasion pork )
-            (craves rest pork )
-            (craves hangover rice )
-            
-            (attacks kentucky bosnia )
-            (attacks bosnia surrey )
-            (attacks surrey pennsylvania )
-            (attacks pennsylvania alsace )
-            (attacks alsace quebec )
-            (attacks quebec guanabara )
-            
-           
+          (locale okra guanabara )
+          (locale pork quebec )
+          (locale pear surrey )
+          (locale rice bosnia )
+          (locale flounder alsace )
+          (locale lamb pennsylvania )
 
-            (orbits mars earth )
-            (orbits earth uranus )
-            (orbits uranus venus )
+          (attacks kentucky bosnia )
+          (attacks bosnia surrey )
+          (attacks surrey pennsylvania )
+          (attacks pennsylvania alsace )
+          (attacks alsace quebec )
+          (attacks quebec guanabara )
 
-            
-           
 
-            
 
-           
-)
-           
-           
+ )
 (:goal
 	:tasks  (
-			  (tag t1 (do_catapulte abrasion rice))
+			 (tag t1 (do_delivery abrasion rice)) 
 			
 			
 		)
 	:constraints(and
-			(after (and 						;(craves abrasion rice )
-             )
+			(after (and (craves abrasion rice ) 
+        )
 				 t1)
 		)
 ))

@@ -14,10 +14,13 @@
        (locale ?n - food ?a - province)
        (harmony ?v - emotion ?s - planet)
        (attacks ?i ?j - province)
-       (orbits ?i ?j - planet))
+       (orbits ?i ?j - planet)
+       (visited ?n - food)
+
+       )
 
     ;type:
-    ;   province = Usure d'un pont
+    ;   province = escence 
     ;   planete = Quantité transportable par un camion
     ;   emotion = localisation
     ;   food    = Pont en bois
@@ -26,7 +29,7 @@
 
 
     ;Predicates
-    ;   (attack = niveau d'usure)
+    ;   (attack =  niveau d'escence)
     ;   (orbite = nb de caisse dans le camion)
     ;   (local = Niveau d'usure)
     ;   (harmony = Quantité de caisse dans le camion)
@@ -75,15 +78,46 @@
 
 
 
+;------------------------------------------------------------------
+;                          Action rajouté
+;------------------------------------------------------------------
+
+(:action visit
+     :parameters (?n - food)
+     :precondition (and )
+     :effect (and (visited ?n))
+)  
+
+(:action unvisit
+     :parameters (?n - food)
+     :precondition (and (visited ?n))
+     :effect (and (not(visited ?n)))
+)
+
+
+
 (:action nop
   :parameters   ()
   :precondition (and)
   :effect       (and)
   )
 
+;------------------------------------------------------------------
+;                               Methods
+;------------------------------------------------------------------
+;                          Faire une livraison
+;------------------------------------------------------------------
+;Algo :
+; Recupere un camion
+; Charger la caisse
+; Aller à destination
+; Decharger la caisse
 
 
-(:method do_catapulte
+; Cas où la caisse est déjà a destination
+(:method do_delivery
+  
+
 
        :parameters (?c -  pain ?n - food)
         :expansion  (
@@ -101,16 +135,17 @@
                     )
     )
 
-(:method do_catapulte
+; Cas où la caisse n'est pas à destination
+(:method do_delivery
 
        :parameters (?c -  pain ?n - food)
         :expansion  (
 
                         ;(tag t1 (nop))
-                        (tag t1 (get_camion ?v ?n1))
-                       ; (tag t2 (overcome ?c ?v ?n1 ?s1 ?s2))
-                        ;(tag t2 (do_transfert ?v ?n1 ?n ))
-                        ;(tag t3 (succumb ?c ?v ?n ?s1 ?s2))
+                        (tag t1 (do_transfert ?v ?n1))
+                        (tag t2 (overcome ?c ?v ?n1 ?s1 ?s2))
+                        (tag t3 (do_transfert ?v ?n ))
+                        (tag t4 (succumb ?c ?v ?n ?s1 ?s2))
                     )
         :constraints( 
                     and 
@@ -123,52 +158,14 @@
                     )
     )
 
-(:method do_transfert
-
-       :parameters (?v - pleasure ?from - food ?to - food)
-        :expansion  (
-
-                        (tag t1 (nop))
-                        (tag t2 (do_feast ?v ?from ?to))
-                        
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                ( craves ?v ?from)
-                                ( eats ?from ?to )
-                                ) 
-                        t1
-                        )
-                    )
-    )
 
 
-(:method do_transfert
+;------------------------------------------------------------------
+;                          Bouge un camion
+;------------------------------------------------------------------
 
-       :parameters (?v - pleasure ?from - food ?to - food)
-        :expansion  (
-
-                        
-                        (tag t1 (do_feast ?v ?from ?mid))
-                        (tag t2 (do_transfert ?v ?mid ?to))
-                       
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                ( craves ?v ?from)
-                                ( eats ?from ?mid )
-                                ( not ( eats ?from ?to))
-
-                                ) 
-                        t1
-                        )
-                    )
-    )
-
-
-(:method do_feast
+; Bouge un camion de from vers to , 2 positions adjacentes
+(:method do_move
 
         :parameters (?v - pleasure ?from - food ?to - food)
         :expansion  (
@@ -188,7 +185,19 @@
                         )
                     )
     )
-(:method get_camion 
+
+
+;------------------------------------------------------------------
+;                         Transfert un camion
+;------------------------------------------------------------------
+
+
+
+
+
+
+; Cas où le camion est déjà à destination
+(:method do_transfert 
     :parameters (?v - pleasure ?to - food)
     :expansion  (    
                     (tag t1 (nop))
@@ -202,18 +211,36 @@
                         )
                     )
     )
-(:method get_camion 
+
+; Lance la recursivité
+(:method do_transfert 
     :parameters (?v - pleasure ?to - food)
     :expansion  (    
-                    ;(tag t1 (nop))
-                    (tag t1 (do_feast ?v ?from ?mid ))
-                    (tag t2 (get_camion ?v ?to))
+                    (tag t1 (visit ?from))
+                    (tag t2 (do_transfert ?v ?from ?to))
+                    (tag t3 (unvisit ?from))
                 )
     :constraints( 
                     and 
                         (before ( and 
                                 ( craves ?v ?from)
-                                ( eats ?from ?mid )
+                                ) 
+                        t1
+                        )
+                    )
+    )
+
+
+; Cas où le camion est déjà à destination
+(:method do_transfert 
+    :parameters (?v - pleasure ?from ?to - food)
+    :expansion  (    
+                    (tag t1 (nop))
+                )
+    :constraints( 
+                    and 
+                        (before ( and 
+                                ( craves ?v ?to)
                                 ) 
                         t1
                         )
@@ -222,11 +249,47 @@
 
 
 
+;Cas où le camion est à un seul pas
+(:method do_transfert 
+    :parameters (?v - pleasure ?from ?to - food)
+    :expansion  (    
+                     (tag t1 (do_move ?v ?from ?to))
+                )
+    :constraints( 
+                    and 
+                        (before ( and 
+                                ( craves ?v ?from)
+                                ( eats ?from ?to)
+                                ) 
+                        t1
+                        )
+                    )
+    )
 
 
-
-
-  )
+;Cas où le camion est à 2 pas ou plus
+(:method do_transfert 
+    :parameters (?v - pleasure ?from ?to - food)
+    :expansion  (    
+                    ;(tag t1 (nop))
+                    
+                    (tag t1 (do_move ?v ?from ?mid ))
+                    (tag t2 (visit ?mid))
+                    (tag t3 (do_transfert ?v ?mid ?to))
+                    (tag t4 (unvisit ?mid))
+                )
+    :constraints( 
+                    and 
+                        (before ( and 
+                                ( craves ?v ?from)
+                                ( not ( visited ?mid))
+                                ( eats ?from ?mid )
+                                ( not ( eats ?from ?to))
+                                ) 
+                        t1
+                        )
+                    )
+    )
 
 )
 

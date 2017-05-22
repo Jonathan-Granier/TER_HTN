@@ -169,15 +169,14 @@
           (craves dread-22 mutton ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-                   (tag t1 (do_catapulte  prostatitis-23 potato))    
-                   (tag t2 (do_catapulte  anxiety-25 potato))    
+			(tag t1 (do_delivery prostatitis-23 potato)) 
+               (tag t1 (do_delivery anxiety-25 potato)) 
 			
 			
 		)
 	:constraints(and
-			(after (and 						(craves prostatitis-23 potato )
-               						(craves anxiety-25 potato ) )
+			(after (and (craves prostatitis-23 potato )
+               (craves anxiety-25 potato ) )
 				 t1)
 		)
 ))

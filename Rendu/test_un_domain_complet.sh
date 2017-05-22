@@ -23,7 +23,7 @@ NEUTRE='\e[0;m'
 ###################
 #	Debug
 ###################
-MAKE_PDDL=0
+MAKE_PDDL=1
 TIMEMAX=300s
 ###################
 
@@ -109,9 +109,11 @@ function test_un_probleme()
 		if [ $RETVAL -eq 124 ]; then
 		echo "timeout"
 		else
-			sed -i -n '/seconds total time/p' $TEMP
-			sed -i -r "s/                  //g" $TEMP
-			TIME=$(sed -r "s/seconds total time//g" $TEMP)
+			sed -i -n '/Total time:/p' 
+			$TEMP
+			sed -i -r 's/Total time://g' $TEMP
+			sed -i -r "s/ //g" $TEMP
+			TIME=$(sed -r "s/s//g" $TEMP)
 			TIME_TOTAL="$TIME_TOTAL \t\t$TIME"
 
 
@@ -120,7 +122,7 @@ function test_un_probleme()
 		fi
 	fi
 
-	#rm $TEMP
+	rm $TEMP
 	echo ""
 	echo -e "${NEUTRE} $TIME_TOTAL"
 	echo "------------------------"

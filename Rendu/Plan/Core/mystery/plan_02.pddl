@@ -1,0 +1,6 @@
+0 :  (overcome grief-7 entertainment ham pluto jupiter  )  
+1 :  (feast entertainment ham tuna bosnia surrey  )  
+2 :  (feast entertainment tuna beef arizona kentucky  )  
+3 :  (succumb grief-7 entertainment beef pluto jupiter  )  
+4 :  (overcome depression-1 entertainment muffin vulcan pluto  )  
+5 :  (succumb depression-1 entertainment beef vulcan pluto  )  

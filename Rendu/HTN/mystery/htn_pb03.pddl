@@ -72,12 +72,12 @@
           (craves hangover chocolate ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  hangover ham))
+			 (tag t1 (do_delivery hangover ham )) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves hangover ham ) )
+			(after (and (craves hangover ham ) )
 				 t1)
 		)
 ))

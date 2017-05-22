@@ -1,0 +1,247 @@
+(defdomain mystery
+	(
+
+
+    ;type:
+    ;   province = escence 
+    ;   planete = Quantité transportable par un camion
+    ;   emotion = localisation
+    ;   food    = Pont en bois
+    ;   pain    = Caisse
+    ;   pleasure = Camion    
+
+
+    ;Predicates
+    ;   (attack =  niveau d'escence)
+    ;   (orbite = nb de caisse dans le camion)
+    ;   (local = Niveau d'usure)
+    ;   (harmony = Quantité de caisse dans le camion)
+    ;   (craves = locat_at)
+    ;   (fears = est dans un camion)
+    ;   (eats,attacks, orbits  fixe )
+    
+
+
+   ;; Met une caisse sur un camion
+				(:operator (!overcome ?c ?v ?n ?s1 ?s2)
+					(
+						(pain ?c) 
+						(pleasure ?v) 
+						(food ?n)
+						(planet ?s1)
+						(planet ?s2)
+						(craves ?c ?n)
+						(craves ?v ?n)
+						(harmony ?v ?s2)
+						(orbits ?s1 ?s2) 
+					)
+					(
+						 (craves ?c ?n)
+						 (harmony ?v ?s2)
+					)
+					(
+						(fears ?c ?v)
+						(harmony ?v ?s1)
+					)
+				)
+
+    ;; Passe le camion de pont en pont
+				(:operator (!feast ?v ?n1 ?n2 ?l1 ?l2)
+					(
+
+						(pleasure ?v) 
+						(food ?n1)
+						(food ?n2)
+						(province ?l1)
+						(province ?l2)
+						
+						(craves ?v ?n1)
+						(eats ?n1 ?n2)
+						(locale ?n1 ?l2)
+						(attacks ?l1 ?l2)
+					)
+					(
+						 (craves ?v ?n1)
+						 (locale ?n1 ?l2)
+					)
+					(
+						(locale ?n1 ?l1)
+						(craves ?v ?n2)
+					)
+				)
+	   ;; Pose la caisse sur un pont.
+				(:operator (!succumb ?c ?v ?n ?s1 ?s2)
+					(
+
+						(pain ?c) 
+						(pleasure ?v) 
+						(food ?n)
+						(planet ?s1)
+						(planet ?s2)
+						(fears ?c ?v)
+						(craves ?v ?n)
+						(harmony ?v ?s1)
+						(orbits ?s1 ?s2)
+					)
+					(
+						 (craves ?v ?n1)
+						 (locale ?n1 ?l2)
+					)
+					(
+						(locale ?n1 ?l1)
+						(craves ?v ?n2)
+					)
+				)
+
+
+
+
+;------------------------------------------------------------------
+;                               Methods
+;------------------------------------------------------------------
+;                          Faire une livraison
+;------------------------------------------------------------------
+;Algo :
+; Recupere un camion
+; Charger la caisse
+; Aller à destination
+; Decharger la caisse
+
+
+
+(:method (do_delivery ?c ?n)
+Case1	(
+			( pain ?c)
+			( food ?n)
+			( craves ?c ?n)
+		)
+		(	
+		)
+
+Case2	(
+			( pain ?c)
+			( food ?n)
+			( food ?n1)
+			( pleasure ?v)
+			( planet ?s1)
+			( planet ?s2)
+			( craves ?c ?n1)
+            ( orbits ?s1 ?s2)
+
+
+
+		)
+		(
+			(do_transfert ?v ?n1)
+            (!overcome ?c ?v ?n1 ?s1 ?s2)
+            (do_transfert_2 ?v ?n1 ?n )
+            (!succumb ?c ?v ?n ?s1 ?s2)
+		)
+
+)
+
+;------------------------------------------------------------------
+;                          Bouge un camion
+;------------------------------------------------------------------
+
+; Bouge un camion de from vers to , 2 positions adjacentes
+(:method (do_move ?v ?from ?to)
+		(
+			( pleasure ?v)
+			( food ?from)
+			( food ?to)
+			( province ?l1 )
+			( province ?l2 )
+			( craves ?v ?from)
+            ( eats ?from ?to )
+            ( attacks ?l1 ?l2)
+            ( locale ?from ?l2)
+		)
+		(	
+			(!feast ?v ?from ?to ?l1 ?l2)
+		)
+)
+
+
+;------------------------------------------------------------------
+;                         Transfert un camion
+;------------------------------------------------------------------
+
+; BUG qui oblige la duplication des 2 methodes
+
+(:method (do_transfert ?v ?to)
+Case1	(
+			( pleasure ?v)
+			( food ?to)
+			( craves ?v ?to)
+		)
+		()
+
+Case2	(
+			( pleasure ?v)
+			( food ?to)
+
+			( food ?from)
+			( craves ?v ?from)
+			( eats ?from ?to)
+
+		)
+		(
+			;(!visit ?from)
+            (do_move ?v ?from ?to )
+            ;(!unvisit ?from)
+		) 	
+
+Case3	(
+			( pleasure ?v)
+			( food ?to)
+			( food ?from)
+			( craves ?v ?from)
+			( food ?mid)
+			( eats ?from ?mid)
+		)
+		(
+			;(!visit ?from)
+			(do_move ?v ?from ?to )
+            (do_transfert ?v ?to)
+            ;(!unvisit ?from)
+		) 	
+)
+
+(:method (do_transfert_2 ?v ?from ?to)
+Case1	(
+			( pleasure ?v)
+			( food ?to)
+			( food ?from)
+
+			( craves ?v ?to)
+		)
+		()
+
+Case2	(
+			( pleasure ?v)
+			( food ?to)
+			( food ?from)
+			( craves ?v ?from)
+            ( eats ?from ?to)
+		)
+		(
+            (do_move ?v ?from ?to)
+		) 
+
+Case3	(
+			( pleasure ?v)
+			( food ?to)
+			( food ?from)
+			( craves ?v ?from)
+            ( eats ?from ?mid )
+		)
+		(
+            (do_move ?v ?from ?mid )
+            ;(!visit ?from)
+            (do_transfert_2 ?v ?mid ?to)
+            ;(!unvisit ?from)
+		)	
+)
+)
+)

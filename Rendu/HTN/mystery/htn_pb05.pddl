@@ -67,15 +67,14 @@
           (eats turkey tuna ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			     (tag t1 (do_catapulte  loneliness shrim ))
-           (tag t2 (do_catapulte  grief shrimp ))
-
+			(tag t1 (do_delivery loneliness shrimp )) 
+      (tag t2 (do_delivery grief shrimp))
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves loneliness shrimp )
-               						(craves grief shrimp ) )
+			(after (and (craves loneliness shrimp )
+               (craves grief shrimp ) )
 				 t1)
 		)
 ))

@@ -109,12 +109,12 @@
           (craves abrasion-29 guava ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			         (tag t1 (do_catapulte  sciatica apple ))
-			 
+			 (tag t1 (do_delivery sciatica apple)) 
+			
+			
 		)
 	:constraints(and
-			(after (and 						(craves sciatica apple ) )
+			(after (and (craves sciatica apple ) )
 				 t1)
 		)
 ))

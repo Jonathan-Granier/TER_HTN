@@ -60,14 +60,13 @@
           (eats haroset hamburger ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-                            (tag t1 (do_catapulte  sciatica hamburger))
-                            (tag t2 (do_catapulte  jealousy wurst))
+			(tag t1 (do_delivery  sciatica hamburger)) 
+			(tag t2 (do_delivery jealousy wurst)) 
 			
 		)
 	:constraints(and
-			(after (and 						(craves sciatica hamburger )
-               						(craves jealousy wurst ) )
+			(after (and (craves sciatica hamburger )
+               (craves jealousy wurst ) )
 				 t1)
 		)
 ))

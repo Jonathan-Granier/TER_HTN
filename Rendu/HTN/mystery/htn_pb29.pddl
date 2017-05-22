@@ -64,14 +64,14 @@
           (eats broccoli shrimp ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  jealousy shrimp  ))
-      (tag t1 (do_catapulte  prostatitis shrimp   ))
+			(tag t1 (do_delivery jealousy shrimp)) 
+      (tag t2 (do_delivery prostatitis shrimp))  
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves jealousy shrimp )
-               						(craves prostatitis shrimp ) )
+			(after (and (craves jealousy shrimp )
+               (craves prostatitis shrimp ) )
 				 t1)
 		)
 ))

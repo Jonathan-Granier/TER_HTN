@@ -123,13 +123,12 @@
           (eats tofu wonderbread ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-                   (tag t1 (do_catapulte  angina chocolate))    
-
+			(tag t1 (do_delivery angina chocolate)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves angina chocolate ) )
+			(after (and (craves angina chocolate ) )
 				 t1)
 		)
 ))

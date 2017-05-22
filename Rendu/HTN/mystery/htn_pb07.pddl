@@ -13,114 +13,83 @@
              arizona manitoba moravia surrey - province
              mercury saturn - planet )
 (:init (craves angina-8 muffin )
-
-        (eats mutton muffin )
-        (eats mutton pea )
-
-        (eats muffin popover )
-        (eats muffin lobster )
-        (eats muffin mutton )
-
-        (eats pea mutton )
-        (eats pea pepper )
-        (eats pea snickers )
-          
-        (eats pepper pea )
-        (eats pepper pear )
-        (eats pepper shrimp )
-
-        (eats snickers shrimp )
-        (eats snickers popover )
-        (eats snickers pea )
-        
-        (eats haroset lobster )
-        (eats haroset shrimp )
-
-        (eats popover lobster )
-        (eats popover muffin )
-        (eats popover snickers )
-
-        (eats shrimp snickers )
-        (eats shrimp pepper )
-        (eats shrimp haroset )
-        
-        (eats pear lobster )
-        (eats pear pepper )
-
-        (eats lobster muffin )
-        (eats lobster pear )
-        (eats lobster popover )
-
-        (locale muffin arizona )
-        (attacks manitoba moravia )
-        (craves boils-15 pear )
-        (craves anger mutton )
-        (craves abrasion snickers )
-
-        (locale pea moravia )
-
-        (harmony stimulation saturn )
-        (craves depression-4 pea )
-        (locale popover manitoba )
-        (craves abrasion-1 pea )
-        
-        (locale shrimp moravia )
-
-        (craves hangover shrimp )
-        (craves learning pea )
-        (craves angina haroset )
-        (eats lobster haroset )
-       
-        (craves stimulation snickers )
-        
-        (craves laceration pepper )
-        
-        (craves sciatica-16 lobster )
-        (craves sciatica snickers )
-        (craves grief-5 lobster )
-        (craves anger-6 lobster )
-        (locale snickers arizona )
-        
-        (craves jealousy popover )
-        
-        (craves anxiety pepper )
-        (locale haroset arizona )
-        (orbits mercury saturn )
-        (craves loneliness-2 pea )
-        (locale pepper manitoba )
-       
-        (craves grief mutton )
-       
-        (locale mutton arizona )
-        
-        (craves loneliness haroset )
-        
-        (craves dread-3 pea )
-        
-        (craves dread snickers )
-        
-        (craves prostatitis snickers )
-        (craves prostatitis-7 lobster )
-        (locale lobster surrey )
-        (harmony learning saturn )
-       
-        (attacks moravia surrey )
-        (attacks arizona manitoba )
-        
-        (craves depression mutton )
-        (locale pear arizona )
-       
-        (craves boils shrimp ) )
+          (locale muffin arizona )
+          (attacks manitoba moravia )
+          (eats mutton muffin )
+          (eats pepper pea )
+          (craves boils-15 pear )
+          (craves anger mutton )
+          (craves abrasion snickers )
+          (eats mutton pea )
+          (locale pea moravia )
+          (eats muffin popover )
+          (eats pea mutton )
+          (harmony stimulation saturn )
+          (craves depression-4 pea )
+          (locale popover manitoba )
+          (craves abrasion-1 pea )
+          (eats popover lobster )
+          (locale shrimp moravia )
+          (eats snickers shrimp )
+          (craves hangover shrimp )
+          (craves learning pea )
+          (craves angina haroset )
+          (eats lobster haroset )
+          (eats shrimp snickers )
+          (eats shrimp pepper )
+          (craves stimulation snickers )
+          (eats pepper pear )
+          (craves laceration pepper )
+          (eats pepper shrimp )
+          (craves sciatica-16 lobster )
+          (craves sciatica snickers )
+          (craves grief-5 lobster )
+          (craves anger-6 lobster )
+          (locale snickers arizona )
+          (eats shrimp haroset )
+          (eats pea pepper )
+          (eats pea snickers )
+          (craves jealousy popover )
+          (eats muffin lobster )
+          (craves anxiety pepper )
+          (locale haroset arizona )
+          (orbits mercury saturn )
+          (craves loneliness-2 pea )
+          (locale pepper manitoba )
+          (eats pear lobster )
+          (eats lobster muffin )
+          (eats popover muffin )
+          (craves grief mutton )
+          (eats popover snickers )
+          (locale mutton arizona )
+          (eats lobster pear )
+          (craves loneliness haroset )
+          (eats lobster popover )
+          (craves dread-3 pea )
+          (eats snickers popover )
+          (craves dread snickers )
+          (eats snickers pea )
+          (eats haroset lobster )
+          (craves prostatitis snickers )
+          (craves prostatitis-7 lobster )
+          (locale lobster surrey )
+          (harmony learning saturn )
+          (eats pear pepper )
+          (attacks moravia surrey )
+          (attacks arizona manitoba )
+          (eats haroset shrimp )
+          (craves depression mutton )
+          (locale pear arizona )
+          (eats muffin mutton )
+          (craves boils shrimp ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-               (tag t1 (do_catapulte  jealousy muffin))
-
+			 (tag t1 (do_delivery jealousy muffin )) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						;(craves jealousy muffin )
-             )
+			(after (and (craves jealousy muffin ) )
 				 t1)
 		)
 ))

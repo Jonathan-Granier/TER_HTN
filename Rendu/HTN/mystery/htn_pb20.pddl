@@ -120,12 +120,12 @@
           (harmony understanding neptune ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-                   (tag t1 (do_catapulte  abrasion pepper ))			
+			(tag t1 (do_delivery abrasion pepper)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves abrasion pepper ) )
+			(after (and (craves abrasion pepper ) )
 				 t1)
 		)
 ))

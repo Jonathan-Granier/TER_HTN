@@ -102,13 +102,12 @@
           (locale arugula bavaria ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-               (tag t1 (do_catapulte  anxiety wonderbread))
-
+			 (tag t1 (do_delivery anxiety wonderbread)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves anxiety wonderbread ) )
+			(after (and (craves anxiety wonderbread ) )
 				 t1)
 		)
 ))

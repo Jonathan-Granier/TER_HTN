@@ -45,14 +45,14 @@
           (attacks bosnia pennsylvania ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			     (tag t1 (do_catapulte  anger lamb  ))
-           (tag t2 (do_catapulte  boils lamb  ))
+			(tag t1 (do_delivery anger lamb)) 
+      (tag t2 (do_delivery boils lamb))  
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves anger lamb )
-               						(craves boils lamb ) )
+			(after (and (craves anger lamb )
+               (craves boils lamb ) )
 				 t1)
 		)
 ))

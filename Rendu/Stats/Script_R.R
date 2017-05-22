@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript --slave
 argv <- commandArgs(TRUE)
 #Score de chaque donné , on fait Valeur/(max de la ligne) , on a un score entre 0 et 1 
-ComputeScore <- function(data,num,time)
+ComputeScore <- function(data,num)
 {
     No_prob <- data_plan_size[,1]
     Score <- data[,num]
@@ -13,8 +13,7 @@ ComputeScore <- function(data,num,time)
         }
         else
         {
-            if(time == 1){  Score[i] <- min(data[i,2],data[i,3])/Score[i] }
-            else { Score[i] <- Score[i]/max(data[i,2],data[i,3]) }
+           Score[i] <- min(data[i,2],data[i,3])/Score[i] 
         }
     }
     return (Score)
@@ -44,10 +43,10 @@ HTN_time <- data_time[,2]
 Core_time <- data_time[,3]
 
 
-Score_HTN_plan <- ComputeScore(data_plan_size,2,0)
-Score_HTN_time <- ComputeScore(data_time,2,1)
-Score_Core_plan <- ComputeScore(data_plan_size,3,0)
-Score_Core_time <- ComputeScore(data_time,3,1)
+Score_HTN_plan <- ComputeScore(data_plan_size,2)
+Score_HTN_time <- ComputeScore(data_time,2)
+Score_Core_plan <- ComputeScore(data_plan_size,3)
+Score_Core_time <- ComputeScore(data_time,3)
 
 
 ## TAILLE DES PLANS

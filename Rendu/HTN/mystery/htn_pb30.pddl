@@ -94,16 +94,16 @@
           (craves boils hamburger ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  dread mutton  ))
-               (tag t2 (do_catapulte  boils mutton  ))
-               (tag t3 (do_catapulte  anxiety chicken  ))
+			 (tag t1 (do_delivery dread mutton)) 
+                (tag t2 (do_delivery boils mutton)) 
+                (tag t3 (do_delivery anxiety chicken)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves dread mutton )
-               						(craves boils mutton )
-               						(craves anxiety chicken ) )
+			(after (and (craves dread mutton )
+               (craves boils mutton )
+               (craves anxiety chicken ) )
 				 t1)
 		)
 ))

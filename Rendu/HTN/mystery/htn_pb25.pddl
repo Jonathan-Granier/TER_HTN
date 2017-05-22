@@ -38,12 +38,12 @@
           (locale pistachio moravia ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			     (tag t1 (do_catapulte  depression chicken  ))
+			(tag t1 (do_delivery depression chicken))  
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves depression chicken ) )
+			(after (and (craves depression chicken ) )
 				 t1)
 		)
 ))

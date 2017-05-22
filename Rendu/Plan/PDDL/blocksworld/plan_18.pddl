@@ -1,27 +1,26 @@
-00: (unstack h a) [1]
-01: ( put-down h) [1]
-02: (unstack a d) [1]
-03: ( put-down a) [1]
-04: (unstack d e) [1]
-05: (  stack d f) [1]
-06: (unstack e c) [1]
-07: ( put-down e) [1]
-08: (unstack c i) [1]
-09: (  stack c a) [1]
-10: (unstack i b) [1]
-11: ( put-down i) [1]
-12: (unstack b g) [1]
-13: (  stack b c) [1]
-14: (  pick-up e) [1]
-15: (  stack e b) [1]
-16: (  pick-up i) [1]
-17: (  stack i e) [1]
-18: (unstack d f) [1]
-19: (  stack d i) [1]
-20: (  pick-up h) [1]
-21: (  stack h d) [1]
-22: (  pick-up g) [1]
-23: (  stack g h) [1]
-24: (  pick-up f) [1]
-25: (  stack f g) [1]
-
+(unstack h a)
+(stack h f)
+(unstack a d)
+(put-down a)
+(unstack d e)
+(stack d h)
+(unstack e c)
+(stack e d)
+(unstack c i)
+(stack c a)
+(unstack i b)
+(put-down i)
+(unstack b g)
+(stack b c)
+(unstack e d)
+(stack e b)
+(pick-up i)
+(stack i e)
+(unstack d h)
+(stack d i)
+(unstack h f)
+(stack h d)
+(pick-up g)
+(stack g h)
+(pick-up f)
+(stack f g)

@@ -6,37 +6,59 @@
              kentucky bosnia surrey pennsylvania alsace quebec guanabara
              - province
              mars earth uranus venus - planet)
-   (:init (eats lamb pork)
-          (eats pork okra)
-          (locale okra guanabara)
-          (locale pork quebec)
-          (eats pork lamb)
+   (:init 
           (harmony rest venus)
-          (eats lamb flounder)
+         
+          
+          
+          (craves rest pork)
+          (craves hangover rice)
           (craves depression flounder)
+          (craves abrasion pork)
+          
+
+          (eats lamb flounder)
+          (eats lamb pork)
+          
+          (eats pork lamb)
+          (eats pork okra)
+          
+          (eats okra pork)
           (eats okra pear)
+          
+          (eats rice pear)
           (eats rice rice)
           (eats rice flounder)
-          (attacks kentucky bosnia)
-          (attacks pennsylvania alsace)
-          (attacks alsace quebec)
-          (craves abrasion pork)
-          (locale rice bosnia)
-          (orbits mars earth)
-          (eats flounder lamb)
-          (craves rest pork)
-          (orbits earth uranus)
-          (locale pear surrey)
-          (craves hangover rice)
-          (attacks bosnia surrey)
-          (attacks surrey pennsylvania)
-          (locale lamb pennsylvania)
-          (eats flounder rice)
-          (eats rice pear)
-          (attacks quebec guanabara)
+          
           (eats pear okra)
           (eats pear rice)
-          (eats okra pork)
+          
+          (eats flounder lamb)
+          (eats flounder rice)
+
+          (orbits mars earth)
+          (orbits earth uranus)
           (orbits uranus venus)
-          (locale flounder alsace))
+          
+
+
+          (locale okra guanabara)
+          (locale pork quebec)
+          (locale pear surrey)
+          (locale rice bosnia)
+          (locale flounder alsace)
+          (locale lamb pennsylvania)
+
+          (attacks kentucky bosnia)
+          (attacks bosnia surrey)
+          (attacks surrey pennsylvania)
+          (attacks pennsylvania alsace)
+          (attacks alsace quebec)
+          (attacks quebec guanabara)
+
+
+
+)
+
+
    (:goal (and (craves abrasion rice))))

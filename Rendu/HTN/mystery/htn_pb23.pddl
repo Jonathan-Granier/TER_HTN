@@ -119,12 +119,12 @@
           (locale pistachio pennsylvania ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  laceration chicken  ))
+			(tag t1 (do_delivery laceration chicken)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves laceration chicken ) )
+			(after (and (craves laceration chicken ) )
 				 t1)
 		)
 ))

@@ -58,12 +58,12 @@
           (attacks arizona surrey ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  anger kale))
+			(tag t1 (do_delivery anger kale)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves anger kale ) )
+			(after (and (craves anger kale ) )
 				 t1)
 		)
 ))

@@ -1,11 +1,10 @@
-00: (unstack b a) [1]
-01: (  stack b c) [1]
-02: (unstack a d) [1]
-03: (  stack a e) [1]
-04: (unstack b c) [1]
-05: (  stack b a) [1]
-06: (  pick-up c) [1]
-07: (  stack c b) [1]
-08: (  pick-up d) [1]
-09: (  stack d c) [1]
-
+(unstack b a)
+(stack b c)
+(unstack a d)
+(stack a e)
+(unstack b c)
+(stack b a)
+(pick-up c)
+(stack c b)
+(pick-up d)
+(stack d c)

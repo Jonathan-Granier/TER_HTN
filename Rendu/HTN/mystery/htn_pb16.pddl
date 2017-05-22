@@ -78,15 +78,14 @@
           (locale pepper kentucky ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-                   (tag t1 (do_catapulte  abrasion rice))    
-                   (tag t2 (do_catapulte  sciatica rice))    
-
+			(tag t1 (do_delivery abrasion rice)) 
+               (tag t1 (do_delivery sciatica rice)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves abrasion rice )
-               						(craves sciatica rice ) )
+			(after (and (craves abrasion rice )
+               (craves sciatica rice ) )
 				 t1)
 		)
 ))

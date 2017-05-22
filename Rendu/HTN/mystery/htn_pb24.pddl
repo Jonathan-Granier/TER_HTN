@@ -125,16 +125,16 @@
           (craves loneliness-1 pepper ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  jealousy-8 pepper  ))
-               (tag t2 (do_catapulte  anxiety-4 pepper  ))
-               (tag t3 (do_catapulte  anger-12 cherry  ))
+			(tag t1 (do_delivery jealousy-8  pepper)) 
+               (tag t2 (do_delivery anxiety-4 pepper))
+               (tag t3 (do_delivery anger-12 cherry ))
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves jealousy-8 pepper )
-               						(craves anxiety-4 pepper )
-               						(craves anger-12 cherry ) )
+			(after (and (craves jealousy-8 pepper )
+               (craves anxiety-4 pepper )
+               (craves anger-12 cherry ) )
 				 t1)
 		)
 ))

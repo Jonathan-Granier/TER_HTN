@@ -74,15 +74,14 @@
           (craves depression beef ) )
 (:goal
 	:tasks  (
-			 
-			(tag t1 (do_catapulte  grief-7 beef))
-            (tag t2 (do_catapulte  depression-1 beef))
+			 (tag t1 (do_delivery grief-7 beef)) 
+       (tag t2 (do_delivery depression-1 beef)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves grief-7 beef )
-               						(craves depression-1 beef ) 
-                    )
-				    t1)
+			(after (and (craves grief-7 beef )
+               (craves depression-1 beef ) )
+				 t1)
 		)
 ))

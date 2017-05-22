@@ -159,12 +159,12 @@
           (craves aesthetics scallop ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte   hangover lamb  ))
+			(tag t1 (do_delivery hangover lamb)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves hangover lamb ) )
+			(after (and (craves hangover lamb ) )
 				 t1)
 		)
 ))

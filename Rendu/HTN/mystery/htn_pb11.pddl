@@ -56,14 +56,14 @@
           (harmony lubricity saturn ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  laceration shrimp))
-      (tag t2 (do_catapulte  loneliness shrimp))
+			 (tag t1 (do_delivery laceration shrimp)) 
+       (tag t1 (do_delivery loneliness shrimp)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves laceration shrimp )
-               						(craves loneliness shrimp ) )
+			(after (and (craves laceration shrimp )
+               (craves loneliness shrimp ) )
 				 t1)
 		)
 ))

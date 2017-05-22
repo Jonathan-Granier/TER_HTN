@@ -79,12 +79,12 @@
           (orbits earth neptune ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  boils papaya  ))
+			(tag t1 (do_delivery boils papaya)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves boils papaya ) )
+			(after (and (craves boils papaya ) )
 				 t1)
 		)
 ))

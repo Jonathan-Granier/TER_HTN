@@ -2,36 +2,35 @@
 #include <stdio.h>
 #include <string.h>
 
-#define TAILLE_TEMP 1000000
-#define NB_OBJECT_MAX 100
+#define TAILLE_TEMP 100000
+#define NB_OBJECT_MAX 200
 #define NB_TYPE_MAX 100
 #define SIZE_OBJECT_NAME 100
 
-int get_under_parenthesis(FILE *src, char *data, int index,char *separator);
+void get_under_parenthesis(FILE *src, FILE *dst,int is_Core_Init,char *separator);
 void go_to_next_parenthesis(FILE *src);
 void pddl_to_htn(FILE *src,FILE *dst,int uniquetask);
 void htn_to_core(FILE *src, FILE *dst);
-int add_separator(char *data, int index, char *separator);
 void objects_to_predicats(FILE *src,char *data);
 int add_predicat(int index , char *data, char *type, char *object);
-void delete_init(int index, char *data);
-void goals_htn_to_goals_core(FILE *src,char *data);
+void delete_init(FILE *src);
+void goals_htn_to_goals_core(FILE *src,FILE *dst);
 void UppertoLower(char *c);
 
 int main(int argc,char *argv[])
 {
 
+		
 	if(argc < 4)
 	{
 		
 		printf("Usage : convertiseurPDDL_HTN_CORE <options> <src> <dest>\n");
-		printf("-c :		htn to core");
-		printf("-h :		pddl to htn");
-		printf("-u : 		tache unique : (tag t1 (do_problem ))");
+		printf("-c :		htn to core\n");
+		printf("-h :		pddl to htn\n");
+		printf("-u : 		tache unique : (tag t1 (do_problem ))\n");
 		return -1;
 
 	}
-
 	FILE *src = fopen(argv[argc-2],"r");
 	FILE *dst = fopen(argv[argc-1],"w");
 
@@ -41,7 +40,10 @@ int main(int argc,char *argv[])
 		if((argc == 5) && ((strcmp(argv[1],"-u") == 0) || (strcmp(argv[2],"-u") == 0)))
 			pddl_to_htn(src,dst,1);
 		else
+		{
+			
 			pddl_to_htn(src,dst,0);
+		}
 	
 	fclose(src);
 	fclose(dst);
@@ -58,31 +60,34 @@ Attention : Aucune vérification n'est faite sur la structure du fichier pddl
 */
 void pddl_to_htn(FILE *src,FILE *dst,int uniquetask)
 {
-	char temp[TAILLE_TEMP];
+
+	
+
+	
 	//Definition du probleme
 	go_to_next_parenthesis(src);
 	fprintf(dst,"(define ");
-
+	
 	//Nom du Domaine
 	go_to_next_parenthesis(src);
-	get_under_parenthesis(src,temp,0,"\0");
-	fprintf(dst,"%s\n",temp);
+	get_under_parenthesis(src,dst,0,"\0");
+	fprintf(dst,"\n");
 
 	go_to_next_parenthesis(src);
-	get_under_parenthesis(src,temp,0,"\0");
-	fprintf(dst,"%s\n",temp);
+	get_under_parenthesis(src,dst,0,"\0");
+	fprintf(dst,"\n");
 
 	fprintf(dst,"\t(:requirements :strips :typing :negative-preconditions :htn :equality)\n\n");
 
 	//Object
 	go_to_next_parenthesis(src);
-	get_under_parenthesis(src,temp,0,"\0");
-	fprintf(dst,"%s\n",temp);
-
+	get_under_parenthesis(src,dst,0,"\0");
+	fprintf(dst,"\n");
+	
 	//Init
-	go_to_next_parenthesis(src);
-	get_under_parenthesis(src,temp,0,"\0");
-	fprintf(dst,"%s\n",temp);
+	go_to_next_parenthesis(src);	
+	get_under_parenthesis(src,dst,0,"\0");
+	fprintf(dst,"\n");
 
 
 	//Goal 
@@ -100,12 +105,13 @@ void pddl_to_htn(FILE *src,FILE *dst,int uniquetask)
 	//Constaints
 	go_to_next_parenthesis(src);
 	go_to_next_parenthesis(src);
-	get_under_parenthesis(src,temp,0,"\t\t\t\t\t\t\0");
-	fprintf(dst,"%s\n",temp);
+	get_under_parenthesis(src,dst,0,"\t\t\t\t\t\t\0");
+	fprintf(dst,"\n");
 
 	fprintf(dst,"\t\t\t\t t1)\n");
 	fprintf(dst,"\t\t)\n");
 	fprintf(dst,"))\n");
+	
 
 }
 
@@ -116,60 +122,58 @@ void pddl_to_htn(FILE *src,FILE *dst,int uniquetask)
 
 /*
 Récupere ce qui se trouve entre parenthése dans un fichier src 
-de manière récursive et le stock dans une chaine de caractère data a partir de l'index
+de manière récursive et l'ecrit dans le fichier dst
 Avant chaque parenthèse ouvrante (et donc avant chaque appele récursif) rajoute
-le separateur à la chaine data.
+le separateur au fichier dst
 Retour l'index
 
 Input :	
 	src  : fichier avec la tete de lecture juste après une parenthèse ouvrante
-	data : chaine de caractère
-	index : entier qui indique où on commence à ecrire dans la chaine data
+	dst  : fichier destination
+	is_Core_Init : boolean pour savoir si on est dans le cas de la catégorie init de Core , 
+	dans ce cas on supprimer :init et on ne commence ni ne termine avec une parenthése
 	separator : chaine de caractère qui fini par \0
-Output:
-	data : le contenu de src et finissant par \0
-	retour : nouvelle index de data
 
 Exemple:
 	Input :
 		separateur = \n\0
-		index = 0
-		data = (chaine vide)
+		is_Core_Init = 0
+		
 		src = Le roi burgonde (La fleur embouquet fâne , et jamais ne renait ) (salsifi) (j'aime les fruits au sirop) )
 
 Output :
 	(Le roi burgonde
 	(La fleur embouquet fâne , et jamais ne renait )
 	(salsifi)
-	(j'aime les fruits au sirop) ) \0
+	(j'aime les fruits au sirop) )
 */
-int get_under_parenthesis(FILE *src, char *data, int index,char *separator)
+void get_under_parenthesis(FILE *src, FILE *dst,int is_Core_Init,char *separator)
 {
 	char c;
 	int i;
 
+	if(is_Core_Init)
+		delete_init(src);
+	else
+		fprintf(dst,"(");
 	
-	data[index]='(';
-	index++;
+	//data[index]='(';
+	//index++;
 	c = fgetc(src);
 	while(c!=')'){
+
 		if(c=='(')
-		{
-			index = add_separator(data,index,separator);
-			index = get_under_parenthesis(src,data,index,separator);
-		}
-		else{
-			data[index]=c;
-			index++;
-		}
+			get_under_parenthesis(src,dst,0,separator);
+		else
+			fprintf(dst,"%c",c);
+
+
 		c=fgetc(src);
 	}
-	data[index]=' ';
-	index++;
-	data[index]=')';
-	index++;
-	data[index]='\0';
-	return index;
+	
+	if(is_Core_Init == 0)
+		fprintf(dst," )");
+	
 }
 
 
@@ -234,44 +238,6 @@ int go_to_next_parenthesis_stop_close(FILE *src)
 }
 
 
-/*
-Ajoute un séparateur à l'index index dans la chaine de caractere data 
-et retourne le nouvelle index
-
-Input :
-	data : une chaine de caractère
-	index : index juste après le dernier element de data
-	separator : chaine de caractère finissant par \0
-
-
-Output:
-	data : data avec le separator à la fin sans le \0
-	retour : nouvelle index de data
-
-
-Exemple
-Input: 
-	data : blublu\n
-	index : 7
-	separator : \t\t\t\0
-
-Output:
-	data : blublu\n\t\t\t
-	index : 10
-
-*/
-int add_separator(char *data, int index, char *separator)
-{
-	int i=0;
-	while(separator[i]!='\0'){
-		data[index] = separator[i];
-		index++;
-		i++;
-	}
-
-	return index;
-}
-
 
 
 
@@ -284,7 +250,7 @@ Attention : Aucune vérification n'est faite sur la structure du fichier HTN
 void htn_to_core(FILE *src, FILE *dst)
 {
 	char temp[TAILLE_TEMP];
-	int index;
+	//int index;
 	//Saut de toute la 1er partie pour atteindre la liste d'objet
 	go_to_next_parenthesis(src);
 	go_to_next_parenthesis(src);
@@ -293,7 +259,7 @@ void htn_to_core(FILE *src, FILE *dst)
 	go_to_next_parenthesis(src);
 
 	//TODO récuperer le nom 
-	fprintf(dst,"(defproblem problem byPaser\n");  
+	fprintf(dst,"(defproblem problem byParser\n");  
 	fprintf(dst,"(\n");
 	fprintf(dst,"\t;;;\n");
 	fprintf(dst,"\t;;;   facts\n");
@@ -305,10 +271,10 @@ void htn_to_core(FILE *src, FILE *dst)
 
 	//predicats
 	go_to_next_parenthesis(src);
-	index = get_under_parenthesis(src,temp,index,"\0");
-	delete_init(index,temp);
+	get_under_parenthesis(src,dst,1,"\0");
+	//delete_init(index,temp);
 
-	fprintf(dst,"%s \n)\n",temp);
+	fprintf(dst,"\n)\n");
 
 	//goals
 	fprintf(dst,"\t;;;\n");
@@ -317,9 +283,9 @@ void htn_to_core(FILE *src, FILE *dst)
 
 	go_to_next_parenthesis(src);
 	go_to_next_parenthesis(src);
-	goals_htn_to_goals_core(src,temp);
+	goals_htn_to_goals_core(src,dst);
 
-	fprintf(dst,"%s\n",temp);
+	fprintf(dst,"\n");
 	fprintf(dst,")");
 }
 
@@ -436,15 +402,13 @@ Output:
 	pum
 
 **/
-void delete_init(int index, char *data)
+void delete_init(FILE *src)
 {
-	data[index-1] = '\0';
-	data[0] = ' ';
-	data[1] = ' ';
-	data[2] = ' ';
-	data[3] = ' ';
-	data[4] = ' ';
-	data[5] ='\n' 	;
+	fgetc(src);
+	fgetc(src);
+	fgetc(src);
+	fgetc(src);
+	fgetc(src);
 }
 
 /**
@@ -465,27 +429,21 @@ OutPut :
 	(do_put_on B A)
 )
 */
-void goals_htn_to_goals_core(FILE *src,char *data)
+void goals_htn_to_goals_core(FILE *src,FILE *dst)
 {
-	int index = 2;
-	data[0]='(';
-	data[1]='\n';
-	//go_to_next_parenthesis(src);
+	//int index = 2;
+	fprintf(dst,"(\n");
+
 	while(go_to_next_parenthesis_stop_close(src) == 1)
 	{
 		go_to_next_parenthesis(src);
-		data[index]='\t';
-		index++;
-		index = get_under_parenthesis(src,data,index,"\0");
-		data[index]='\n';
-		index++;
+		fprintf(dst,"\t");
+		get_under_parenthesis(src,dst,0,"\0");
 		go_to_next_parenthesis_stop_close(src);
 
 	}
-	data[index]=')';
-	index++;
-	data[index]='\0';
-	index++;
+	fprintf(dst,")");
+	
 }
 
 

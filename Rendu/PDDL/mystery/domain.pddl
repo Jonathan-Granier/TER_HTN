@@ -11,6 +11,10 @@
        (attacks ?i ?j - province)
        (orbits ?i ?j - planet))
 
+
+
+   
+   
    (:action overcome
        :parameters (?c - pain ?v - pleasure ?n - food ?s1 ?s2 - planet)
        :precondition (and (craves ?c ?n)

@@ -122,14 +122,14 @@
           (eats tuna tomato ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  anger turkey))
-               (tag t2 (do_catapulte  abrasion turkey))
+			 (tag t1 (do_delivery anger turkey)) 
+                (tag t2 (do_delivery abrasion turkey )) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves anger turkey )
-               						(craves abrasion turkey ) )
+			(after (and (craves anger turkey )
+               (craves abrasion turkey ) )
 				 t1)
 		)
 ))

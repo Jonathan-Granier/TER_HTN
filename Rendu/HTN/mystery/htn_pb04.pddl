@@ -63,12 +63,14 @@
           (eats wurst grapefruit ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-			(tag t1 (do_catapulte  sciatica wurst ))
+			(tag t1 (do_delivery sciatica wurst )) 
+      
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves sciatica wurst ) )
+			(after (and ;(craves sciatica wurst ) 
+        )
 				 t1)
 		)
 ))

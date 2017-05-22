@@ -119,13 +119,12 @@
           (craves hangover papaya ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-                   (tag t1 (do_catapulte  abrasion wonderbread))    
-
+			(tag t1 (do_delivery abrasion wonderbread)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves abrasion wonderbread ) )
+			(after (and (craves abrasion wonderbread ) )
 				 t1)
 		)
 ))

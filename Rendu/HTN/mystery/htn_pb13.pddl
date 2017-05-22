@@ -158,14 +158,14 @@
           (eats lemon baguette ) )
 (:goal
 	:tasks  (
-			 ;; A remplir 
-	              (tag t1 (do_catapulte  prostatitis-18 lobster))
-                   (tag t2 (do_catapulte  laceration-20 ham))	
+			(tag t1 (do_delivery prostatitis-18 lobster)) 
+               (tag t1 (do_delivery laceration-20 ham)) 
+			
 			
 		)
 	:constraints(and
-			(after (and 						(craves prostatitis-18 lobster )
-               						(craves laceration-20 ham ) )
+			(after (and (craves prostatitis-18 lobster )
+               (craves laceration-20 ham ) )
 				 t1)
 		)
 ))

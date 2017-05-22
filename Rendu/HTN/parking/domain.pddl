@@ -264,10 +264,10 @@
         :expansion  (
                         ;(tag t1 (nop))
                         (tag t1 (do_clear_i ?car_i))
-                        ;(tag t2 (do_clear_curb ?curb))
-                        ;(tag t3 (do_move_car_i ?curb ?car_i))
-                        ;(tag t4 (do_clear_j ?car_j))
-                        ;(tag t5 (do_move_car_j ?car_i ?car_j))
+                        (tag t2 (do_clear_curb ?curb))
+                        (tag t3 (do_move_car_i ?curb ?car_i))
+                        (tag t4 (do_clear_j ?car_j))
+                        (tag t5 (do_move_car_j ?car_i ?car_j))
 
                     )
         :constraints( 
