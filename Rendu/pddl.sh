@@ -20,7 +20,7 @@ function aide()
 JAR_HTN=../pddl4j_JFPDA_Version/pddl4j_JFPDA_Version/lib/iSHOP.jar
 JAR_CORE=../CoRe-Planner-1.0/CoRe-Planner-1.0/lib/planner_Vtest.jar
 JAR_PDDL4J=../pddl4j-master/build/libs/pddl4j-3.5.0.jar
-FASTDOWNWARD=../Fastdownward/DIRNAME/fast-downward.py
+FASTDOWNWARD=../FastDownward/fast-downward.py
 VAL=../VAL-master/validate
 #############################################################
 
