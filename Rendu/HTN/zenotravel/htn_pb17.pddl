@@ -92,7 +92,29 @@
  )
 (:goal
 	:tasks  (
-			 ;; A remplir 
+			(tag t1 (do_carry_person person1 city4))
+			(tag t2 (do_carry_person person2 city11))
+			(tag t3 (do_carry_person person3 city0))
+			(tag t4 (do_carry_person person4 city12))
+			(tag t5 (do_carry_person person5 city12))
+			(tag t6 (do_carry_person person6 city0))
+			(tag t7 (do_carry_person person7 city5))
+			(tag t8 (do_carry_person person8 city13))
+			(tag t9 (do_carry_person person9 city9))
+			(tag t10 (do_carry_person person10 city7))
+			(tag t11 (do_carry_person person11 city7))
+			(tag t12 (do_carry_person person12 city6))
+			(tag t13 (do_carry_person person13 city2))
+			(tag t14 (do_carry_person person14 city10))
+			(tag t15 (do_carry_person person15 city14)) 
+			(tag t16 (do_carry_person person16 city12)) 
+			(tag t17 (do_carry_person person17 city1)) 
+			(tag t18 (do_carry_person person18 city1)) 
+			(tag t19 (do_carry_person person19 city5)) 
+			(tag t20 (do_carry_person person20 city13)) 
+			(tag t21 (do_fly plane1 city14)) 
+			(tag t22 (do_fly plane3 city7))
+			(tag t23 (do_fly plane5 city12))
 			
 			
 		)

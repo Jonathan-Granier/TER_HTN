@@ -37,6 +37,13 @@ elif [ $1 = "-h" ]; then
 	
 	PLAN=Plan/HTN/$2/plan_$3.pddl
 
+	if [ ! -d Plan/HTN/$2 ]; then
+		mkdir Plan/HTN/$2
+		echo "Création du dossier Plan/HTN/$2"
+	fi
+
+
+
 	java -javaagent:$JAR_HTN -server -Xms6048m -Xmx6048m -classpath $JAR_HTN pddl4j.examples.ISHOP.ISHOP -o HTN/$2/domain.pddl -f HTN/$2/htn_pb$3.pddl | tee $TEMP
 
 	#PARSE
@@ -60,6 +67,12 @@ elif [ $1 = "-c" ]; then
 	CHEMIN=CoRe-Planner-1.0/CoRe-Planner-1.0
 	PLAN=Plan/Core/$2/plan_$3.pddl 
 
+
+	if [ ! -d Plan/Core/$2 ]; then
+		mkdir Plan/Core/$2
+		echo "Création du dossier Plan/Core/$2"
+	fi
+
 	java -jar $JAR_CORE -f -d Core/$2/$2.jap -p Core/$2/pb$3.jap | tee $TEMP
 	rm $PLAN > /dev/null 2> /dev/null
 
@@ -79,6 +92,13 @@ elif [ $1 = "-c" ]; then
 # PDDL / Fastdownwar
 elif [ $1 = "-p" ]; then
 	PLAN=Plan/PDDL/$2/plan_$3.pddl
+	
+	if [ ! -d Plan/PDDL/$2 ]; then
+		mkdir Plan/PDDL/$2
+		echo "Création du dossier Plan/PDDL/$2"
+	fi
+
+
 	./$FASTDOWNWARD --plan-file plan_$3.pddl $CHEMIN_PDDL/domain.pddl $CHEMIN_PDDL/p$3.pddl --search "astar(ipdb())"
 	mv plan_$3.pddl $PLAN
 	#sed -i -n '/Actual search time:/,/Plan length:/p' $PLAN
@@ -92,6 +112,10 @@ elif [ $1 = "-p4J" ]; then
 	PLAN=Plan/PDDL/$2/plan_$3.pddl
 	java -javaagent:$JAR_PDDL4J -server -Xms6048m -Xmx6048m fr.uga.pddl4j.planners.hsp.HSP -o $CHEMIN_PDDL/domain.pddl -f $CHEMIN_PDDL/p$3.pddl | tee $PLAN
 
+	if [ ! -d Plan/PDDL/$2 ]; then
+		mkdir Plan/PDDL/$2
+		echo "Création du dossier Plan/PDDL/$2"
+	fi
 
 
 

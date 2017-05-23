@@ -34,14 +34,16 @@
 (:goal
 	:tasks  (
 			 ;; A remplir 
-			
+			(tag t1 (do_carry_person person1 city1))
+			;(tag t1 (do_carry_person person3 city2))
+			(tag t2 (do_fly plane1 city2 ))
 			
 		)
 	:constraints(and
 			(after (and
-							(at plane1 city2 )
-							(at person1 city1 )
-							(at person3 city2 )
+							;(at plane1 city2 )
+							;(at person1 city1 )
+							;(at person3 city2 )
 	 )
 				 t1)
 		)

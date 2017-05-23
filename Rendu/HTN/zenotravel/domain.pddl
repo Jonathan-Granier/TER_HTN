@@ -74,9 +74,9 @@
 
 
 ;; Le passager est déjà dans la cité en question
-(:method do_carry_persons
+(:method do_carry_person
 
-       :parameters ( ?p - person  ?c - city)
+       :parameters ( ?p - person  ?to - city)
         :expansion  (
 
                         
@@ -85,7 +85,7 @@
         :constraints( 
                     and 
                         (before ( and 
-                                    ( at ?p ?c)
+                                    ( at ?p ?to)
                                 ) 
                         t1
                         )
@@ -93,48 +93,20 @@
     )
 
 
-;; Le passager est dans un avion qui est à destination
+;; Le passager est dans un avion
 (:method do_carry_person 
 
-       :parameters (?p - person ?c - city  )
+       :parameters (?p - person  ?to - city )
         :expansion  (
 
-                        
-                        (tag t1 (debark ?p ?a ?c))
-
-
+                        (tag t1 (do_fly ?a ?to))
+                        (tag t2 (do_debark ?a ?p ?to))
                     )
         :constraints( 
                     and 
                         (before ( and 
                                 
-                                    ( at ?a ?c)
                                     ( in ?p ?a)
-                                    
-                                ) 
-                        t1
-                        )
-                    )
-    )
-;; Le passager est dans un avion qui n'est pas à destination
-(:method do_carry_person 
-
-       :parameters (?p - person  ?c - city )
-        :expansion  (
-
-                        
-                        (tag t1 (do_fly ?a ?from ?c))
-                        (tag t2 (do_debark ?a ?p ?c))
-
-
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                
-                                    ;( at ?a ?from)
-                                    ( in ?p ?a)
-                                    ( at ?a ?from)
                                 ) 
                         t1
                         )
@@ -142,23 +114,23 @@
     )
 
 
-;; Le passager est ni à destination , ni dans un avion
 (:method do_carry_person 
 
-       :parameters (?p - person  ?c - city )
+       :parameters (?p - person  ?to - city )
         :expansion  (
 
-                        
-                        (tag t1 (do_board ?a ?p ?from))
-                        (tag t2 (do_fly ?a ?from ?c))
-                        (tag t3 (do_debark ?a ?p ?c))
+                        ;(tag t1 (nop))
+                        (tag t1 (do_fly ?a ?from))
+                        (tag t2 (do_board ?a ?p ?from))
+                        (tag t3 (do_fly ?a ?to))
+                        (tag t4 (do_debark ?a ?p ?to))
 
 
                     )
         :constraints( 
                     and 
                         (before ( and 
-                                ( not ( at ?p ?c))
+                                ( not ( at ?p ?to))
                                 ( at ?p ?from)
                                 ( not ( in ?p ?a))
                                 ) 
@@ -169,85 +141,101 @@
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;  Transfert un avion dans une cité       ;;;    
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Le passager est ni à destination , ni dans un avion
+(:method do_carry_person 
 
-
-;; L'avion est déjà à destination
-(:method do_transfert_plane
-
-       :parameters (?a - aircraft  ?c - city )
+       :parameters (?p - person  ?to - city )
         :expansion  (
 
-                        
-                        (tag t1 (nop))
+
+                        (tag t1 (do_board ?a ?p ?from))
+                        (tag t2 (do_fly ?a ?to))
+                        (tag t3 (do_debark ?a ?p ?to))
+
+
                     )
         :constraints( 
                     and 
                         (before ( and 
-                                    ( at ?a ?c)
+                                ( not ( at ?p ?to))
+                                ( at ?p ?from)
+                                ( at ?a ?from)
+                                ( not ( in ?p ?a))
                                 ) 
                         t1
                         )
                     )
     )
 
-;; L'avion n'est pas à destination
-(:method do_transfert_plane
 
-       :parameters (?a - aircraft  ?c - city )
-        :expansion  (
-
-                        
-                        (tag t1 (nop))
-                        ;(tag t1 (do_fly ?a ?from ?c))
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                    ( not ( at ?a ?c))
-                                    ( at ?a ?from)
-                                ) 
-                        t1
-                        )
-                    )
-    )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Fait voler un avion d'une cité à l'autre ;;;    
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Cas ou il y a assez d'essence dans l'avion
+
+
+
+
+
+
 (:method do_fly
 
-       :parameters (?a - aircraft  ?from - city ?to - city )
+       :parameters (?a - aircraft ?to - city )
         :expansion  (
 
-                        
-                        (tag t1 (fly ?a ?from ?c ?l1 ?l2))
+                        ;(tag t1 (nop))
+                        (tag t1 (do_check_city ?a ?to))
                     )
         :constraints( 
                     and 
                         (before ( and 
-                                    ( not ( at ?a ?c))
-                                    ( at ?a ?from)
-                                    ( fuel-level ?a ?l1)
-                                    ( next ?l2 ?l1)    
+                                    ( at ?a ?to)
                                 ) 
                         t1
                         )
                     )
     )
 
+
+
+
 ;; Cas ou il n'y a plus d'essence
 (:method do_fly
 
-       :parameters (?a - aircraft  ?from - city ?to - city )
+       :parameters (?a - aircraft ?to - city )
         :expansion  (
 
                         
-                        (tag t1 (refuel ?a ?from ?l1 ?l2))
+                        ;(tag t1 (nop))
+                        (tag t1 (do_check_city ?a ?from))
+                        (tag t2 (refuel ?a ?from ?l1 ?l2))
+                        (tag t3 (fly ?a ?from ?to ?l2 ?l1))
+                    )
+        :constraints( 
+                    and 
+                        (before ( and 
+                                    ( not ( at ?a ?to))
+                                    ( at ?a ?from)
+                                    ( fuel-level ?a ?l1)
+                                    ( next ?l1 ?l2)
+                                    ( not ( next ?l3 ?l1)) 
+                                    
+                                ) 
+                        t1
+                        )
+                    )
+    )
+
+
+;; Cas ou il y a assez d'essence dans l'avion
+(:method do_fly
+
+       :parameters (?a - aircraft ?to - city )
+        :expansion  (
+
+                        (tag t1 (do_check_city ?a ?from))
+                      
                         (tag t2 (fly ?a ?from ?to ?l1 ?l2))
                     )
         :constraints( 
@@ -255,14 +243,14 @@
                         (before ( and 
                                     ( not ( at ?a ?to))
                                     ( at ?a ?from)
-                                    ( fuel-level ?a ?l2)
-                                    ( next ?l2 ?l1)
+                                    ( fuel-level ?a ?l1)
+                                    ;( next ?l3 ?l1)
+                                   
                                 ) 
                         t1
                         )
                     )
     )
-
 
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -275,14 +263,14 @@
         :expansion  (
 
                         
-                        (tag t1 (do_transfert_plane ?a ?c))
-                        (tag t2 (board ?p ?a ?c))
-                        (tag t3 (check_city ?a ?c))
+                        (tag t1 (board ?p ?a ?c))
+                        (tag t2 (do_check_city ?a ?c))
                     )
         :constraints( 
                     and 
                         (before ( and 
                                     ( at ?p ?c)
+                                    ( at ?a ?c)
                                     ( not ( in ?p ?a))
                                 ) 
                         t1
@@ -301,7 +289,7 @@
 
                         
                         (tag t1 (debark ?p ?a ?c))
-                        (tag t2 (check_city ?a ?c))
+                        (tag t2 (do_check_city ?a ?c))
                     )
         :constraints( 
                     and 
@@ -318,9 +306,90 @@
     ;;;     Verifie s'il y a des gens à poser ou prendre    ;;;    
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(:method check_city
+
+
+
+
+;; Depose une personne
+(:method do_check_city
 
        :parameters (?a - aircraft ?c - city)
+        :expansion  (
+
+                        
+                        (tag t1 (debark ?p ?a ?c))
+                       ;(tag t2 (do_check_city ?a ?c))
+                    )
+        :constraints( 
+                    and 
+                        (before ( and 
+                                    ( at ?a ?c)
+                                    ( in ?p ?a)
+                                ) 
+                        t1
+                        )
+                    )
+    )
+
+
+;; Prend une personne
+(:method do_check_city
+
+       :parameters (?a - aircraft ?c - city)
+        :expansion  (
+
+                        
+                        (tag t1 (board ?p ?a ?c))
+                        (tag t2 (do_check_city ?a ?c))
+                    )
+        :constraints( 
+                    and 
+                        (before ( and 
+                                    ( at ?a ?c)
+                                    ( not ( in ?p ?a))
+                                ) 
+                        t1
+                        )
+                    )
+    )
+
+
+(:method do_check_city
+
+       :parameters (?a - aircraft ?c - city)
+        :expansion  (
+
+                        
+                        (tag t1 (nop))
+                    )
+        :constraints( 
+                    and 
+                        (before ( and 
+                                    ( at ?a ?c)
+                                    ( not ( at ?p ?c))
+                                ) 
+                        t1
+                        )
+                    )
+    )
+
+ 
+
+)
+
+
+
+
+
+
+
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;     Verifie s'il faut remettre de l'escence         ;;;    
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(:method do_refuel
+
+       :parameters (?a - aircraft ?c - city ?l1 - flevel ?l2 - flevel)
         :expansion  (
 
                         
@@ -336,47 +405,20 @@
                     )
     )
 
-;; Depose une personne
-(:method check_city
+(:method do_refuel
 
-       :parameters (?a - aircraft ?c - city)
+       :parameters (?a - aircraft ?c - city ?l1 - flevel ?l2 - flevel)
         :expansion  (
 
                         
-                        (tag t1 (debark ?p ?a ?c))
-                        (tag t2 (check_city ?a ?c))
+                         (tag t1 (refuel ?a ?from ?l1 ?l2))
                     )
         :constraints( 
                     and 
                         (before ( and 
                                     ( at ?a ?c)
-                                    ( in ?p ?a)
                                 ) 
                         t1
                         )
                     )
     )
-
-;; Prend une personne
-(:method check_city
-
-       :parameters (?a - aircraft ?c - city)
-        :expansion  (
-
-                        
-                        (tag t1 (board ?p ?a ?c))
-                        (tag t2 (check_city ?a ?c))
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                    ( at ?a ?c)
-                                    ( not ( in ?p ?a))
-                                ) 
-                        t1
-                        )
-                    )
-    )
-
-
-)

@@ -25,7 +25,10 @@ elif [ $1 = "-h" ] || [ $2 = "-h" ]; then
 	else
 		FOLDER=$3
 	fi
-
+	if [ ! -d HTN/$FOLDER ]; then
+		mkdir HTN/$FOLDER
+		echo "Création du dossier HTN/$FOLDER"
+	fi
 	for fullfile in PDDL/$FOLDER/* 
 	do
 		file=$(basename $fullfile)
@@ -41,6 +44,10 @@ elif [ $1 = "-h" ] || [ $2 = "-h" ]; then
 	done
 
 elif [ $1 = "-c" ]; then
+	if [ ! -d Core/$2 ]; then
+		mkdir Core/$2
+		echo "Création du dossier Core/$2"
+	fi
 	for fullfile in HTN/$2/* 
 	do
 		file=$(basename $fullfile)

@@ -40,6 +40,10 @@
 (:goal
 	:tasks  (
 			 ;; A remplir 
+			(tag t1 (do_carry_person person1 city2))
+			(tag t2 (do_carry_person person2 city3))
+			(tag t3 (do_carry_person person3 city3))
+			(tag t4 (do_carry_person person4 city3))
 			
 			
 		)

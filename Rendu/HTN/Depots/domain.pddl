@@ -169,7 +169,7 @@
                     and 
                         (before ( and 
                                 ( clear ?s1)
-                                (at ?s1 ?p1)
+                                ( at ?s1 ?p1)
                                 ) 
                         t1
                         )
