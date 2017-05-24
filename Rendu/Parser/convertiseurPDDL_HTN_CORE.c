@@ -439,6 +439,7 @@ void goals_htn_to_goals_core(FILE *src,FILE *dst)
 		go_to_next_parenthesis(src);
 		fprintf(dst,"\t");
 		get_under_parenthesis(src,dst,0,"\0");
+		fprintf(dst,"\n");
 		go_to_next_parenthesis_stop_close(src);
 
 	}

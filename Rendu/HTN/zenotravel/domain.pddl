@@ -67,16 +67,18 @@
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;  Transfert un passager dans une cité    ;;;    
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;-------------------------------------------------------------------
+;                           Methods
+;-------------------------------------------------------------------
+;             Transfert un passager dans une cité      
+;-------------------------------------------------------------------
 
 
 
 ;; Le passager est déjà dans la cité en question
 (:method do_carry_person
 
-       :parameters ( ?p - person  ?to - city)
+        :parameters ( ?p - person  ?to - city)
         :expansion  (
 
                         
@@ -141,7 +143,7 @@
 
 
 
-;; Le passager est ni à destination , ni dans un avion
+;; Le passager est ni à destination , ni dans un avion mais un avion est déjà sur place
 (:method do_carry_person 
 
        :parameters (?p - person  ?to - city )
@@ -169,9 +171,9 @@
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Fait voler un avion d'une cité à l'autre ;;;    
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;-------------------------------------------------------------------
+;            Fait voler un avion d'une cité à l'autre   
+;-------------------------------------------------------------------
 
 
 
@@ -244,6 +246,7 @@
                                     ( not ( at ?a ?to))
                                     ( at ?a ?from)
                                     ( fuel-level ?a ?l1)
+                                    ( next ?l2 ?l1)
                                     ;( next ?l3 ?l1)
                                    
                                 ) 
@@ -253,9 +256,9 @@
     )
 
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;     Prend un passager dans une cité      ;;;    
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;-------------------------------------------------------------------
+;               Prend un passager dans une cité        
+;-------------------------------------------------------------------
 
 (:method do_board
 
@@ -278,9 +281,9 @@
                     )
     )
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;     Dépose un passager dans une cité     ;;;    
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;-------------------------------------------------------------------
+;                   Dépose un passager dans une cité       
+;-------------------------------------------------------------------
 
 (:method do_debark
 
@@ -302,9 +305,9 @@
                     )
     )
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;     Verifie s'il y a des gens à poser ou prendre    ;;;    
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;-------------------------------------------------------------------
+;              Verifie s'il y a des gens à poser ou prendre       
+;-------------------------------------------------------------------
 
 
 
@@ -380,45 +383,3 @@
 
 
 
-
-
-
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;     Verifie s'il faut remettre de l'escence         ;;;    
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(:method do_refuel
-
-       :parameters (?a - aircraft ?c - city ?l1 - flevel ?l2 - flevel)
-        :expansion  (
-
-                        
-                        (tag t1 (nop))
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                    ( at ?a ?c)
-                                ) 
-                        t1
-                        )
-                    )
-    )
-
-(:method do_refuel
-
-       :parameters (?a - aircraft ?c - city ?l1 - flevel ?l2 - flevel)
-        :expansion  (
-
-                        
-                         (tag t1 (refuel ?a ?from ?l1 ?l2))
-                    )
-        :constraints( 
-                    and 
-                        (before ( and 
-                                    ( at ?a ?c)
-                                ) 
-                        t1
-                        )
-                    )
-    )

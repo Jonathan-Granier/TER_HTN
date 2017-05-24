@@ -105,5 +105,17 @@
 
 
 (
-	(do_carry_person person2 city8 )	(do_carry_person person3 city2 )	(do_carry_person person4 city7 )	(do_carry_person person5 city1 )	(do_carry_person person6 city6 )	(do_carry_person person7 city5 )	(do_carry_person person8 city1 )	(do_carry_person person9 city5 )	(do_carry_person person10 city9 )	(do_fly plane2 city3 )	(do_fly plane4 city5 )	(do_fly plane5 city8 ))
+	(do_carry_person person2 city8 )
+	(do_carry_person person3 city2 )
+	(do_carry_person person4 city7 )
+	(do_carry_person person5 city1 )
+	(do_carry_person person6 city6 )
+	(do_carry_person person7 city5 )
+	(do_carry_person person8 city1 )
+	(do_carry_person person9 city5 )
+	(do_carry_person person10 city9 )
+	(do_fly plane2 city3 )
+	(do_fly plane4 city5 )
+	(do_fly plane5 city8 )
+)
 )

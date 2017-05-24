@@ -63,5 +63,9 @@
 
 
 (
-	(do_carry_person person1 city2 )	(do_carry_person person2 city3 )	(do_carry_person person3 city3 )	(do_carry_person person4 city3 ))
+	(do_carry_person person1 city2 )
+	(do_carry_person person2 city3 )
+	(do_carry_person person3 city3 )
+	(do_carry_person person4 city3 )
+)
 )

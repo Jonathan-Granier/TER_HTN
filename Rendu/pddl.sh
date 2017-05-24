@@ -7,7 +7,8 @@ function aide()
 	echo
 	echo "Usage : ./pddl.sh <Option> <Nom du Probleme> <Numero du probeme>"
 	echo " -h 		:		version HTN"
-	echo " -p 		:		version PDDL"
+	echo " -p 		:		version PDDL FastDownward"
+	echo " -p4J 	:		version PDDL4J"
 	echo " -c 		:		version Core_HTN"
 	echo " -vH 		:		test un plan HTN"
 	echo " -vC 		:		test un plan Core HTN"
@@ -81,6 +82,8 @@ elif [ $1 = "-c" ]; then
 	sed -i -r "s/[0-9]*\. \[ \(\) ,//g" $TEMP
 	sed -i -r "s/]//g" $TEMP
 	sed -i -r "s/!//g" $TEMP
+	sed -i '/(visit /d' $TEMP
+	sed -i '/(unvisit /d' $TEMP
 	
 	#numérote les lignes du fichier à partir de 0
 	awk '{ print NR -1 " : " $0 }' $TEMP > $PLAN
@@ -124,15 +127,15 @@ elif [ $1 = "-p4J" ]; then
 	sed -i '$d' $PLAN
 
 # Validateur HTN / GTOP
-elif [ $1 = "-vH" ]; then
+elif [ $1 = "-vh" ]; then
 	./$VAL $CHEMIN_PDDL/domain.pddl $CHEMIN_PDDL/p$3.pddl Plan/HTN/$2/plan_$3.pddl 
 
 # Validateur HTN / CORE
-elif [ $1 = "-vC" ]; then
+elif [ $1 = "-vc" ]; then
 	./$VAL $CHEMIN_PDDL/domain.pddl $CHEMIN_PDDL/p$3.pddl Plan/Core/$2/plan_$3.pddl 
 
 # Validateur PDDL
-elif [ $1 = "-vP" ]; then
+elif [ $1 = "-vp" ]; then
 	./$VAL $CHEMIN_PDDL/domain.pddl $CHEMIN_PDDL/p$3.pddl Plan/PDDL/$2/plan_$3.pddl 
 
 

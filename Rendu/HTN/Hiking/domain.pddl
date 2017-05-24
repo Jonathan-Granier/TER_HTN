@@ -21,7 +21,7 @@
 )
 
 
-  ;  Démonter la tente
+  ;  Démonte une tente
   (:action put_down
          :parameters (?x1 - person ?x2 - place ?x3 - tent)
          :precondition  (and 
@@ -33,7 +33,7 @@
                     (not (up ?x3))
 )
 )
-  ;; Monter la tente
+  ;; Monte une tente
   (:action put_up
          :parameters (?x1 - person ?x2 - place ?x3 - tent)
          :precondition  (and 
@@ -68,7 +68,8 @@
   (:action drive
          :parameters (?x1 - person ?x2 - place ?x3 - place ?x4 - car)
          :precondition  (and 
-                        (at_person ?x1 ?x2)(at_car ?x4 ?x2))
+                        (at_person ?x1 ?x2)
+                        (at_car ?x4 ?x2))
          :effect    (and 
                     (at_person ?x1 ?x3)
                     (not (at_person ?x1 ?x2))
@@ -119,14 +120,14 @@
   (:action walk_together
          :parameters (?x1 - tent ?x2 - place ?x3 - person ?x4 - place ?x5 - person ?x6 - couple)
          :precondition  (and 
-                        ;(at_tent ?x1 ?x2)
-                        ;(up ?x1)
-                        ;(at_person ?x3 ?x4)
+                        (at_tent ?x1 ?x2)
+                        (up ?x1)
+                        (at_person ?x3 ?x4)
                         (next ?x4 ?x2)
-                        ;(at_person ?x5 ?x4)
-                        ;(not (= ?x3 ?x5))
-                        ;(walked ?x6 ?x4)
-                        ;(partners ?x6 ?x3 ?x5)
+                        (at_person ?x5 ?x4)
+                        (not (= ?x3 ?x5))
+                        (walked ?x6 ?x4)
+                        (partners ?x6 ?x3 ?x5)
                         )
          :effect    (and 
                     (at_person ?x3 ?x2)
@@ -146,54 +147,16 @@
 ) 
   
 
-
-; Algo :
-;   Init :
-;   (Une ligne de tente est un ensemble de place , toutes adjacentes qui ont une tente chacune)
-;   Pour chaque tente down
-;       Les mettres dans une autre place (on fait une ligne de tente)
-;   Laisser une voiture dans un endroit sans tente (juste après la ligne de tente)
-;   
-;   Faire marcher tout les couples jusqu'a qu'il n'y est plus de tente.
-;   Construire les tentes à chaque arrivé
-;   
-;   Milieu :
-;   Sur la 1er place sans tente doit se trouver une voiture
-;   Monter à 2 dans une voiture
-;   Allez là ou il y a une tente + une voiture
-;   Prendre voiture + tente
-;   Avec une voiture (1 personne):
-;       Allez a la dernier place de la nouvelle ligne de tente qu'on veut creer
-;   L'autre voiture :
-;       tant qu'il y a encore des tentes pas monter 
-;           Aller là ou il y a une tente monté
-;           La prendre
-;           Allez là ou il y a pas de tente 
-;           Poser la tente(Ne pas la monter)
-;       
-;       Rejoindre la 1er voiture
-;       Retourner la où sont les autres avec une voiture.
-;   
-;   
-;   Faire marcher tout les couples jusqu'a qu'il n'y est plus de tente.
-;   Construire les tentes à chaque arrivé  
-;
-;    Fin (il reste plus de tente que de place a parcourir) :
-;    Monter à 1 dans une voiture     
-;    Tant qu'il le faut 
-;       Aller là ou il y a une tente monté
-;       La prendre
-;       Allez là ou il y a pas de tente 
-;       Poser la tente(Ne pas la monter) 
-;   
-;   Revenir au campement
-;   
-;   Faire marcher tout les couples jusqu'au bout
-;   Construire les tentes à chaque arrivé  
-;
-;
+; Algo
 ;
 
+; Pour chaque étape / place
+;   Démonter la tente
+;   La transporter à la prochaine étape avec 2 voitures
+;       Si il n'y a pas 2 voitures sur place , allez en chercher une à l'étape précédante
+;   Monter la tente
+;   Revenir avec 1 voiture
+;   Faire marcher tous les couples à la prochaine étape
 
 
 
@@ -201,126 +164,353 @@
 
 
 
+;----------------------------------------------------
+;                   Do_problem
+;----------------------------------------------------
 
+; Fait avancer tous les couples qui doivent avancer d'une place à l'autre
+; Recommencer tant qu'il reste des couples à faire avancer
 
-
-
-
-  (:method do_Hiking
-        :parameters ()
-        :expansion (
-                        ;(tag t1 (nop))
-                        ;(tag t1 (do_walk_couple ?p1 ?p2))
-                        ;(tag t1 (walk_together ?pl1 ))
-                        (tag t1 (walk_together ?x1 ?x2 ?x3 ?x4 ?x5 ?x6))
-                    )
-        :constraints
-                    ( and
-                        (before 
-                            ;(next ?x2 ?x4)
-
-                           ; (down ?jhg)
-
-                        t1
-                        )
-                    )
-
-
-    )
-
-
-  (:method do_Init
-        :parameters ()
-        :expansion (
-                        (tag t1 (nop))
-                    )
-        :constraints
-                    ( and
-                        (before 
-                            (next ?p1 ?p2)
-                        t1
-                        )
-                    )
-
-
-    )
-
-;--------------------------------------------------------------------------------
-;   Faire marcher tout les couples jusqu'a qu'il n'y est plus de tente.
-;   Construire les tentes à chaque arrivé  
-;--------------------------------------------------------------------------------
-    
-    (:method do_walk_all
-        :parameters (?pl1 - place)
-        :expansion (
-                        (tag t1 (nop))
-                    )
-        :constraints
-                    ( and
-                        (before 
-                            ( and 
-                            (at_tent ?t ?pl1)
-                            (up ?t)
-                            (next ?pl1 ?pl2)
-                            )
-                        t1
-                        )
-                    )
-
-
-    )
-
-
-
-    (:method do_walk_couple
-    :parameters (?pl1 - place ?pl2 - place )
+(:method do_problem
+    :parameters ()
     :expansion (
                     (tag t1 (nop))
-                    ;(tag t1 (walk_together ?t ?pl2 ?per1 ?pl1 ?per2 ?c))
-                    ;(tag t2 (do_walk_couple ?pl1 ?pl2))
+                    
                 )
     :constraints
                 ( and
-                    (before 
+                   
+                    
+                )
+
+
+)
+
+
+(:method do_problem
+    :parameters ()
+    :expansion (
+                    (tag t1 (do_go_to_next_place ?from ?to))
+                    (tag t2 (do_problem))
+                    
+                )
+    :constraints
+                ( and
+                    ( before 
+                        (next ?from ?to)
+
+                    t1
+                    )
+                )
+
+
+)
+
+
+;----------------------------------------------------
+;               Allez à la prochaine place
+;----------------------------------------------------
+
+; Monte une tente
+; Transfert une tente à la prochaine place
+; Fait marcher tous ceux qui doivent marcher
+(:method do_go_to_next_place
+    :parameters (?from ?to - place)
+    :expansion (
+                    (tag t1 (do_down_tent ?from))
+                    (tag t2 (do_transfert ?from ?to))
+                    (tag t3 (do_walk_all ?from ?to))
+                    
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( next ?from ?to)
+
+                    t1
+                    )
+                )
+
+
+)
+
+
+
+;------------------------------------------------------------
+;                        Demonte une tente 
+;------------------------------------------------------------
+
+; Cas où il y a une tente monté
+(:method do_down_tent
+    :parameters (?p - place)
+    :expansion (
+                    (tag t1 (nop))
+                    
+                )
+    :constraints
+                ( and
+                    ( before ( and 
+                             ( at_tent ?t ?p)
+                             ( down ?t)
+                             )
+                    t1
+                    )
+                )
+
+
+)
+
+; Cas où il n'y a pas de tente monté
+(:method do_down_tent
+    :parameters (?p - place)
+    :expansion (
+                    (tag t1 (put_down ?person ?p ?t))
+                    
+                )
+    :constraints
+                ( and
+                    ( before 
+                            ( and 
+                            ( at_tent ?t ?p)
+                            ( up ?t)
+                            ( at_person ?person ?p)
+                            )
+                    t1
+                    )
+                )
+
+
+)
+
+
+;------------------------------------------------------------
+;                        Monte une tente 
+;------------------------------------------------------------
+
+(:method do_put_tent
+    :parameters (?p - place)
+    :expansion (
+                    (tag t1 (put_up ?person ?p ?t))
+                    
+                )
+    :constraints
+                ( and
+                    ( before 
+                            ( and 
+                            ( at_tent ?t ?p)
+                            ( down ?t)
+                            ( at_person ?person ?p)
+                            )
+                    t1
+                    )
+                )
+
+
+)
+
+;------------------------------------------------------------
+;                        Transfert une tente
+;------------------------------------------------------------
+
+; Cas où il y a 2 voitures présentes
+(:method do_transfert
+    :parameters (?from ?to - place)
+    :expansion (
+                    (tag t1 (do_drive_tent ?from ?to ?c1))
+                    (tag t2 (do_drive ?from ?to ?c2))
+                    (tag t3 (do_put_tent ?to))
+                    (tag t4 (do_drive_passenger ?to ?from ?c1))
+                )
+    :constraints
+                ( and
+                    ( before 
                         ( and 
-                        ;(at_tent ?t ?pl1)
-                        (up ?t)
-                        ;(next ?pl1 ?pl2)
-                        ;(at_person ?per1 ?pl1)
-                        ;(at_person ?per2 ?pl1)
-                        ;(partners ?c ?per1 ?per2)
+                       
+                        ( at_car ?c1 ?from)
+                        ( at_car ?c2 ?from)
+                        ( next ?from ?to)
                         )
                     t1
                     )
                 )
 
 
-    )
-
-;    (:method do_walk_couple
-;    :parameters (?pl1 - place ?pl2 - place )
-;    :expansion (
-;                    (tag t1 (nop))
-;                )
-;    :constraints
-;                ( and
-;                    (before 
-;                        ( and 
-;                        (at_tent ?t ?pl1)
-;                        (up ?t)
-;                        (next ?pl1 ?pl2)
-;                        )
-;                    t1
-;                    )
-;                )
+)
 
 
-;    )
+; Cas où il y a 1 voiture présente
+(:method do_transfert
+    :parameters (?from ?to - place)
+    :expansion (
+                    (tag t1 (do_drive_tent_passenger ?from ?previous ?c1))
+                    (tag t2 (do_drive_tent ?previous ?to ?c1))
+                    (tag t3 (do_drive ?previous ?to ?c2))
+                    (tag t4 (do_put_tent ?to))
+                    (tag t5 (do_drive_passenger ?to ?from ?c1))
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( and 
+                        ( at_car ?c1 ?from)
+                        ( at_car ?c2 ?previous)
+                        ( next ?from ?to)
+                        )
+                    t1
+                    )
+                )
+
+
+)
 
 
 
+;------------------------------------------------------------
+;                        Fait marcher tous le monde
+;------------------------------------------------------------
 
 
+
+(:method do_walk_all
+    :parameters (?from ?to - place)
+    :expansion (
+                    (tag t1 (nop))
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( next ?from ?to)
+                    t1
+                    )
+                )
+
+
+)
+
+
+
+(:method do_walk_all
+    :parameters (?from ?to - place)
+    :expansion (
+                    (tag t1 (walk_together ?t ?to ?person_1 ?from ?person_2 ?couple))
+                    (tag t2 (do_walk_all ?from ?to))
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( and 
+                        ( at_tent ?t ?to)
+                        ( up ?t)
+                        ( at_person ?person_1 ?from)
+                        ( next ?from ?to)
+                        ( at_person ?person_2 ?from)
+                        ( walked ?couple ?from)
+                        ( partners ?couple ?person_1 ?person_2)
+                        )
+                    t1
+                    )
+                )
+
+
+)
+
+
+;------------------------------------------------------------
+;                        Methode de Transfert
+;------------------------------------------------------------
+
+; 1 personne
+
+
+(:method do_drive
+    :parameters (?from ?to - place ?c - car)
+    :expansion (
+                    (tag t1 (drive ?person ?from ?to ?c ))
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( and 
+                        ( at_person ?person ?from)
+                        ( at_car ?c ?from)
+                        
+                        )
+                    t1
+                    )
+                )
+
+
+)
+
+
+
+; 1 personne + 1 tente
+
+(:method do_drive_tent
+    :parameters (?from ?to - place ?c - car)
+    :expansion (
+                    (tag t1 (drive_tent ?person ?from ?to ?c ?t))
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( and 
+                        ( at_person ?person ?from)
+                        ( at_car ?c ?from)
+                        ( at_tent ?t ?from)
+                        ( down ?t)
+                        
+                        )
+                    t1
+                    )
+                )
+)
+; 2 personnes
+
+(:method do_drive_passenger
+    :parameters (?from ?to - place ?c - car)
+    :expansion (
+                    (tag t1 (drive_passenger ?person_1 ?from ?to ?c ?person_2))
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( and 
+                        ( at_person ?person_1 ?from)
+                        ( at_person ?person_2 ?from)
+                        ( at_car ?c ?from)
+                        
+                        )
+                    t1
+                    )
+                )
+
+
+)
+; 2 personnes + 1 tente
+
+(:method do_drive_tent_passenger
+    :parameters (?from ?to - place ?c - car)
+    :expansion (
+                     (tag t1 (drive_tent_passenger ?person_1 ?from ?to ?c ?t ?person_2))
+                )
+    :constraints
+                ( and
+                    ( before 
+                        ( and 
+                        ( at_person ?person_1 ?from)
+                        ( at_person ?person_2 ?from)
+                        ( at_car ?c ?from)
+                        ( at_tent ?t ?from)
+                        ( down ?t)
+                        
+                        )
+                    t1
+                    )
+                )
+
+
+)
 
 
 

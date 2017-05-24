@@ -24,7 +24,7 @@ NEUTRE='\e[0;m'
 #	Debug
 ###################
 MAKE_PDDL=0
-TIMEMAX=30s
+TIMEMAX=10s
 ###################
 
 

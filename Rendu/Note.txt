@@ -12,11 +12,11 @@ Blocksworld
 
 Hiking
 	- PDDL 	: OK
-	- HTN 	: Algo fait , il est compliqué
-	- Core 	: Pas fait.
+	- HTN 	: OK.
+	- Core 	: OK.
 
 Depots :
-	- PDDL : OK sur les problemes petits
+	- PDDL : OK
 	- HTN  : OK
 	- Core : OK sauf les 2 derniers , prend trop de mémoire.
 
@@ -32,8 +32,8 @@ Movie :
 
 Mystery :
 	- PDDL : OK
-	- HTN  : En cours
-	- Core : Pas fait
+	- HTN  : OK mais obligé de rajouter un visit/unvisit --> Ne fait pas toujours la solution optimal --> numéro 10 --> Surement BUG ISHOP
+	- Core : OK mais oblihé de rajouter un visit/unvisit
 
 Elevator :
 	- PDDL : OK
@@ -42,8 +42,8 @@ Elevator :
 
 zenotravel :
 	- PDDL : OK
-	- HTN  : Ca bug de manière incompréhensible / probleme de typage
-	- Core : Pas fait
+	- HTN  : OK mais plan plus long à un bug ISHOP 
+	- Core : OK mais algo different et moins efficasse en taille de plan (pas le cas du au bug)
 
 
 satellite :
@@ -59,4 +59,10 @@ parking :
 
 A faire : 
 
-hiking, zenotravel, Mystery, logistic, freecell, schedule, pipesworld, storage,thoughful
+driverlog --> Domaine simple
+logistic --> Pas possible en HTN , il y a des forall dans le domaine 
+freecell --> C'est compliqué et il a pas forcement de stratégie gagnante
+schedule --> domain un peu complexe et pas documenté
+ pipesworld --> domain un peu complexe mais bien documenté
+ storage --> domain simple 
+ thoughful --> Encore un jeu de carte , domaine complexe mais un peu documenté

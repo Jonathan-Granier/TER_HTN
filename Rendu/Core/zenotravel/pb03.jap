@@ -61,5 +61,10 @@
 
 
 (
-	(do_carry_person person1 city1 )	(do_carry_person person2 city0 )	(do_carry_person person3 city0 )	(do_carry_person person4 city1 )	(do_fly plane2 city2  ))
+	(do_carry_person person1 city1 )
+	(do_carry_person person2 city0 )
+	(do_carry_person person3 city0 )
+	(do_carry_person person4 city1 )
+	(do_fly plane2 city2  )
+)
 )

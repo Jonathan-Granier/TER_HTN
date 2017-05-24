@@ -10,4 +10,3 @@
 09: (    walk_together tent1 place2 guy0 place1 girl0 couple0) [1]
 10: (    walk_together tent1 place2 guy1 place1 girl1 couple1) [1]
 11: (    walk_together tent1 place2 guy2 place1 girl2 couple2) [1]
-
