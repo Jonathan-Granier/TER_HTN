@@ -23,7 +23,7 @@ NEUTRE='\e[0;m'
 ###################
 #	Debug
 ###################
-MAKE_PDDL=0
+MAKE_PDDL=1
 TIMEMAX=10s
 ###################
 
@@ -85,7 +85,7 @@ function test_un_probleme()
 		TIME=$(sed -r "s/ seconds total time//g" $TEMP)
 		TIME_TOTAL="$TIME_TOTAL \t$TIME"
 	
-		./$SCRIPT_PDDL -vH $1 $2 > $TEMP
+		./$SCRIPT_PDDL -vh $1 $2 > $TEMP
 		Parse_Validateur $TEMP $HTN
 	fi
 
@@ -99,7 +99,7 @@ function test_un_probleme()
 		TIME=$(sed -r "s/Conjectures found in//g" $TEMP)
 		TIME_TOTAL="$TIME_TOTAL \t\t$TIME"
 
-		./$SCRIPT_PDDL -vC $1 $2 > $TEMP
+		./$SCRIPT_PDDL -vc $1 $2 > $TEMP
 		Parse_Validateur $TEMP $CORE
 	fi
 
@@ -109,15 +109,14 @@ function test_un_probleme()
 		if [ $RETVAL -eq 124 ]; then
 		echo "timeout"
 		else
-			sed -i -n '/Total time:/p' 
-			$TEMP
+			sed -i -n '/Total time:/p' $TEMP
 			sed -i -r 's/Total time://g' $TEMP
 			sed -i -r "s/ //g" $TEMP
 			TIME=$(sed -r "s/s//g" $TEMP)
 			TIME_TOTAL="$TIME_TOTAL \t\t$TIME"
 
 
-			./$SCRIPT_PDDL -vP $1 $2 > $TEMP
+			./$SCRIPT_PDDL -vc $1 $2 > $TEMP
 			Parse_Validateur $TEMP $PDDL
 		fi
 	fi

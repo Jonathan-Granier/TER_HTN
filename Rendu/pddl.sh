@@ -10,8 +10,9 @@ function aide()
 	echo " -p 		:		version PDDL FastDownward"
 	echo " -p4J 	:		version PDDL4J"
 	echo " -c 		:		version Core_HTN"
-	echo " -vH 		:		test un plan HTN"
-	echo " -vC 		:		test un plan Core HTN"
+	echo " -vh 		:		test un plan PDDL"
+	echo " -vh 		:		test un plan HTN"
+	echo " -vc 		:		test un plan Core HTN"
 	echo " --help 	: 		affiche l'aide"
 }
 

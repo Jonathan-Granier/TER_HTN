@@ -25,7 +25,7 @@ NEUTRE='\e[0;m'
 ###################
 #	Debug
 ###################
-MAKE_PDDL=0
+MAKE_PDDL=1
 TIMEMAX=300s
 ###################
 
@@ -94,7 +94,7 @@ function test_un_probleme()
 		echo -e -n "$TIME" >> $FILE_TIME_STAT
 		
 		
-		./$SCRIPT_PDDL -vH $1 $2 > $TEMP
+		./$SCRIPT_PDDL -vh $1 $2 > $TEMP
 		Parse_Validateur $TEMP $HTN
 	fi
 
@@ -117,7 +117,7 @@ function test_un_probleme()
 		echo -e -n "$TIME" >> $FILE_TIME_STAT
 		
 
-		./$SCRIPT_PDDL -vC $1 $2 > $TEMP
+		./$SCRIPT_PDDL -vc $1 $2 > $TEMP
 		Parse_Validateur $TEMP $CORE
 	fi
 
@@ -133,14 +133,15 @@ function test_un_probleme()
 			echo -e -n "-1" >> $FILE_SIZE_PLAN_STAT
 			echo -e -n "-1" >> $FILE_TIME_STAT
 		else
-			sed -i -n '/seconds total time/p' $TEMP
-			sed -i -r "s/                  //g" $TEMP
-			sed -i -r "s/seconds total time//g" $TEMP
-			TIME=$(sed -r "s/,/./g" $TEMP)
+			sed -i -n '/Total time:/p' $TEMP
+			sed -i -r 's/Total time://g' $TEMP
+			sed -i -r "s/ //g" $TEMP
+			TIME=$(sed -r "s/s//g" $TEMP)
+			
 			echo -e -n "$TIME" >> $FILE_TIME_STAT
 
 
-			./$SCRIPT_PDDL -vP $1 $2 > $TEMP
+			./$SCRIPT_PDDL -vp $1 $2 > $TEMP
 			Parse_Validateur $TEMP $PDDL
 		fi
 	fi
