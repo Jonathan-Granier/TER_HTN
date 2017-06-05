@@ -31,7 +31,7 @@ public class ISHOPNode {
 	 */
 	private int _statePosition;
 	
-	private final boolean COMMENT = false;
+	private final boolean COMMENT = true;
 	
 	/**
 	 * Creates a new task network node

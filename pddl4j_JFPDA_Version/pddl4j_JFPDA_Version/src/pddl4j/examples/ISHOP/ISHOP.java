@@ -275,8 +275,8 @@ public final class ISHOP {
 			
 			//// Pop the first node in the pending list open ////
 			final int last = openList.size() - 1;
-			final ISHOPNode currentNode = openList.get(last);
-			openList.remove(last);
+			final ISHOPNode currentNode = openList.get(0);
+			openList.remove(0);
 			nb_of_explored_nodes++;
 			// If there is composed tasks in the current node
 			if (currentNode.get_statePosition() != currentNode.getExpansion().size()) {

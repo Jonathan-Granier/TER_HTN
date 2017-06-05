@@ -32,11 +32,11 @@ elif [ $1 = "-j" ]; then
 	CHEMIN=seq-agl/$2
 	java -javaagent:pddl4j-master/build/libs/pddl4j-3.5.0.jar -server -Xms2048m -Xmx2048m fr.uga.pddl4j.planners.hsp.HSP -o $CHEMIN/domain.pddl -f $CHEMIN/p$3.pddl
 
-elif [ $1 = "-vH" ]; then
+elif [ $1 = "-vh" ]; then
 	CHEMIN=seq-agl/$2
 	./VAL-master/validate $CHEMIN/domain.pddl $CHEMIN/p$3.pddl Plan/HTN/$2/plan_$3.pddl 
 
-elif [ $1 = "-vC" ]; then
+elif [ $1 = "-vc" ]; then
 	CHEMIN=seq-agl/$2
 	./VAL-master/validate $CHEMIN/domain.pddl $CHEMIN/p$3.pddl Plan/Core/$2/plan_$3.pddl 
 

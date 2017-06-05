@@ -77,7 +77,7 @@ called AHSP. To launch the example use the following command line:
 
 HTN extension:
 
-iSHOP	:java -javaagent:lib/iSHOP.jar -server -Xms2048m -Xmx2048m -classpath lib/iSHOP.jar pddl4j.examples.ISHOP.ISHOP -o problems/Rover/domain.pddl -f problems/Rover/htn_pb03.pddl
+iSHOP	:java -javaagent:lib/iSHOP.jar -server -Xms2048m -Xmx2048m -classpath lib/iSHOP.jar pddl4j.examples.ISHOP.ISHOP -o problems/rover/domain.pddl -f problems/rover/htn_pb03.pddl
 
 Note: A set of classical PDDL planning problems is available in the web site of the international 
 planning competition: http://ipc.icaps-conference.org.
