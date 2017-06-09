@@ -2,8 +2,8 @@ Travail d'etude et de recherche (TER)
 ================================
 ## Benchmark sur la plannification hierarchique (HTN)
 
-Auteur : GRANIER Jonathan
-Maitre de stage : PELLIER Damien
+Auteur : GRANIER Jonathan  
+Maitre de stage : PELLIER Damien  
 
 -----------------------------------------
 ### Contenu 
@@ -14,16 +14,16 @@ Benchmark sur la plannification hierarchique (HTN) creer a partir des domaines d
 
 -----------------------------------------
 ### Domaines traités
-Barman
-Blocksworld
-Depots
-Elevator
-Gripper
-Hiking
-Movie
-Mystery
-Parking
-Satellite
-Zenotravel
+Barman  
+Blocksworld  
+Depots  
+Elevator  
+Gripper  
+Hiking  
+Movie  
+Mystery  
+Parking  
+Satellite  
+Zenotravel  
 -----------------------------------------
 
