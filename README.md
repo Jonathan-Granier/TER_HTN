@@ -8,7 +8,7 @@ Maitre de stage : PELLIER Damien
 -----------------------------------------
 ### Contenu 
 
-Benchmark sur la plannification hierarchique (HTN) creer a partir des domaines de l'IPC 2014 :  https://helios.hud.ac.uk/scommv/IPC-14/index.html
+Benchmark sur la plannification hierarchique (HTN) créé a partir des domaines de l'IPC 2014 :  https://helios.hud.ac.uk/scommv/IPC-14/index.html
 
 
 
