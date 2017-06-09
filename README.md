@@ -4,6 +4,7 @@ Travail d'etude et de recherche (TER)
 
 Auteur : GRANIER Jonathan  
 Maitre de stage : PELLIER Damien  
+Superviseur : RAMOUL Abdeldjalil
 
 -----------------------------------------
 ### Contenu 
