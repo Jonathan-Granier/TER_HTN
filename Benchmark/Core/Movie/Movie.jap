@@ -1,0 +1,147 @@
+
+
+(defdomain Depots
+	(
+
+		(:operator (!rewind-movie)
+			()
+			()
+			(
+				(movie-rewound)
+			)
+		)
+
+		(:operator (!reset-counter)
+			()
+			()
+			(
+				(counter-at-zero)
+			)
+		)
+
+		(:operator (!get-chips ?x)
+			( 
+				(chips ?x )
+			)
+			()
+			(
+				(have-chips)
+			)
+		)
+
+		(:operator (!get-dip ?x)
+			( 
+				(dip ?x )
+			)
+			()
+			(
+				(have-dip)
+			)
+		)
+
+		(:operator (!get-pop ?x)
+			( 
+				(pop ?x )
+			)
+			()
+			(
+				(have-pop)
+			)
+		)
+
+		(:operator (!get-cheese ?x)
+			( 
+				(cheese ?x )
+			)
+			()
+			(
+				(have-cheese)
+			)
+		)
+
+		(:operator (!get-crackers ?x)
+			( 
+				(crackers ?x )
+			)
+			()
+			(
+				(have-crackers)
+			)
+		)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;     		Fait le probleme		    ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(:method (do_problem)
+    (
+		
+    )
+    (
+        (!rewind-movie)
+        (do_take_cheese)
+        (do_take_crackers)
+        (do_take_pop)
+        (do_take_dip)
+        (do_take_chips)
+        (!reset-counter)
+    )
+
+)
+
+
+(:method (do_take_cheese)
+    (
+  		(cheese ?x)	
+    )
+    (
+        (!get-cheese ?x)
+    )
+
+)
+
+(:method (do_take_crackers)
+    (
+  		(crackers ?x)	
+    )
+    (
+        (!get-crackers ?x)
+    )
+
+)
+
+(:method (do_take_pop)
+    (
+  		(pop ?x)	
+    )
+    (
+        (!get-pop ?x)
+    )
+
+)
+
+(:method (do_take_dip)
+    (
+  		(dip ?x)	
+    )
+    (
+        (!get-dip ?x)
+    )
+
+)
+
+(:method (do_take_chips)
+    (
+  		(chips ?x)	
+    )
+    (
+        (!get-chips ?x)
+    )
+
+)
+
+
+
+)
+)

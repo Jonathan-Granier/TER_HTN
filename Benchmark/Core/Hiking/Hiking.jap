@@ -1,0 +1,496 @@
+
+
+(defdomain blocksworld
+	(
+
+;  Démonte une tente
+		(:operator (!put_down ?x1 ?x2 ?x3)
+			(
+				(person ?x1)
+				(place ?x2)
+				(tent ?x3) 
+				(at_person ?x1 ?x2)
+                (at_tent ?x3 ?x2)
+                (up ?x3)
+			)
+			(
+				(up ?x3)
+			)
+			(
+				(down ?x3)
+			)
+		)
+
+; Monte une tente
+		(:operator (!put_up ?x1 ?x2 ?x3)
+			(
+				(person ?x1)
+				(place ?x2)
+				(tent ?x3) 
+				(at_person ?x1 ?x2)
+                (at_tent ?x3 ?x2)
+                (down ?x3)
+			)
+			(
+				(down ?x3)
+			)
+			(
+				(up ?x3)
+			)
+		)
+ 
+;;Transporte 2 personnes d'une place à l'autre
+		(:operator (!drive_passenger ?x1 ?x2 ?x3 ?x4 ?x5)
+			(
+				(person ?x1)
+				(place ?x2)
+				(place ?x3)
+				(car ?x4)
+				(person ?x5)
+				(at_person ?x1 ?x2)
+                (at_car ?x4 ?x2)
+                (at_person ?x5 ?x2)
+			)
+			(
+				(at_person ?x1 ?x2)
+				(at_car ?x4 ?x2)
+				(at_person ?x5 ?x2)
+			)
+			(
+				(at_person ?x1 ?x3)
+				(at_car ?x4 ?x3)
+				(at_person ?x5 ?x3)
+			)
+		)
+
+;; Transporte 1 personne d'une place à l'autre
+
+		(:operator (!drive ?x1 ?x2 ?x3 ?x4)
+			(
+				(person ?x1)
+				(place ?x2)
+				(place ?x3)
+				(car ?x4)
+				
+				 (at_person ?x1 ?x2)
+				 (at_car ?x4 ?x2)
+			)
+			(
+				(at_person ?x1 ?x2)
+				(at_car ?x4 ?x2)
+				
+			)
+			(
+				(at_person ?x1 ?x3)
+				(at_car ?x4 ?x3)
+				
+			)
+		)
+
+;; Transporte 1 personnes et 1 tente d'une place à l'autre
+		(:operator (!drive_tent ?x1 ?x2 ?x3 ?x4 ?x5)
+			(
+				(person ?x1)
+				(place ?x2)
+				(place ?x3)
+				(car ?x4)
+				(tent ?x5)
+				
+				(at_person ?x1 ?x2)
+				(at_car ?x4 ?x2)
+				(at_tent ?x5 ?x2)
+				(down ?x5)
+			)
+			(
+				(at_person ?x1 ?x2)
+				(at_car ?x4 ?x2)
+				(at_tent ?x5 ?x2)
+				
+			)
+			(
+				(at_person ?x1 ?x3)
+				(at_car ?x4 ?x3)
+				(at_tent ?x5 ?x3)
+				
+			)
+		)
+
+;; Transporte 2 personnes et 1 tente d'une place à l'autre
+		(:operator (!drive_tent_passenger ?x1 ?x2 ?x3 ?x4 ?x5 ?x6)
+			(
+				(person ?x1)
+				(place ?x2)
+				(place ?x3)
+				(car ?x4)
+				(tent ?x5)
+				(person ?x6)
+				
+				(at_person ?x1 ?x2)
+				(at_car ?x4 ?x2)
+				(at_tent ?x5 ?x2)
+				(down ?x5)
+				(at_person ?x6 ?x2)
+			)
+			(
+				(at_person ?x1 ?x2)
+				(at_car ?x4 ?x2)
+				(at_tent ?x5 ?x2)
+				(at_person ?x6 ?x2)
+				
+			)
+			(
+				(at_person ?x1 ?x3)
+				(at_car ?x4 ?x3)
+				(at_tent ?x5 ?x3)
+				(at_person ?x6 ?x3)
+				
+			)
+		)
+
+
+		(:operator (!walk_together ?x1 ?x2 ?x3 ?x4 ?x5 ?x6)
+			(
+				(tent ?x1)
+				(place ?x2)
+				(person ?x3)
+				(place ?x4)
+				(person ?x5)
+				(couple ?x6)
+				
+				(at_tent ?x1 ?x2)
+                (up ?x1)
+                (at_person ?x3 ?x4)
+                (next ?x4 ?x2)
+                (at_person ?x5 ?x4)
+                (walked ?x6 ?x4)
+                (partners ?x6 ?x3 ?x5)
+			)
+			(
+				(at_person ?x3 ?x4)
+				(at_person ?x5 ?x4)
+				(walked ?x6 ?x4)
+				
+			)
+			(
+				(at_person ?x3 ?x2)
+				(at_person ?x5 ?x2)
+				(walked ?x6 ?x2)
+				
+			)
+		)
+
+
+
+; Algo
+;
+
+; Pour chaque étape / place
+;   Démonter la tente
+;   La transporter à la prochaine étape avec 2 voitures
+;       Si il n'y a pas 2 voitures sur place , allez en chercher une à l'étape précédante
+;   Monter la tente
+;   Revenir avec 1 voiture
+;   Faire marcher tous les couples à la prochaine étape
+
+
+
+
+
+
+
+;----------------------------------------------------
+;                   Do_problem
+;----------------------------------------------------
+
+; Fait avancer tous les couples qui doivent avancer d'une place à l'autre
+; Recommencer tant qu'il reste des couples à faire avancer
+
+
+
+
+(:method (do_problem )
+
+; Tant qu'il y a des personnes à faire marcher , on continue
+Case1	(	 
+			(place ?from)
+			(place ?to)
+			(person ?person)
+			(next ?from ?to)
+			(at_person ?person ?from)
+		)
+		(
+			(do_go_to_next_place ?from ?to)
+            (do_problem)
+		)
+;; On s'arrette quand il n'y a plus personne à faire marcher
+Case2	()
+		()
+)
+
+
+
+;----------------------------------------------------
+;               Allez à la prochaine place
+;----------------------------------------------------
+
+; Monte une tente
+; Transfert une tente à la prochaine place
+; Fait marcher tous ceux qui doivent marcher
+
+
+(:method (do_go_to_next_place ?from ?to)
+
+; Tant qu'il y a des personnes à faire marcher , on continue
+		(	 
+			(place ?from)
+			(place ?to)
+			(next ?from ?to)
+		)
+		( 
+			(do_down_tent ?from)
+            (do_transfert ?from ?to)
+            (do_walk_all ?from ?to)
+		)
+)
+
+
+;------------------------------------------------------------
+;                        Demonte une tente 
+;------------------------------------------------------------
+
+(:method (do_down_tent ?p )
+
+; Cas où il y a une tente monté
+Case1	(	 
+			(place ?p)
+			(tent ?t)
+			( at_tent ?t ?p)
+            ( down ?t)
+		)
+		(
+		)
+; Cas où il n'y a pas de tente monté
+Case2	(
+			(place ?p)
+			(tent ?t)
+			(person ?person)
+			( at_tent ?t ?p)
+            ( up ?t)
+            ( at_person ?person ?p)
+		)
+		(
+			(!put_down ?person ?p ?t)
+		)
+)
+
+
+
+;------------------------------------------------------------
+;                        Monte une tente 
+;------------------------------------------------------------
+
+(:method (do_put_tent ?p )
+
+
+		(	 
+			(place ?p)
+			(tent ?t)
+			(person ?person)
+			( at_tent ?t ?p)
+	        ( down ?t)
+	        ( at_person ?person ?p)
+		)
+		(
+			(!put_up ?person ?p ?t)
+		)
+
+)
+
+
+
+;------------------------------------------------------------
+;                        Transfert une tente
+;------------------------------------------------------------
+
+
+(:method (do_transfert ?from ?to )
+; Cas où il y a 2 voitures présentes
+Case1	(	 
+			(place ?from)
+			(place ?to)
+			(car ?c1)
+			(car ?c2)
+
+			( at_car ?c1 ?from)
+            ( at_car ?c2 ?from)
+            ( next ?from ?to)
+		)
+		(
+			(do_drive_tent ?from ?to ?c1)
+            (do_drive ?from ?to ?c2)
+            (do_put_tent ?to)
+            (do_drive_passenger ?to ?from ?c1)
+		)
+
+; Cas où il y a 1 voitures présente
+Case2	(
+			(place ?from)
+			(place ?to)
+			(place ?previous)
+			(car ?c1)
+			(car ?c2)
+			( at_car ?c1 ?from)
+            ( at_car ?c2 ?previous)
+            ( next ?from ?to)
+		)
+		(
+			(do_drive_tent_passenger ?from ?previous ?c1)
+            (do_drive_tent ?previous ?to ?c1)
+            (do_drive ?previous ?to ?c2)
+            (do_put_tent ?to)
+            (do_drive_passenger ?to ?from ?c1)
+		)
+)
+
+
+;------------------------------------------------------------
+;                        Fait marcher tous le monde
+;------------------------------------------------------------
+
+
+
+
+(:method (do_walk_all ?from ?to )
+
+
+
+Case1	(
+			(place ?from)
+			(place ?to)
+			(tent ?t)
+			(person ?person_1)
+			(person ?person_2)
+			(couple ?couple)
+			( at_tent ?t ?to)
+           	( up ?t)
+            ( at_person ?person_1 ?from)
+            ( next ?from ?to)
+            ( at_person ?person_2 ?from)
+            ( walked ?couple ?from)
+           ; ( partners ?couple ?person_1 ?person_2)
+
+		)
+		(
+			(!walk_together ?t ?to ?person_1 ?from ?person_2 ?couple)
+			(do_walk_all ?from ?to)
+		)
+
+
+Case2	(	 
+			(place ?from)
+			(place ?to)
+			
+            ( next ?from ?to)
+		)
+		(
+			
+		)
+
+)
+
+
+
+
+
+;------------------------------------------------------------
+;                        Methode de Transfert
+;------------------------------------------------------------
+
+
+; 1 personne
+
+(:method (do_drive ?from ?to ?c)
+
+		(
+			(place ?from)
+			(place ?to)
+			(car ?c)
+			(person ?person)
+			( at_person ?person ?from)
+            ( at_car ?c ?from)
+                        
+		)
+		(
+			(!drive ?person ?from ?to ?c )
+		)
+)
+
+
+; 1 personne + 1 tente
+
+
+(:method (do_drive_tent ?from ?to ?c)
+
+		(
+			(place ?from)
+			(place ?to)
+			(car ?c)
+			(tent ?t)
+			(person ?person)
+			( at_person ?person ?from)
+            ( at_car ?c ?from)
+            ( at_tent ?t ?from)
+            ( down ?t)
+			
+		)
+		(
+			(!drive_tent ?person ?from ?to ?c ?t)
+		)
+)
+
+
+; 2 personnes
+
+(:method (do_drive_passenger ?from ?to ?c)
+
+		(
+			(place ?from)
+			(place ?to)
+			(car ?c)
+			(person ?person_1)
+			(person ?person_2)
+			( at_person ?person_1 ?from)
+            ( at_person ?person_2 ?from)
+            ( at_car ?c ?from)
+			
+		)
+		(
+			(!drive_passenger ?person_1 ?from ?to ?c ?person_2)
+		)
+)
+
+
+; 2 personnes + 1 tente
+
+(:method (do_drive_tent_passenger ?from ?to ?c)
+
+		(
+			(place ?from)
+			(place ?to)
+			(car ?c)
+			(person ?person_1)
+			(person ?person_2)
+			(tent ?t)
+			( at_person ?person_1 ?from)
+			( at_person ?person_2 ?from)
+			( at_car ?c ?from)
+			( at_tent ?t ?from)
+			( down ?t)
+			
+		)
+		(
+			(!drive_tent_passenger ?person_1 ?from ?to ?c ?t ?person_2)
+		)
+)
+)
+)

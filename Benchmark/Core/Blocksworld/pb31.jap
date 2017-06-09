@@ -1,0 +1,68 @@
+(defproblem problem blocksworld
+  (
+    ;;;
+    ;;;  facts
+    ;;;
+    (block A)
+    (block B)
+    (block C)
+    (block D)
+    (block E)
+    (block F)
+    (block G)
+    (block H)
+    (block I)
+    (block J)
+    (block K)
+    (block L)
+    (block M)
+    (block N)
+    (block O)
+    
+    (clear E) 
+    (clear M) 
+    (clear B) 
+    (clear F) 
+    (clear I) 
+    (ontable G)
+    (ontable N) 
+    (ontable O) 
+    (ontable K) 
+    (ontable H) 
+    (on E J) 
+    (on J D) 
+    (on D L)
+    (on L C) 
+    (on C G) 
+    (on M N) 
+    (on B A) 
+    (on A O) 
+    (on F K) 
+    (on I H)
+    
+
+    (handempty)
+
+  )
+  ;;;
+  ;;; goals
+  ;;;
+(
+            
+            (do_put_on_table I C)
+            (do_put_on N I)
+            (do_put_on D N)
+            (do_put_on J D)
+            (do_put_on L J)
+            (do_put_on B L)
+            (do_put_on A B)
+            (do_put_on E A)
+            (do_put_on F E)
+            (do_put_on M F)
+            (do_put_on K M)
+            (do_put_on H K)
+            (do_put_on O H)
+            (do_put_on G O)
+
+ )
+)

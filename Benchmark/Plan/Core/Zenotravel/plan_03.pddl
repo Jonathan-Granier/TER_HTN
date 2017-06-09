@@ -1,0 +1,6 @@
+0 :  (board person1 plane1 city0  )  
+1 :  (fly plane1 city0 city1 fl4 fl3  )  
+2 :  (debark person1 plane1 city1  )  
+3 :  (board person3 plane1 city1  )  
+4 :  (fly plane1 city1 city0 fl3 fl2  )  
+5 :  (debark person3 plane1 city0  )  

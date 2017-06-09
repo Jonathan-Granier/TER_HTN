@@ -1,0 +1,119 @@
+(defproblem problem byPaser
+(
+	;;;
+	;;;   facts
+	;;;
+
+
+	(depot depot0)
+
+	(distributor distributor0)
+	(distributor distributor1)
+
+	(truck truck0)
+	(truck truck1)
+
+	(pallet pallet0)
+	(pallet pallet1)
+	(pallet pallet2)
+	(pallet pallet3)
+	(pallet pallet4)
+	(pallet pallet5)
+
+	(crate crate0)
+	(crate crate1)
+	(crate crate2)
+	(crate crate3)
+	(crate crate4)
+	(crate crate5)
+	(crate crate6)
+	(crate crate7)
+	(crate crate8)
+	(crate crate9)
+
+	(hoist hoist0)
+	(hoist hoist1)
+	(hoist hoist2)
+
+ 	(surface crate0)
+ 	(surface crate1)
+ 	(surface crate2)
+ 	(surface crate3)
+ 	(surface crate4)
+ 	(surface crate5)
+ 	(surface crate6)
+ 	(surface crate7)
+ 	(surface crate8)
+ 	(surface crate9)
+ 	
+
+
+ 	(surface pallet0)
+ 	(surface pallet1)
+ 	(surface pallet2)
+ 	(surface pallet3)
+ 	(surface pallet4)
+ 	(surface pallet5)
+
+ 	(place depot0)
+ 	(place distributor0)
+ 	(place distributor1)
+     
+
+	(at pallet0 depot0  )
+	(clear crate2  )
+	(at pallet1 distributor0  )
+	(clear crate6  )
+	(at pallet2 distributor1  )
+	(clear crate9  )
+	(at pallet3 distributor1  )
+	(clear crate7  )
+	(at pallet4 distributor0  )
+	(clear crate0  )
+	(at pallet5 distributor0  )
+	(clear crate8  )
+	(at truck0 distributor0  )
+	(at truck1 distributor0  )
+	(at hoist0 depot0  )
+	(available hoist0  )
+	(at hoist1 distributor0  )
+	(available hoist1  )
+	(at hoist2 distributor1  )
+	(available hoist2  )
+	(at crate0 distributor0  )
+	(on crate0 pallet4  )
+	(at crate1 distributor0  )
+	(on crate1 pallet1  )
+	(at crate2 depot0  )
+	(on crate2 pallet0  )
+	(at crate3 distributor0  )
+	(on crate3 pallet5  )
+	(at crate4 distributor1  )
+	(on crate4 pallet3  )
+	(at crate5 distributor0  )
+	(on crate5 crate1  )
+	(at crate6 distributor0  )
+	(on crate6 crate5  )
+	(at crate7 distributor1  )
+	(on crate7 crate4  )
+	(at crate8 distributor0  )
+	(on crate8 crate3  )
+	(at crate9 distributor1  )
+	(on crate9 pallet2  )
+   
+)
+	;;;
+	;;;   goals
+	;;;
+
+
+(
+	(do_put_on crate9 pallet0 )
+	(do_put_on crate7 pallet1 )
+	(do_put_on crate6 pallet2 )
+	(do_put_on crate0 pallet3 )
+	(do_put_on crate8 pallet4 )
+	(do_put_on crate3 crate8 )
+	(do_put_on crate1 crate0 )
+)
+)

@@ -1,0 +1,47 @@
+(define (problem BLOCKS-10-2)
+(:domain BLOCKS)
+     (:requirements :strips :typing :negative-preconditions :htn :equality)
+
+(:objects F I J H E D B A C G - block)
+(:INIT 
+	(CLEAR J)
+    (CLEAR C) 
+    (ONTABLE A) 
+    (ONTABLE C) 
+    (ON J I) 
+    (ON I H) 
+    (ON H F)
+    (ON F D) 
+    (ON D E) 
+    (ON E G) 
+    (ON G B) 
+    (ON B A) 
+    (HANDEMPTY))
+(:goal
+     :tasks  (
+            (tag t1 (do_put_on J D))
+            (tag t2 (do_put_on F J))
+            (tag t3 (do_put_on A F))
+            (tag t4 (do_put_on C A))
+            (tag t5 (do_put_on H C))
+            (tag t6 (do_put_on G H))
+            (tag t7 (do_put_on I G))
+            (tag t8 (do_put_on E I))
+            (tag t9 (do_put_on B E))
+
+        )
+
+    :constraints(and
+                    (after (and
+                                (ON B E) 
+                                (ON E I) 
+                                (ON I G) 
+                                (ON G H) 
+                                (ON H C) 
+                                (ON C A) 
+                                (ON A F)
+                                (ON F J) 
+                                (ON J D)
+                            ) t1)
+                )    
+))

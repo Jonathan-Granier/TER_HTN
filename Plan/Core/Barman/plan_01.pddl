@@ -1,7 +1,0 @@
-0 :  (grasp left shot1  )  
-1 :  (fill-shot shot1 ingredient4 left right dispenser4  )  
-2 :  (pour-shot-to-clean-shaker shot1 ingredient4 shaker1 left l0 l1  )  
-3 :  (clean-shot shot1 ingredient4 left right  )  
-4 :  (fill-shot shot1 ingredient1 left right dispenser1  )  
-5 :  (pour-shot-to-used-shaker shot1 ingredient1 shaker1 left l1 l2  )  
-6 :  (leave left shot1  )  

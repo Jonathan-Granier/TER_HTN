@@ -1,0 +1,273 @@
+;;------------------------------------------------------------------------------
+;; This file describes the skills and the beliefs of a tool maker agent. 
+;;
+;; A tool maker agent can make the following assumptions:
+;; 	- (has-wood ?agent ?quantity) 
+;;    (is-available wood ?agent ?place)
+;; 	- (has-iron ?agent ?quantity)
+;;    (is-available iron ?agent ?place)
+;;	- (receive-cash ?agent1 ?agent2 ?cash ?tool)
+;;    (is-transportable ?tool ?from ?to)
+;;
+;; A tool maker agent can reach the following goals:
+;; 	- (has-tool ?tool ?agent) 
+;;    (is-available ?tool ?agent ?place)
+;;	- (is-settled ?agent ?tool-shop-name ?place)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash ?tool)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash ?tool-maker-shop)
+;;------------------------------------------------------------------------------
+
+(defdomain tool-maker (
+
+	(:operator (!take-wood ?wq)
+		((has-wood ?tm ?iwq))
+		((has-wood ?tm ?iwq))
+		((has-wood ?tm (call - ?iwq ?wq)))
+	)
+
+	(:method (take-wood ?t)
+		(:first (need-wood ?t ?nwq) 
+			(has-wood ?tm ?wq) (call >= ?wq ?nwq))
+		((!take-wood ?nwq))
+		
+		(:first (need-wood ?t ?nwq) 
+			(~has-wood ?tm ?wq) (~call >= ?wq ?nwq)
+			(is-settled ?tm (call cat ?tm shop) ?p)
+			(~is-available wood ?tm ?p))
+		((!take-wood ?nwq))
+	)
+
+	(:operator (!take-iron ?iq)
+		((has-iron ?tm ?iiq))
+		((has-iron ?tm ?iiq))
+		((has-iron ?tm (call - ?iiq ?iq)))
+	)
+	
+	(:method (take-iron ?t)
+		(:first (need-iron ?t ?niq)
+			(has-iron ?tm ?iq) (call >= ?iq ?niq))
+		((!take-iron ?niq))
+		
+		(:first (need-iron ?t ?niq)
+			(~has-iron ?tm ?iq) (~call >= ?iq ?niq)
+			(is-settled ?tm (call cat ?tm shop) ?p)
+			(~is-available iron ?tm ?p))
+		((!take-iron ?niq))
+	)
+	
+	(:operator (!make-tool ?t ?tq)
+		((store ?t ?itq))
+		((store ?t ?itq))
+		((store ?t (call + ?itq ?tq)))
+	)
+
+	(:method (make-tool ?t ?tq)
+		()
+		((take-wood ?t) (take-iron ?t) (!make-tool ?t ?tq))
+	)
+		
+	(:method (make ?t ?tq)
+		(:first (store hammer ?hq) (call < ?hq 1))
+		((make-tool hammer 1) (make ?t ?tq))
+		
+		(:first (store saw ?sq) (call < ?sq 1))
+		((make-tool saw 1) (make ?t ?tq))
+		
+		()
+		((make-tool ?t ?tq))
+	)	
+		
+	(:operator (!sell-tool ?t ?tq)
+		((need-wood ?t ?nwq) 
+			(need-iron ?t ?niq) 
+			(wood-price ?tm ?wp) 
+			(iron-price ?tm ?ip)
+			(has-cash ?tm ?icq))
+		((has-cash ?tm ?icq))
+		((has-cash ?tm (call + ?icq (call * (call + (call * ?nwq ?wp) (call * ?niq ?ip)) ?tq))))
+	)
+					
+	(:method (sell-tool ?a ?t ?tq ?to)
+		(:first (store ?t ?itq) (call >= ?itq ?tq)
+			(need-wood ?t ?nwq) (need-iron ?t ?niq) 
+			(wood-price ?tm ?wp) (iron-price ?tm ?ip)
+			(~receive-cash ?tm ?a (call * (call + (call * ?nwq ?wp) (call * ?niq ?ip)) ?tq) ?t)
+			(is-settled ?tm (call cat ?tm shop) ?from)
+			(~is-transportable ?t ?from ?to))
+		((!sell-tool ?t ?tq))
+		
+		(:first (store ?t ?itq) (call < ?itq ?tq)
+			(need-wood ?t ?nwq) (need-iron ?t ?niq) 
+			(wood-price ?tm ?wp) (iron-price ?tm ?ip)
+			(~receive-cash ?tm ?a (call * (call + (call * ?nwq ?wp) (call * ?niq ?ip)) ?tq) ?t)
+			(is-settled ?tm (call cat ?tm shop) ?from)
+			(~is-transportable ?t ?from ?to))
+		((make ?t ?tq) (!sell-tool ?t ?tq))
+	)		
+			
+	(:operator (!pay ?a ?s ?p)
+		((has-cash ?f ?c))
+		((has-cash ?f ?c))
+		((has-cash ?f (call - ?c ?p)))
+	)
+	
+	(:operator (!settle ?n ?h ?p)
+		()
+		()
+		((is-settled ?n ?h ?p))
+	)
+		
+	(:method (settle ?n)
+		(:first (is-built tool-maker-shop (call cat ?n shop) ?n ?p)
+			(is-settled ?n (call cat ?n shop) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n shop) ?p))
+			(~is-built tool-maker-shop (call cat ?n shop) ?n ?p))
+		((!settle ?n (call cat ?n shop) ?p))
+		
+		(:first (~is-built tool-maker-shop (call cat ?n shop) ?n ?p))
+		((!settle ?n (call cat ?n shop) ?p))
+	)
+		
+	(:method (settle ?n ?p)
+		(:first (is-built tool-maker-shop (call cat ?n shop) ?n ?p)
+			(is-settled ?n (call cat ?n shop) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n shop) ?p))
+			(~is-built tool-maker-shop (call cat ?n shop) ?n ?p))
+		((!settle ?n (call cat ?n shop) ?p))
+		
+		(:first (~is-built tool-maker-shop (call cat ?n shop) ?n ?p))
+		((!settle ?n (call cat ?n shop) ?p))
+		
+	)
+			
+	(:method (do-plan)
+		
+		;; some agent wants a tool and the settler is already settled
+		(:first (goal (has-tool ?a ?t)) 
+			(goal (is-available ?t ?a ?to))
+			(agent-name ?n)
+			(is-settled ?n (call cat ?n shop) ?p))
+		((sell-tool ?a ?t 1 ?to))
+		
+		;; some agent wants a tool but the settler is not already settled
+		(:first (goal (has-tool ?a ?t))
+			(goal (is-available ?t ?a ?to))
+			(agent-name ?n))
+		((settle ?n) (sell-tool ?a ?t 1 ?to))
+				
+		;; some agent want to settled this agent
+		(:first (agent-name ?n)
+			(goal (is-settled ?n (call cat ?n shop) ?p)))
+		((settle ?n ?p))
+		
+		;; the settlers must pay some agent for a wood
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s wood)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+		;; the settlers must pay some agent for a iron
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s iron)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+		;; the settlers must pay some agent for a tool maker shop
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s tool-maker-shop)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))		
+	)
+
+	;; classical axioms
+	
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+	
+    (:- (same ?x ?x) ())
+	
+	;; classical needed methods and operators
+	
+	(:operator (!do-nothing) () () ())
+	
+	(:operator (!assert ?g)	() () ?g)
+		
+	(:method (achieve-goals ?goals)
+        ()
+    	((assert-goals ?goals nil) (do-plan))
+	)
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+		()
+		((assert-goals ?goals (list (goal ?goal) . ?out)))
+	)
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))	
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))
+		
+))
+
+(defproblem tool-maker-problem tool-maker
+ 	(
+		;; static properties		
+		(agent-name tool-maker)
+		(not (is-built tool-maker-shop tool-maker-shop tool-maker shop-village))
+		//(is-settled tool-maker tool-maker-shop shop-village)
+		
+		(wood-price tool-maker 1)
+		(iron-price tool-maker 1)
+		
+		(store fishing-pole 0)
+		(need-wood fishing-pole 2)
+		(need-iron fishing-pole 1)
+		
+		(store knife 0)
+		(need-wood knife 1)
+		(need-iron knife 2)		
+		
+		(store scythe 0)
+		(need-wood scythe 1)
+		(need-iron scythe 3)
+		
+		(store axe 0)
+		(need-wood axe 1)
+		(need-iron axe 1)
+		
+		(store saw 1)
+		(need-wood saw 1)
+		(need-iron saw 1)
+		
+		(store pick 0)
+		(need-wood pick 1)
+		(need-iron pick 2)
+		
+		(store hammer 1)
+		(need-wood hammer 1)
+		(need-iron hammer 1)
+						
+		;; resources properties
+		(has-wood tool-maker 6)
+		(has-iron tool-maker 4)
+		(has-cash tool-maker 2)
+	)
+	
+	((achieve-goals (list 
+		//(is-settled tool-maker tool-maker-shop shop-village)
+		(has-tool miner pick)
+		(is-available pick miner montain-village))
+		//(receive-cash construction-worker tool-maker 2 tool-maker-shop)
+		//(receive-cash sawmill-worker tool-maker 2 wood)
+		//(receive-cash foundry-worker tool-maker 2 iron)
+	))
+))

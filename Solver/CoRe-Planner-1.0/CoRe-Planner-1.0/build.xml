@@ -1,0 +1,94 @@
+<project name="CoRe Planner Project" default="build" basedir=".">
+
+	<property name="version" value="beta" />
+	<property name="src_dir" value="${basedir}/src" />
+	<property name="class_dir" value="${basedir}/class" />
+	<property name="doc_dir" value="${basedir}/doc/api" />
+	<property name="lib_dir" value="${basedir}/lib" />	
+	<property name="dev_dir" value="${basedir}/dev" />
+	
+	<property name="javacc_home" value="${dev_dir}/javacc/javacc.jar" />
+	<property name="javacc_target" value="src/core/planner/lexer/Lexer.jj" />
+	<property name="javacc_output" value="src/core/planner/lexer/" />
+	
+	<property name="core.planner" value="core/planner" />
+	<property name="core.planner.lexer" value="core/planner/lexer" />
+	
+	<property name="planner_pkg" value="core.planner, core.planner.lexer" />
+			
+	<target name="build" depends="core.planner" description="Build CoRe Planner packages" >
+		<echo>CoRe Planner is successfully built</echo>
+	</target>
+	
+	<target name="rebuild" depends="clean, build" description="Rebuild CoRe Planner packages" >
+		<echo>CoRe Planner is successfully rebuilt</echo>
+	</target>	
+	
+	<target name="core.planner.lexer" description="Build core.planner.lexer package">
+		<echo>Build core.planner.lexer package</echo>
+		<java classpath="${javacc_home}" classname="javacc" fork="true">
+			<jvmarg line="-ea -esa"/>
+			<arg line="-JDK_VERSION=1.5 -OUTPUT_DIRECTORY=${javacc_output} ${javacc_target}"/>
+		</java>
+	</target>
+	
+	<target name="core.planner" depends="core.planner.lexer" description="Build core.planner package">
+		<echo>Build core.planner package</echo>
+			<javac 
+				classpath="${class_dir}" 
+				srcdir="${src_dir}" 
+				destdir="${class_dir}" 
+				deprecation="yes"
+				includes="${core.planner}**/*.java" 
+				source="1.5" 
+				debug="on"
+			/>
+	</target>		
+
+	<target name="core.planner.lexer.clean" description="Clean the core.planner.lexer package">
+		<echo>Clean the core.planner.lexer package</echo>
+		<delete>
+			<fileset dir="${src_dir}" includes="${core.planner.lexer}/*.java" />
+		</delete>
+	</target>
+	
+	<target name="core.planner.clean" description="Clean the core.planner.lexer package">
+		<echo>Clean the core.planner package</echo>
+		<delete>
+			<fileset dir="${class_dir}" includes="${core.planner}/**/*.class" />
+		</delete>
+	</target>
+	
+	<target name="clean" depends="core.planner.lexer.clean, core.planner.clean" description="Clean the Core Assumption-Based Plan Project">
+		<echo>CoRe Planner is successfully cleaned</echo>
+	</target>
+
+	<target name="doc" description="Generate the Core Planner Documentation">
+		<echo>Generate the Core Planner Documentation</echo>
+		<javadoc 
+			sourcepath="${src_dir}" 
+			classpath="${class_dir}}" 
+			destdir="${doc_dir}" 
+			packagenames="${planner_pkg}" 
+			access="public" 
+			source="1.5" 
+			Windowtitle="CoRe Planner ${version}"
+			Author="Damien Pellier"
+			Version="${version}"
+		/>
+	</target>
+	
+	<target name="jar" description="Build Core Planner Jar">
+		<echo>Build Core Planner Jar</echo>
+		<jar destfile="${lib_dir}/planner.jar" 
+			basedir="${class_dir}" 
+			includes="${core.planner}/**/*.class">
+			<manifest>
+				<attribute name="Built-By" value="Damien Pellier" />
+				<attribute name="Main-Class" value="core.planner.Planner" />
+			</manifest>
+		</jar>
+	</target>
+		
+</project>
+

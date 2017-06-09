@@ -1,0 +1,288 @@
+;;------------------------------------------------------------------------------
+;; This file describes the skills and the beliefs of a miner agent. 
+;;
+;; A miner agent can make the following assumptions:
+;;	- (receive-cash ?agent1 ?agent2 ?cash ore)
+;;    (is-transportable ore ?from ?to)
+;;	- (has-tool ?agent pick)
+;;    (is-available pick ?agent ?place)
+;;	- (has-fish ?agent ?quantity)
+;;    (is-available fish ?agent ?place)
+;;	- (has-bread ?agent ?quantity)
+;;    (is-available bread ?agent ?place)
+;;	- (has-ham ?agent ?quantity)
+;;    (is-available ham ?agent ?place)
+;;	- (is-built miner-hut ?hut-name ?agent ?place)
+;;
+;; A miner agent can reach the following goals:
+;; 	- (has-ore ?agent ?quantity)
+;;    (is-available ore ?agent ?place)
+;;	- (is-settled ?agent ?hut-name ?place)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash pick)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash miner-hut)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash fish)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash bread)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash ham)
+;;------------------------------------------------------------------------------
+
+(defdomain miner (
+										
+	(:operator (!eat-bread ?bq)
+		((has-bread ?m ?ibq))
+		((has-bread ?m ?ibq))
+		((has-bread ?m (call + ?ibq ?bq)))
+	)
+	
+	(:method (eat-bread ?bq)		
+		(:first (has-bread ?m ?ibq)
+			(has-bread ?m ?ibq) (call >= ?ibq ?bq))
+		((!eat-bread ?bq))
+		
+		(:first (has-bread ?m ?ibq)
+			(is-settled ?m (call cat ?m hut) ?loc)
+			(~is-available bread ?m ?loc)
+			(~has-bread ?m ?ibq) (~call >= ?ibq ?bq))
+		((!eat-bread ?bq))
+		
+		()
+		()
+	)
+	
+	(:operator (!eat-fish ?fq)
+		((has-fish ?m ?ifq))
+		((has-fish ?m ?ifq))
+		((has-fish ?m (call + ?ifq ?fq)))
+	)
+
+	(:method (eat-fish ?fq)		
+		(:first (has-fish ?m ?ifq)
+			(has-fish ?m ?ifq) (call >= ?ifq ?fq))
+		((!eat-fish ?fq))
+
+		(:first (has-fish ?m ?ifq)
+			(is-settled ?m (call cat ?m hut) ?loc)
+			(~is-available fish ?m ?loc)
+			(~has-fish ?m ?ifq) (~call >= ?ifq ?fq))
+		((!eat-fish ?fq))
+		
+		()
+		()
+	)
+
+	(:operator (!eat-ham ?hq)
+		((has-ham ?m ?ihq))
+		((has-ham ?m ?ihq))
+		((has-ham ?m (call + ?ihq ?hq)))
+	)
+	
+	(:method (eat-ham ?hq)		
+		(:first (has-ham ?m ?ihq)
+			(has-ham ?m ?ihq) (call >= ?ihq ?hq))
+		((!eat-ham ?hq))
+		
+		(:first (has-ham ?m ?ihq)
+			(is-settled ?m (call cat ?m hut) ?loc)
+			(~is-available ham ?m ?loc)
+			(~has-ham ?m ?ihq) (~call >= ?ihq ?hq))
+		((!eat-ham ?hq))
+		
+		()
+		()
+	)
+	
+	(:method (eat ?oq)		
+		(:first (small-extraction ?q) (call <= ?oq ?q))
+		((eat-bread ?q))
+		
+		(:first (medium-extraction ?q) (call <= ?oq ?q))
+		((eat-bread ?q) (eat-fish ?q))
+		
+		(:first (large-extraction ?q))
+		((eat-bread ?q) (eat-ham ?q))
+	)
+	
+	(:operator (!extract-ore ?oq)
+		((has-ore ?m ?ioq))
+		((has-ore ?m ?ioq))
+		((has-ore ?m (call + ?ioq ?oq)))
+	)
+		
+	(:method (extract-ore ?m ?oq)		
+		(:first (has-tool ?m pick))
+		((eat ?oq) (!extract-ore ?oq))
+		
+		(:first (is-settled ?m (call cat ?m hut) ?loc)
+			(~has-tool ?m pick)
+			(~is-available pick ?m ?loc))
+		((eat ?oq) (!extract-ore ?oq))
+	)
+	
+	
+	(:operator (!sell-ore ?oq)
+		((has-ore ?m ?ioq) (has-cash ?m ?icq) (ore-price ?m ?p))
+		((has-ore ?m ?ioq) (has-cash ?m ?icq))
+		((has-ore ?m (call - ?ioq ?oq)) (has-cash ?m (call + ?icq (call * ?oq ?p))))
+	)
+		
+	(:method (sell-ore ?a ?oq ?to)
+		(:first (has-ore ?m ?ioq) (call >= ?ioq ?oq) 
+			(ore-price ?m ?p) (is-settled ?m (call cat ?m hut) ?from)
+			(~receive-cash ?m ?a (call * ?oq ?p) ore) 
+			(~is-transportable ore ?from ?to))
+		((!sell-ore ?oq))
+		
+		(:first (has-ore ?m ?ioq) (call < ?ioq ?oq) 
+			(ore-price ?m ?p) (is-settled ?m (call cat ?m hut) ?from)
+			(~receive-cash ?m ?a (call * ?oq ?p) ore)
+			(~is-transportable ore ?from ?to))
+		((extract-ore ?m (call - ?oq ?ioq)) (!sell-ore ?oq))
+	)
+	
+	(:operator (!settle ?n ?h ?p)
+		()
+		()
+		((is-settled ?n ?h ?p))
+	)
+		
+	(:method (settle ?n)
+		(:first (is-built miner-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built miner-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+	)
+	
+	(:operator (!pay ?a ?s ?p)
+		((has-cash ?f ?c))
+		((has-cash ?f ?c))
+		((has-cash ?f (call - ?c ?p)))
+	)
+	
+	(:method (settle ?n ?p)
+		(:first (is-built miner-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built miner-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+	)
+		
+	(:method (do-plan)
+		
+		;; some agent wants ore and the settler is already settled
+		(:first (goal (has-ore ?a ?oq)) 
+			(goal (is-available ore ?a ?to))
+			(agent-name ?n)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((sell-ore ?a ?oq ?to))
+		
+		;; some agent wants ore but the settler is not already settled
+		(:first (goal (has-ore ?a ?oq))
+			(goal (is-available ore ?a ?to))
+			(agent-name ?n))
+		((settle ?n) (sell-ore ?a ?oq ?to))
+				
+		;; some agent want to settled this agent
+		(:first (agent-name ?n)
+			(goal (is-settled ?n (call cat ?n hut) ?p)))
+		((settle ?n ?p))
+		
+		;; the settlers must pay some agent for a pick
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s pick)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+		;; the settlers must pay some agent for a miner-hut
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s miner-hut)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+		;; the settlers must pay some agent for fish
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s fish)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+		;; the settlers must pay some agent for bread
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s bread)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+		;; the settlers must pay some agent for ham
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s ham)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+	)
+	
+	;; classical axioms
+	
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+	
+    (:- (same ?x ?x) ())
+
+	;; classical needed methods and operators
+	
+	(:operator (!do-nothing) () () ())
+	
+	(:operator (!assert ?g)	() () ?g)
+		
+	(:method (achieve-goals ?goals)
+        ()
+    	((assert-goals ?goals nil) (do-plan))
+	)
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+		()
+		((assert-goals ?goals (list (goal ?goal) . ?out)))
+	)
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))
+		
+))
+
+(defproblem miner-problem miner
+ 	(
+		;; static properties
+		(agent-name miner)
+		(has-tool miner pick)
+		(is-built miner-hut miner-hut miner montain-village)
+		(is-settled miner miner-hut montain-village)
+		(ore-price miner 2)		
+		(small-extraction 2)
+		(medium-extraction 4)
+		(large-extraction 6)
+		
+		;; dynamic properties
+		(has-ore miner 0)
+		(has-cash miner 2)
+		(has-fish miner 0)
+		(has-bread miner 6)
+		(has-ham miner 6)
+		
+	)
+	((achieve-goals (list 
+		//(is-settled miner miner-hut montain-village)
+		//(has-ore foundry-worker 8)
+		//(is-available ore foundry-worker foundry-village)
+		//(receive-cash tool-maker miner 2 pick)
+		//(receive-cash construction-worker miner 2 miner-hut)
+		//(receive-cash baker miner 2 bread)
+		//(receive-cash fishman miner 2 fish)
+		//(receive-cash butcher miner 2 ham)
+	))
+))

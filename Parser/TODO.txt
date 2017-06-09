@@ -1,8 +1,0 @@
-Parser à faire entre HTN Bien et HTN Pas bien
-
-
-
-Note sur le HTN Pas bien :
-	-Enlever les typages et les contraintes liés
-	-Enlever les predicats négatifs
-	-Rajouter des contraites de type dans les méthodes pour chaque objet utilisé dans une sous action , pas utile dans le cas d'une sous methode

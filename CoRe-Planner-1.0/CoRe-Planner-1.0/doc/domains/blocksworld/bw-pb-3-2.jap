@@ -1,8 +1,0 @@
-(defproblem bw-pb-3-2 blocksworld
-	((arm-empty) 
-		(on-table b1) (clear b1)
- 		(on-table b2) (on b3 b2) (clear b3)
- 	)
- 	((achieve-goals (list (on b3 b1) (clear b3)))
-
-))

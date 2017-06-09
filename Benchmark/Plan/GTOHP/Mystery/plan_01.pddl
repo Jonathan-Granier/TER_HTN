@@ -1,0 +1,5 @@
+0 :      (overcome abrasion rest pork uranus venus)[1]
+1 :      (feast rest pork lamb alsace quebec)[1]
+2 :      (feast rest lamb flounder surrey pennsylvania)[1]
+3 :      (feast rest flounder rice pennsylvania alsace)[1]
+4 :     (succumb abrasion rest rice uranus venus)[1]

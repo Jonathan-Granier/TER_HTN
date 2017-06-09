@@ -1,2 +1,4 @@
-TER
-Fastdownward/
+Solver/Fastdownward/
+*.o
+*.class
+

@@ -1,0 +1,23 @@
+( defproblem produce Production 
+(
+	(in-container bin1 p1)
+	(in-container bin2 p2)
+	
+	(piece p1 a)
+	(piece p2 b)
+	
+	(at-position m1 t)
+	
+	(available-transport t)
+	(available-machine m1)
+	(available-machine m2)
+	
+	(produce m1 g)
+	(produce m2 g)
+	(produce m2 h)
+
+)
+(
+	(produce-h m2 p4)
+)
+)

@@ -1,8 +1,0 @@
-0 :      (up f0 f2)[1]
-1 :      (board f2 p1)[1]
-2 :      (up f2 f3)[1]
-3 :      (board f3 p0)[1]
-4 :      (down f3 f0)[1]
-5 :      (depart f0 p1)[1]
-6 :     (up f0 f2)[1]
-7 :     (depart f2 p0)[1]

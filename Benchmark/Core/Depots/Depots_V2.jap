@@ -1,0 +1,386 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Depots Version 2
+; Régle partiellement les problemes de mémoire de la version 1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+(defdomain Depots
+	(
+
+				(:operator (!Drive ?x ?y ?z)
+					(
+						(truck ?x) 
+						(place ?y) 
+						(place ?z) 
+						(at ?x ?y)
+					)
+					(
+						(at ?x ?y) 
+					)
+					(
+						(at ?x ?z)
+					)
+				)
+
+				(:operator (!Lift ?x ?y ?z ?p)
+					(
+						(hoist ?x) 
+						(crate ?y ) 
+						(surface ?z ) 
+						(place ?p)
+						(at ?x ?p) 
+						(available ?x) 
+						(at ?y ?p) 
+						(on ?y ?z) 
+						(clear ?y) 
+					)
+					(
+						(at ?y ?p)
+						(clear ?y)
+						(available ?x)
+						(on ?y ?z)
+					)
+					(
+						(lifting ?x ?y)
+						(clear ?z)
+
+					)
+
+				)
+
+				(:operator (!Drop ?x ?y ?z ?p)
+					(
+						(hoist ?x) 
+						(crate ?y ) 
+						(surface ?z ) 
+						(place ?p)
+						(at ?x ?p) 
+						(at ?z ?p) 
+						(clear ?z) 
+						(lifting ?x ?y)
+					)
+					(
+						(lifting ?x ?y)
+						(clear ?z)
+						
+					)
+					(
+						(available ?x)
+						(at ?y ?p)
+						(clear ?y)
+						(on ?y ?z)
+					)
+
+				)
+
+				(:operator (!Load ?x ?y ?z ?p)
+					(
+						(hoist ?x) 
+						(crate ?y ) 
+						(truck ?z ) 
+						(place ?p)
+						(at ?x ?p) 
+						(at ?z ?p) 
+						(lifting ?x ?y)
+					)
+					(
+						(lifting ?x ?y)
+						
+					)
+					(
+						(available ?x)
+						(in ?y ?z)
+					)
+
+				)
+
+				(:operator (!Unload ?x ?y ?z ?p)
+					(
+						(hoist ?x) 
+						(crate ?y ) 
+						(truck ?z ) 
+						(place ?p)
+						(at ?x ?p) 
+						(at ?z ?p) 
+						(available ?x)
+						(in ?y ?z)
+					)
+					(
+						(in ?y ?z)
+						(available ?x)
+						
+					)
+					(
+						(lifting ?x ?y)
+					)
+
+				)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;  Met une caisse c sur une surface s2    ;;;    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(:method (do_put_on ?c ?s2)
+		
+;; Cas où la caisse est bien placé
+Case1	(
+			( crate ?c)
+			( surface ?s2)
+			( on ?c ?s2)
+		)
+		()	
+
+;; Cas où la caisse est déjà dans le bon dépot ou distributeur
+Case2	(
+			( crate ?c)
+			( surface ?s2)
+			( place ?p)
+			( hoist ?h)
+			( at ?c ?p)
+            ( at ?s2 ?p)
+            ( available ?h)
+            ( at ?h ?p)
+		)
+		(
+			(do_clear ?c ?p)
+	        (do_clear ?s2 ?p)
+	        (do_lift_crate ?c ?p ?h)
+        	(!Drop ?h ?c ?s2 ?p)
+		)
+;;Cas où la caisse est dans un camion t		
+Case3	(
+			( crate ?c)
+			( surface ?s2)
+			( truck ?t)
+			( place ?p)
+			( hoist ?h )
+			( in ?c ?t)
+            ( available ?h)
+            ( at ?h ?p)
+            ( at ?s2 ?p)
+		)
+		(
+			(do_get_truck ?t ?p)
+            (do_clear ?s2 ?p)
+            (!Unload ?h ?c ?t ?p)
+            (!Drop ?h ?c ?s2 ?p)
+		)
+
+;; Cas où la caisse est dans un autre dépot ou distributeur
+Case4	(
+
+			( crate ?c)
+			( surface ?s1)
+			( surface ?s2)
+			( truck ?t)
+			( place ?p1)
+			( place ?p2)
+
+			( at ?c ?p1)
+            ( on ?c ?s1)
+            ( at ?s1 ?p1)
+            ( at ?s2 ?p2)
+		)
+        (
+ 			(do_load_truck ?c ?s1 ?p1 ?t)
+    		(!Drive ?t ?p1 ?p2)
+       	 	(do_unload_truck ?c ?s2 ?p2 ?t)
+        )
+	
+)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;         Nettoie une surface             ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Nettoie la surface s1 à la place p1 et met ce qui a dessus dans un camion
+
+
+
+(:method (do_clear ?s ?p)
+		
+;;Cas où s1 est clear
+Case1	(
+
+			( surface ?s)
+			( place ?p)
+			( clear ?s)
+            ( at ?s ?p)
+		)
+        ()
+        
+;;Cas où s1 n'est pas clear
+Case2	(
+			( surface ?s)
+			( place ?p)
+			( truck ?t)
+			( hoist ?h)
+			( crate ?c)
+			( on ?c ?s )
+            ( at ?s ?p)
+            ( at ?h ?p)
+		)
+		(
+			(do_clear ?c ?p)
+			(do_get_truck ?t ?p)
+            (!Lift ?h ?c ?s ?p)
+            (!Load ?h ?c ?t ?p)
+		)
+)
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;         Récupere un camion              ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Raméne un camion à la place p si il n'y est pas déjà
+
+
+(:method (do_get_truck ?t ?p1)
+		
+;;Cas où s1 est clear
+Case1	(
+
+			( truck ?t)
+			( place ?p1)
+			( at ?t ?p1)
+		)
+        (
+
+        )
+;;Cas où s1 n'est pas clear
+Case2	(
+			( truck ?t)
+			( place ?p1)
+			( place ?p2)
+		)
+		(
+			(!Drive ?t ?p2 ?p1)
+		)
+)
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;         Souleve une caisse              ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;Souleve une caisse avec une grue en fonction de là ou elle est (camion ou surface)
+
+
+
+(:method (do_lift_crate ?c ?p ?h)
+		
+;; Cas où la caisse est dans un camion
+Case1	(
+
+			( crate ?c)
+			( place ?p)
+			( hoist ?h)
+			( in ?c ?t)
+            ( at ?h ?p)
+		)
+        (
+        	(do_get_truck ?t ?p)
+        	(!Unload ?h ?c ?t ?p)
+        )
+;; Cas où la caisse est sur une surface
+Case2	(
+			( crate ?c)
+			( place ?p)
+			( hoist ?h)
+			( on ?c ?s)
+	        ( at ?c ?p)
+	        ( at ?s ?p)
+	        ( at ?h ?p)
+		)
+		(
+			(!Lift ?h ?c ?s ?p)
+		)
+)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;     Charge une caisse dans un camion    ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(:method (do_load_truck ?c ?s ?p ?t)
+    (
+    	(crate ?c)
+    	(surface ?s)
+    	(place ?p)
+    	(truck ?t)
+    	(hoist ?h)
+
+    	( at ?c ?p)
+        ( at ?s ?p)
+        ( on ?c ?s)
+        ( available ?h)
+        ( at ?h ?p)
+    )
+    (
+        (do_get_truck ?t ?p)
+        (do_clear ?c ?p)
+        (!Lift ?h ?c ?s ?p)
+        (!Load ?h ?c ?t ?p)
+    )
+
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;     Décharge une caisse d'un camion     ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(:method (do_unload_truck ?c ?s ?p ?t )
+		(
+			( crate ?c)
+			( surface ?s)
+			( place ?p)
+			( truck ?t)
+			( hoist ?h)
+
+			( in ?c ?t)
+            ( at ?t ?p)
+            ( available ?h)
+            ( at ?h ?p)
+		)                   
+
+
+		(
+		    (do_clear ?s ?p)
+		    (!Unload ?h ?c ?t ?p)
+		    (!Drop ?h ?c ?s ?p)
+        )
+
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+)
+)

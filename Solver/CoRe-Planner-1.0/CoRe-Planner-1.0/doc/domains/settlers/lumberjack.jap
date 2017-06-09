@@ -1,0 +1,180 @@
+;;------------------------------------------------------------------------------
+;; This file describes the skills and the beliefs of a lumberjack agent. 
+;;
+;; A lumberjack agent can make the following assumptions:
+;;	- (receive-cash ?agent1 ?agent2 ?cash tree-trunk) 
+;;    (is-transportable tree-trunk ?from ?to)
+;;	- (has-tool ?agent axe) 
+;;    (is-available axe ?agent ?place)
+;;	- (is-built lumberjack-hut ?hut-name ?agent ?place)
+;;
+;; A lumberjack agent can reach the following goals:
+;; 	- (has-tree-trunk ?agent ?quantity) 
+;;    (is-available tree-truck ?agent ?place)
+;;	- (is-settled ?agent ?hut-name ?place)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash axe)
+;; 	- (receive-cash ?agent1 ?agent2 ?cash lumberjack-hut)
+;;------------------------------------------------------------------------------
+
+(defdomain lumberjack (
+										
+	(:operator (!cut-tree ?q)
+		((has-tree-trunk ?l ?iq))
+		((has-tree-trunk ?l ?iq))
+		((has-tree-trunk ?l (call + ?iq ?q)))
+	)
+		
+	(:method (cut-tree ?l ?q)
+		(:first (has-tool ?l axe))
+		((!cut-tree ?q))
+		(:first (is-settled ?l (call cat ?l hut) ?loc)
+			(~has-tool ?l axe)
+			(~is-available axe ?l ?loc))
+		((!cut-tree ?q))
+	)
+		
+	(:operator (!sell-tree-trunk ?tq)
+		((has-tree-trunk ?l ?itq) (has-cash ?l ?icq) (tree-trunk-price ?l ?p))
+		((has-tree-trunk ?l ?itq) (has-cash ?l ?icq))
+		((has-tree-trunk ?l (call - ?itq ?tq)) (has-cash ?l (call + ?icq (call * ?tq ?p))))
+	)
+		
+	(:method (sell-tree-trunk ?a ?q ?to)
+		(:first (has-tree-trunk ?l ?iq) (call >= ?iq ?q) 
+			(tree-trunk-price ?l ?p) (is-settled ?l (call cat ?l hut) ?from)
+			(~receive-cash ?l ?a (call * ?q ?p) tree-trunk)
+			(~is-transportable tree-truck ?from ?to))
+		((!sell-tree-trunk ?q))
+		
+		(:first (has-tree-trunk ?l ?iq) (call < ?iq ?q) 
+			(tree-trunk-price ?l ?p) (is-settled ?l (call cat ?l hut) ?from)
+			(~receive-cash ?l ?a (call * ?q ?p) tree-trunk) 
+			(~is-transportable tree-truck ?from ?to))
+		((cut-tree ?l (call - ?q ?iq)) (!sell-tree-trunk ?q))
+	)
+	
+	(:operator (!pay ?a ?s ?p)
+		((has-cash ?f ?c))
+		((has-cash ?f ?c))
+		((has-cash ?f (call - ?c ?p)))
+	)
+	
+	(:operator (!settle ?n ?h ?p)
+		()
+		()
+		((is-settled ?n ?h ?p))
+	)
+		
+	(:method (settle ?n)
+		(:first (is-built lumberjack-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built lumberjack-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+		(:first (~is-built lumberjack-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+	)
+	
+	(:method (settle ?n ?p)
+		(:first (is-built lumberjack-hut (call cat ?n hut) ?n ?p)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((!do-nothing))
+		
+		(:first (not (is-settled ?n (call cat ?n hut) ?p))
+			(~is-built lumberjack-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+		
+		(:first (~is-built lumberjack-hut (call cat ?n hut) ?n ?p))
+		((!settle ?n (call cat ?n hut) ?p))
+	)
+		
+	(:method (do-plan)
+		
+		;; some agent wants tree trunks and the settler is already settled
+		(:first (goal (has-tree-trunk ?a ?q)) 
+			(goal (is-available tree-trunk ?a ?loc))
+			(agent-name ?n)
+			(is-settled ?n (call cat ?n hut) ?p))
+		((sell-tree-trunk ?a ?q ?loc))
+		
+		;; some agent wants tree-trunks but the settler is not already settled
+		(:first (goal (has-tree-trunk ?a ?q))
+			(goal (is-available tree-trunk ?a ?loc))
+			(agent-name ?n))
+		((settle ?n) (sell-tree-trunk ?a ?q ?loc))
+				
+		;; some agent want to settled this agent
+		(:first (agent-name ?n)
+			(goal (is-settled ?n (call cat ?n hut) ?p)))
+		((settle ?n ?p))
+		
+		;; the settlers must pay some agent for an axe
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s axe)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))		
+		
+		;; the settlers must pay some agent for a lumberjack hut
+		(:first (agent-name ?n)
+			(goal (receive-cash ?a ?n ?p ?s))
+			(same ?s lumberjack-hut)
+			(has-cash ?n ?c) (call >= ?c ?p))
+		((!pay ?a ?s ?p))
+		
+	)
+	
+	;; classical axioms
+	
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+	
+    (:- (same ?x ?x) ())
+
+
+	;; classical needed methods and operators
+	
+	(:operator (!do-nothing) () () ())
+	
+	(:operator (!assert ?g) () () ?g)
+		
+	(:method (achieve-goals ?goals)
+        ()
+    	((assert-goals ?goals nil) (do-plan))
+	)
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+		()
+		((assert-goals ?goals (list (goal ?goal) . ?out)))
+	)
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))
+		
+))
+
+(defproblem lumberjack-problem lumberjack
+ 	(
+		;; static properties
+		(agent-name lumberjack)
+		(has-tool lumberjack axe)
+		(is-built lumberjack-hut lumberjack-hut lumberjack forest-village)
+		//(is-settled lumberjack lumberjack-hut forest-village)
+		(tree-trunk-price lumberjack 1)
+		
+		;; dynamic properties
+		(has-tree-trunk lumberjack 3)
+		(has-cash lumberjack 2)
+		
+	)
+	((achieve-goals (list 
+		//(is-settled lumberjack lumberjack-hut forest-village)
+		(has-tree-trunk sawmill-worker 4)
+		(is-available tree-trunk sawmill-worker forest-village))
+		//(receive-cash tool-maker lumberjack 2 axe)
+		//(receive-cash construction-worker lumberjack 2 lumberjack-hut)
+	))
+))

@@ -1,5 +1,0 @@
-0 :      (feast satisfaction mutton orange goias guanabara)[1]
-1 :      (feast satisfaction orange chocolate guanabara bavaria)[1]
-2 :      (overcome hangover satisfaction chocolate venus neptune)[1]
-3 :      (feast satisfaction chocolate ham goias guanabara)[1]
-4 :     (succumb hangover satisfaction ham venus neptune)[1]

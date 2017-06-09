@@ -1,0 +1,8 @@
+0 :  (up f0 f1  )  
+1 :  (board f1 p0  )  
+2 :  (up f1 f3  )  
+3 :  (depart f3 p0  )  
+4 :  (down f3 f2  )  
+5 :  (board f2 p1  )  
+6 :  (up f2 f3  )  
+7 :  (depart f3 p1  )  

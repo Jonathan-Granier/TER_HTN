@@ -1,7 +1,0 @@
-0 :  (rewind-movie) 
-1 :  (get-cheese z8  )  
-2 :  (get-crackers k8  )  
-3 :  (get-pop p8  )  
-4 :  (get-dip d8  )  
-5 :  (get-chips c8  )  
-6 :  (reset-counter) 

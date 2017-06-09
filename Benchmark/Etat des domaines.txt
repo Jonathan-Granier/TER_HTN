@@ -1,0 +1,68 @@
+Documents qui recense les domaines traité et leur differents problemes
+
+Barman : 
+	- PDDL 		: impossible dessus .
+	- GTOHP 	: OK
+	- Core 		: plan plus long , une adaptation pour être faite.
+
+Blocksworld
+	- PDDL 		: OK
+	- GTOHP 	: OK
+	- Core 		: Probleme dans l'arbre de recherche , impossible de remonter. Obliger de donner une indication supplementaire dans le probleme.
+
+Hiking
+	- PDDL 		: OK
+	- GTOHP 	: OK.
+	- Core 		: OK.
+
+Depots :
+	- PDDL 		: OK
+	- GTOHP  	: OK
+	- Core 		: OK sauf les 2 derniers , prend trop de mémoire.
+
+Gripper :
+	- PDDL 		: OK 
+	- GTOHP  	: OK
+	- Core 		: OK 
+
+Movie :
+	- PDDL 		: OK 
+	- GTOHP  	: OK
+	- Core 		: OK 
+
+Mystery :
+	- PDDL 		: OK
+	- GTOHP  	: OK mais obligé de rajouter un visit/unvisit --> Ne fait pas toujours la solution optimal --> numéro 10 --> Surement BUG ISHOP
+	- Core 		: OK mais oblihé de rajouter un visit/unvisit
+
+Elevator :
+	- PDDL 		: OK
+	- GTOHP  	: OK
+	- Core 		: OK mais algo different et moins efficasse en taille de plan
+
+zenotravel :
+	- PDDL 		: OK
+	- GTOHP  	: OK mais plan plus long à un bug ISHOP 
+	- Core 		: OK mais algo different et moins efficasse en taille de plan (pas le cas du au bug)
+
+
+satellite :
+	- PDDL		: OK
+	- GTOHP  	: OK mais pas optimal , le solver ne remonte pas assez le branche pour trouver la solution optimal
+	- Core 		: OK mais meme probleme que GTOHP
+
+parking :
+	- PDDL 		: Trop complexe
+	- GTOHP 	: OK mais juste niveau mémoire - Probleme sur le pb05 --> Il semblerai que GTOHP n'arrive pas à remonter la derniere etape pour trouver la solution , il part en boucle infini. 
+	- Core 		: Pas OK. La dernière tache ne fonctionne pas sans le goal.  
+
+
+A faire : 
+
+driverlog --> Domaine simple
+logistic --> Pas possible en GTOHP , il y a des forall dans le domaine 
+freecell --> C'est compliqué et il a pas forcement de stratégie gagnante
+schedule --> domain un peu complexe et pas documenté
+ pipesworld --> domain un peu complexe mais bien documenté
+ storage --> domain simple en aparence , très complexe à faire en GTOHP. 
+ thoughful --> Encore un jeu de carte , domaine complexe mais un peu documenté

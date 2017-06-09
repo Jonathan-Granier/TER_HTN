@@ -1,0 +1,12 @@
+00: (                           switch_on instrument3 satellite1) [1]
+01: (                       turn_to satellite0 phenomenon5 star4) [1]
+02: (                     calibrate satellite1 instrument3 star0) [1]
+03: (                       turn_to satellite1 phenomenon7 star0) [1]
+04: (take_image satellite1 phenomenon7 instrument3 spectrograph2) [1]
+05: (                       turn_to satellite1 star4 phenomenon7) [1]
+06: (      take_image satellite1 star4 instrument3 spectrograph2) [1]
+07: (                       turn_to satellite1 phenomenon5 star4) [1]
+08: (take_image satellite1 phenomenon5 instrument3 spectrograph2) [1]
+09: (                       turn_to satellite1 star3 phenomenon5) [1]
+10: (          take_image satellite1 star3 instrument3 infrared0) [1]
+

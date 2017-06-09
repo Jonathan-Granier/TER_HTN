@@ -1,0 +1,14 @@
+#############################################################
+######### A Modifier selon l'arboressance    ################
+#############################################################
+JAR_GTOHP=../Solver/pddl4j_JFPDA_Version/pddl4j_JFPDA_Version/lib/iSHOP.jar
+JAR_CORE=../Solver/CoRe-Planner-1.0/CoRe-Planner-1.0/lib/planner_Vtest.jar
+JAR_PDDL4J=../Solver/pddl4j-master/build/libs/pddl4j-3.5.0.jar
+FASTDOWNWARD=../Solver/FastDownward/fast-downward.py
+VAL=../Solver/VAL-master/validate
+#############################################################
+
+
+# Attention , FASTDOWNWARD n'est pas inclue, il faut le télécharger sur le dépot officiel : 
+#	http://www.fast-downward.org/ObtainingAndRunningFastDownward
+#	Il y a un dossier prevu pour le solver : Solver/FastDownward/

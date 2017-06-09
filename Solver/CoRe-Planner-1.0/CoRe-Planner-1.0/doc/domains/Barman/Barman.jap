@@ -1,0 +1,417 @@
+(defdomain Barman
+	(
+
+				(:operator (!grasp ?h ?c)
+					(
+						(hand ?h) 
+						(ontable ?c) 
+						(handempty ?h) 
+					)
+					(
+						(ontable ?c) 
+						(handempty ?h)
+					)
+					(
+						(holding ?h ?c)
+					)
+				)
+
+				(:operator (!leave ?h ?c)
+					(
+					(hand ?h)
+					(holding ?h ?c)
+					)
+					((holding ?h ?c))
+					((handempty ?h) (ontable ?c))
+
+				)
+
+				(:operator (!fill-shot ?s ?i ?h1 ?h2 ?d)
+					(
+						(shot ?s) (ingredient ?i) (hand ?h1) (hand ?h2) (dispenser ?d )
+						(holding ?h1 ?s)
+	                    (handempty ?h2)
+	                    (dispenses ?d ?i)
+	                    (empty ?s)
+	                    (clean ?s)
+					)
+					(
+						(empty ?s) 
+						(clean ?s)
+					)
+					(
+						(contains ?s ?i) 
+						(used ?s ?i)
+					)
+				)
+
+				(:operator (!refill-shot ?s ?i ?h1 ?h2 ?d)
+					(
+						(shot ?s) (ingredient ?i) (hand ?h1) (hand ?h2) (dispenser ?d)
+						(holding ?h1 ?s)
+	                    (handempty ?h2)
+	                    (dispenses ?d ?i)
+	                    (empty ?s)
+	                    (used ?s)
+					)
+					(
+						(empty ?s) 
+						
+					)
+					(
+						(contains ?s ?i) 
+					)
+				)
+
+				(:operator (!empty-shot ?h ?p ?b)
+					(
+						(hand ?h) (shot ?p)
+						(holding ?h ?p)
+						(contains ?p ?b)
+					)
+					(
+						(used ?s ?b)
+					)
+					(
+						(clean ?s)
+					)
+				)
+				(:operator (!clean-shot ?s ?b ?h1 ?h2)
+					(
+						(shot ?s) (hand ?h1) (hand ?h2)
+						(holding ?h1 ?s)
+                        (handempty ?h2)	   		      
+                        (empty ?s)
+                        (used ?s ?b)
+					)
+					(
+						(used ?s ?b)
+					)
+					(
+						(clean ?s)
+					)
+				)
+				(:operator (!pour-shot-to-clean-shaker ?s ?i ?d ?h1 ?l ?l1)
+					(
+						(shot ?s) (ingredient ?i) (shaker ?d) (hand ?h1) (level ?l) (level ?l1) 
+						(holding ?h1 ?s)
+                        (contains ?s ?i)
+                        (empty ?d)
+                        (clean ?d)                              
+                        (shaker-level ?d ?l)
+                        (next ?l ?l1)
+					)
+					(
+						(contains ?s ?i)
+						(empty ?d)
+						(clean ?d)
+						(shaker-level ?d ?l)
+					)
+					(
+						(empty ?s)
+                        (contains ?d ?i)
+                        (unshaked ?d)
+                        (shaker-level ?d ?l1)
+					)
+				)
+				(:operator (!pour-shot-to-used-shaker ?s ?i ?d ?h1 ?l ?l1)
+					(
+						(shot ?s) (ingredient ?i) (shaker ?d) (hand ?h1) (level ?l) (level ?l1) 
+						(holding ?h1 ?s)
+                        (contains ?s ?i)
+                        (unshaked ?d)
+                        (shaker-level ?d ?l)
+                        (next ?l ?l1)
+					)
+					(
+						(contains ?s ?i)
+						(shaker-level ?d ?l)
+					)
+					(
+						(contains ?d ?i)
+                        (empty ?s)
+                        (shaker-level ?d ?l1)
+					)
+				)
+				(:operator (!empty-shaker ?h ?s ?b ?l ?l1)
+					(
+						(hand ?h) (shaker ?s) (cocktail ?b) (level ?l) (level ?l1)
+						(holding ?h ?s)
+                        (contains ?s ?b)
+                        (shaked ?s)
+                        (shaker-level ?s ?l)
+                        (shaker-empty-level ?s ?l1)
+
+					)
+					(
+						(shaked ?s)
+						(shaker-level ?s ?l)
+						(contains ?s ?b)
+					)
+					(
+						(shaker-level ?s ?l1)
+						(empty ?s)
+					)
+				)
+				(:operator (!clean-shaker ?h1 ?h2 ?s)
+					(
+						(hand ?h1) (hand ?h2) (shaker ?s)
+						(holding ?h1 ?s)
+                        (handempty ?h2)
+                        (empty ?s)
+					)
+					(
+
+					)
+					(
+						(clean ?s)
+					)
+				)
+				(:operator (!shake ?b ?d1 ?d2 ?s ?h1 ?h2)
+					(
+						(cocktail ?b) (ingredient ?d1) (ingredient ?d2) (shaker ?s) (hand ?h1) (hand ?h2)
+						(holding ?h1 ?s)
+                        (handempty ?h2)
+                        (contains ?s ?d1)
+                        (contains ?s ?d2)
+                        (cocktail-part1 ?b ?d1)
+                        (cocktail-part2 ?b ?d2)
+                        (unshaked ?s)
+					)
+					(
+						(unshaked ?s)
+						(contains ?s ?d1)
+						(contains ?s ?d2)
+					)
+					(
+						(shaked ?s)
+                        (contains ?s ?b)
+					)
+				)
+				(:operator (!pour-shaker-to-shot ?b ?d ?h ?s ?l ?l1)
+					(
+						(shot ?d) (hand ?h) (shaker ?s) (level ?l) (level ?l1)
+						(holding ?h ?s)
+	                    (shaked ?s)
+	                    (empty ?d)
+	                    (clean ?d)
+	                    (contains ?s ?b)
+	                    (shaker-level ?s ?l)
+	                    (next ?l1 ?l)
+					)
+					(
+						(clean ?d)
+						(empty ?d)
+						(shaker-level ?s ?l) 
+					)
+					(
+						(contains ?d ?b)
+                        (shaker-level ?s ?l1)
+					)
+
+				)
+
+
+
+
+;------------------------------------------------------------------
+;                               Methods
+;------------------------------------------------------------------
+;                            Cocktail factory
+;------------------------------------------------------------------
+(:method (do_cocktail_in_shot ?sh ?c)
+	(
+		( shot ?sh)
+		( cocktail ?c)
+		( ontable ?sh) 
+	    ( clean ?sh )
+	    ( handempty ?h)
+	)
+	(
+		
+		(get_first_ingredient ?c ?h)
+		(get_second_ingredient ?c ?h)
+		(serve_shot ?sh ?c)
+	)
+
+)
+(:method (do_cocktail_in_shot ?sh ?i)
+	(
+		( shot ?sh)
+		( cocktail ?c)
+		( dispenses ?d ?i)
+		( hand ?h )
+	)
+	(
+		(do_fill_shot ?sh ?i ?h)
+		(!leave ?h ?sh)
+	)
+)
+
+
+
+;                        Recovery of ingredients
+;------------------------------------------------------------------
+
+(:method (get_first_ingredient ?c ?h1)
+	(
+		( cocktail ?c )
+		( hand ?h1 )
+		( hand ?h2 )
+		( shaker ?s )
+		( level ?l0 )
+		( level ?l1 )
+		( cocktail-part1 ?c ?i)
+        ( empty ?sh)
+        ( next ?l0 ?l1)
+	)
+	(
+		
+		(do_fill_shot ?sh ?i ?h1)	
+       	(!pour-shot-to-clean-shaker ?sh ?i ?s ?h1 ?l0 ?l1)
+        (!clean-shot ?sh ?i ?h1 ?h2)
+
+	)
+
+)
+
+(:method (get_second_ingredient ?c ?h1)
+	(
+		( cocktail ?c )
+		( hand ?h1 )
+		( hand ?h2 )
+		( cocktail-part2 ?c ?i)
+		( dispenses ?d ?i)
+        ( holding ?h1 ?sh)
+        ( shaker ?s)
+        ( level ?l0 )
+        ( level ?l1 )
+	)
+	(
+		(!fill-shot ?sh ?i ?h1 ?h2 ?d)
+        (!pour-shot-to-used-shaker ?sh ?i ?s ?h1 ?l0 ?l1)
+        (!leave ?h1 ?sh)
+
+	)
+
+)
+
+;                            Serve
+;------------------------------------------------------------------
+
+(:method (serve_shot ?sh ?c)
+	(
+		(shot ?sh)
+		(cocktail ?c)
+		( cocktail-part1 ?c ?i1 )
+        ( cocktail-part2 ?c ?i2 )
+        ( hand ?h )
+        ( hand ?h1 )
+        ( shaker ?s)
+        ( level ?l0 )
+        ( level ?l1 )
+        ( level ?l2 )
+
+	)
+	(
+		(do_clean_shot ?sh ?b ?h)
+        (!grasp ?h1 ?s)
+	    (!shake ?c ?i1 ?i2 ?s ?h1 ?h)
+        (!pour-shaker-to-shot ?c ?sh ?h1 ?s ?l2 ?l1)
+        (!empty-shaker ?h1 ?s ?c ?l1 ?l0)
+        (!clean-shaker ?h1 ?h ?s)
+        (!leave ?h1 ?s)
+	)
+
+)
+
+;                              Clean Shot
+;------------------------------------------------------------------
+
+
+(:method (do_clean_shot ?s ?b ?h1)
+Case1	(
+			(shot ?s)
+			(hand ?h1)
+			(clean ?s)
+		)
+		()
+Case2	(
+			(shot ?s)
+			(hand ?h1)
+			(hand ?h2)
+			(cocktail ?b)
+		)
+		(
+			(!grasp ?h1 ?s)
+            (!clean-shot ?s ?b ?h1 ?h2)
+            (!leave ?h1 ?s)
+		)
+Case3	(
+			(shot ?s)
+			(hand ?h1)
+			(hand ?h2)
+			(ingredient ?b)
+		)
+		(
+			(!grasp ?h1 ?s)
+            (!clean-shot ?s ?b ?h1 ?h2)
+            (!leave ?h1 ?s)
+		)
+
+
+)
+
+;                    fill-shot
+;------------------------------------------------------------------
+
+
+(:method (do_fill_shot ?sh ?i ?h1)
+Case1	(
+			(shot ?sh)
+			(ingredient ?i)
+			(hand ?h1)
+			(hand ?h2)
+			( used ?sh ?i)
+            ( dispenses ?d ?i)
+		)
+		(
+			(!grasp ?h1 ?sh)
+            (!refill-shot ?sh ?i ?h1 ?h2 ?d)
+		)
+
+Case2	(
+			(shot ?sh)
+			(ingredient ?i)
+			(hand ?h1)
+			(hand ?h2)
+			( clean ?sh)
+            ( dispenses ?d ?i)
+
+		)
+		(
+			(!grasp ?h1 ?sh)
+            (!fill-shot ?sh ?i ?h1 ?h2 ?d)
+		)
+
+Case3	(
+			(shot ?sh)
+			(ingredient ?i)
+			(hand ?h1)
+			(hand ?h2)
+			( used ?sh ?b )
+            ( dispenses ?d ?i)
+		)
+		(
+			(!grasp ?h1 ?sh)
+           	(!clean-shot ?sh ?b ?h1 ?h2)
+           	(!fill-shot ?sh ?i ?h1 ?h2 ?d)
+		)
+
+
+
+)
+
+
+)
+)

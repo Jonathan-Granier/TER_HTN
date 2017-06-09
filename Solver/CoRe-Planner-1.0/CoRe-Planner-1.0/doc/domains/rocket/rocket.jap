@@ -1,0 +1,179 @@
+(defdomain Rocket (
+		
+	(:operator (!move ?r ?x ?y)
+		()
+		((rocket-at ?r ?x) (hasfuel ?r))
+		((rocket-at ?r ?y))
+	)
+	
+	(:operator (!load ?c ?r ?x)
+		()
+		((container-at ?c ?x))
+		((container-in ?c ?r))
+	)
+	
+	(:operator (!unload ?c ?r ?x)
+		()
+		((container-in ?c ?r))
+		((container-at ?c ?x))
+	)
+	
+	(:operator (!assert ?g)
+		()
+		()
+		?g
+	)
+
+	(:operator (!failure ?g)
+		()
+		()
+		?g
+	)
+
+	
+	(:operator (!remove ?g)
+		()
+		?g
+		()
+	)
+		
+	(:method (achieve-goals ?goals)
+        ()
+    	((assert-goals ?goals nil) (clean-up) (do-plan))
+	)
+
+    (:method (assert-goals (list ?goal . ?goals) ?out)
+		()
+		((assert-goals ?goals (list (goal ?goal) . ?out)))
+	)
+
+    (:method (assert-goals nil ?out)
+		()
+		((!assert ?out)))
+			 
+	(:method (clean-up)
+	
+		;; remove irrevelant containers 
+		(:first (container-at ?c ?x)
+			(not (goal (container-at ?c ?y))))
+		((!remove (list (container-at ?c ?x)))
+			(clean-up))
+		
+		;; remove goals on container if they was already reached
+		(:first (goal (container-at ?c ?x)) (container-at ?c ?x))
+		((!remove (list (goal (container-at ?c ?x))))
+			(clean-up))
+		
+		;; remove irrevelant rockets and already goals acheived
+		(:first (rocket-at ?c ?x)
+			(goal (rocket-at ?c ?x)))
+		((!remove (list (rocket-at ?c ?x) (goal (rocket-at ?c ?x))))
+			(clean-up))
+			
+		;; if no more irrevelant container to be removed
+			()
+			()
+	)
+			 
+	(:method (remove-goals)
+						
+		;; remove goals about containers position reached
+		(:first (goal (container-at ?c ?x)) (container-at ?c ?x))
+		((!remove (list (goal (container-at ?c ?x))))
+			(remove-goals))
+			
+		;; remove goals about rockets position reached
+		(:first (goal (rocket-at ?r ?x)) (rocket-at ?r ?x))
+		((!remove (list (goal (rocket-at ?r ?x))))
+			(remove-goals))
+					
+		;; if no more goal must be removed
+		()
+		()
+	)
+    
+	;; Build plan for the rocket domain
+    (:method (do-plan)
+		
+		;; move containers from x to y
+        (:first (goal (container-at ?c ?y))
+			(container-at ?c ?x) 
+			(different ?x ?y)
+			(rocket-at ?r ?x) 
+			(can-move ?r ?y))
+		((load-container ?r ?x ?y nil)
+			(!move ?r ?x ?y) 
+			(unload-container ?r ?y nil)
+			(clean-up)
+		 	(do-plan))
+		
+		(:first (goal (container-at ?c ?y))
+			(container-at ?c ?x) 
+			(different ?x ?y)
+			(rocket-at ?r ?x) 
+			(not (can-move ?r ?y)))
+		((!failure (list (goal (container-at ?c ?y))))
+		 (!remove (list (goal (container-at ?c ?y))))
+		 (do-plan))
+		
+		;; move rocket from x to y
+        (:first (goal (rocket-at ?r ?y))
+			(rocket-at ?r ?x)
+			(hasfuel ?r))
+		((!move ?r ?x ?y) 
+			(remove-goals) 
+			(do-plan))
+		
+		;; failure rocket r cannot move from x to y
+        (:first (goal (rocket-at ?r ?y))
+			(rocket-at ?r ?x)
+			(not (hasfuel ?r)))
+		((!failure (list (goal (rocket-at ?r ?y))))
+		 (!remove (list (goal (rocket-at ?r ?y))))
+		 (do-plan))
+		
+		
+		;; if no more container to load then we're done
+    		()
+        	()
+	)
+	
+	;; Load all containers contained in a rocket r at location x
+	(:method (load-container ?r ?x ?y ?loaded)
+		;; load all containers that must move to the same destination
+		(:first (rocket-at ?r ?x) (goal (container-at ?c ?y))
+			(not (call member ?c ?loaded)))
+		((!load ?c ?r ?x) (load-container ?r ?x ?y (list ?c . ?loaded)))
+
+		;; if nothing else matches, then we're done
+			()
+			()
+	)
+	
+	;; Unload all containers contained in a rocket r at location x
+	(:method (unload-container ?r ?x ?unloaded)
+		(:first (container-in ?c ?r)
+			(not (call member ?c ?unloaded)))
+		((!unload ?c ?r ?x) (unload-container ?r ?x (list ?c . ?unloaded)))
+
+		;; if no more container to unload then we're done
+			()
+			()
+	)
+			
+	;; Test if we can move a rocket
+	(:- (can-move ?r ?x) 
+		
+		;; if the rocket r must not be moved to y to reach a goal
+		((not (goal (rocket-at ?r ?y))) (hasfuel ?r))
+		
+		;; if the rocket r must be move to y to reach a goal and y = x
+		((goal (rocket-at ?r ?y)) (same ?x ?y) (hasfuel ?r))		
+	)
+		
+	
+	(:- (different ?x ?y) ((not (same ?x ?y))))
+	
+    (:- (same ?x ?x) ())
+		
+))

@@ -1,0 +1,26 @@
+
+
+> seq -w 1 23 | parallel -k -j 1  java -jar -Xms10240m -Xmx10240m planner_Vtest.jar -d ../doc/domains/rover/rover2.jap -p ../doc/domains/rover/pb{}.jap -l -1 >> ../tests_results/data/rover2.data
+
+> seq -w 1 23 | parallel -k -j 1  java -jar -Xms8192m -Xmx8192m lib/iSHOP.jar -o problems/Rover/SiHTNA_rover_domain.pddl -f problems/rover/htn_pb{}.pddl -i 8 >> tests_results/data/rover.data
+
+> seq -w 1 20 | parallel -k -j 1  java -jar -Xms8192m -Xmx8192m  planner_Vtest.jar -d ../doc/domains/childsnack/domain.jap -p ../doc/domains/childsnack/pb{}.jap -l -1 >> ../tests_results/data/childsnack.data
+
+> seq -w 1 15 | parallel -k -j 1  java -jar -Xms10240m -Xmx10240m  planner_Vtest.jar -d ../doc/domains/satellite/domain.jap -p ../doc/domains/satellite/pb{}.jap -l -1 >> ../tests_results/data/satellite.data
+
+-javaagent:lib/iSHOP.jar -server -Xms2048m -Xmx2048m -classpath lib/pddl4j.jar
+
+java -jar lib/iSHOP.jar  -o problems/Rover/SiHTNA_rover_domain2.pddl -f problems/Rover/HTN_pb01.pddl -i 8
+
+@article{Tange2011a,
+ title = {GNU Parallel - The Command-Line Power Tool},
+ author = {O. Tange},
+ address = {Frederiksberg, Denmark},
+ journal = {;login: The USENIX Magazine},
+ month = {Feb},
+ number = {1},
+ volume = {36},
+ url = {http://www.gnu.org/s/parallel},
+ year = {2011},
+ pages = {42-47}
+}

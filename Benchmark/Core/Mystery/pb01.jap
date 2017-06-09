@@ -1,0 +1,103 @@
+(defproblem problem byParser
+(
+	;;;
+	;;;   facts
+	;;;
+
+
+	(food rice)
+	(food pear)
+	(food flounder)
+	(food okra)
+	(food pork)
+	(food lamb)
+
+	(pleasure rest)
+
+	(pain hangover)
+	(pain depression)
+	(pain abrasion)
+
+	(province kentucky)
+	(province bosnia)
+	(province surrey)
+	(province pennsylvania)
+	(province alsace)
+	(province quebec)
+	(province guanabara)
+
+	(planet mars)
+	(planet earth)
+	(planet uranus)
+	(planet venus)
+
+ 
+ 
+          
+          
+          
+         
+          
+          
+
+          (harmony rest venus  )
+         
+          
+          
+          (craves rest pork  )
+          (craves hangover rice  )
+          (craves depression flounder  )
+          (craves abrasion pork  )
+          
+
+          (eats lamb flounder  )
+          (eats lamb pork  )
+          
+          (eats pork lamb  )
+          (eats pork okra  )
+          
+          (eats okra pork  )
+          (eats okra pear  )
+          
+          (eats rice pear  )
+          (eats rice rice  )
+          (eats rice flounder  )
+          
+          (eats pear okra  )
+          (eats pear rice  )
+          
+          (eats flounder lamb  )
+          (eats flounder rice  )
+
+          (orbits mars earth  )
+          (orbits earth uranus  )
+          (orbits uranus venus  )
+          
+
+
+          (locale okra guanabara  )
+          (locale pork quebec  )
+          (locale pear surrey  )
+          (locale rice bosnia  )
+          (locale flounder alsace  )
+          (locale lamb pennsylvania  )
+
+          (attacks kentucky bosnia  )
+          (attacks bosnia surrey  )
+          (attacks surrey pennsylvania  )
+          (attacks pennsylvania alsace  )
+          (attacks alsace quebec  )
+          (attacks quebec guanabara  )
+
+
+
+ 
+)
+	;;;
+	;;;   goals
+	;;;
+
+
+(
+	(do_delivery abrasion rice ))
+)

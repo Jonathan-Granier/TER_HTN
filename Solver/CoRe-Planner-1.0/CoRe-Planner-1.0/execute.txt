@@ -1,0 +1,7 @@
+java -jar planner.jar -d ../doc/domains/rover/rover.jap -p ../doc/domains/rover/pb01.jap 
+
+java -jar planner_Vtest.jar -d ../doc/domains/rover/rover.jap -p ../doc/domains/rover/pb01.jap 
+
+java -jar -Xms8192m -Xmx8192m  planner_Vtest.jar -d ../doc/domains/childsnack/domain.jap -p ../doc/domains/childsnack/pb01.jap 
+
+java -jar -Xms10240m -Xmx10240m  planner_Vtest.jar -d ../doc/domains/satellite/domain.jap -p ../doc/domains/satellite/pb01.jap
