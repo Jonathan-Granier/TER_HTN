@@ -14,6 +14,8 @@ Benchmark sur la plannification hierarchique (HTN) creer a partir des domaines d
 
 -----------------------------------------
 ### Domaines traités
+
+
 Barman  
 Blocksworld  
 Depots  
